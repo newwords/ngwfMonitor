@@ -1,5 +1,5 @@
-define([], function () {
-    var province = {
+define(["underscore"], function (_) {
+    var provinces = {
         '00030001': '北京分公司',
         '00030002': '天津分公司',
         '00030003': '内蒙古分公司',
@@ -32,6 +32,12 @@ define([], function () {
         '00030030': '安徽分公司',
         '00030031': '青海分公司'
     };
-
-    return province;
+    var provinceArray = [];
+    _.each(provinces, function (name, value) {
+        provinceArray.push({
+            name: name,
+            value: value
+        });
+    });
+    return provinceArray;
 });

@@ -1,4 +1,6 @@
 var express = require('express');
+var xlsx = require("node-xlsx");
+var util = require('util');
 var router = express.Router();
 var multiparty = require('multiparty');
 
@@ -16,13 +18,23 @@ router.get('/ajax', function (req, res, next) {
 
 /* UPLOAD handle*/
 router.post('/upload', function (req, res, next) {
-    var form = new multiparty.Form({uploadDir: './public/files/'});
+    var form = new multiparty.Form();
+    form.on('field', function (name, value) {
+        if (name === 'province') {
+
+        }
+    });
+    form.on('part', function (part) {
+        console.log("province:", province);
+        res.end("OK");
+    });
     form.parse(req, function (err, fields, files) {
         if (err) {
-            console.log("error");
-        } else {
-            console.log("success")
+            throw new Error("form is error");
         }
+        var filepath = files.file[0].path;
+        var workbook = xlsx.parse(filepath);
+        console.log(workbook);
     });
 });
 

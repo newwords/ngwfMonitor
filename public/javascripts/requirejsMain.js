@@ -32,6 +32,6 @@ var requireConfig = require = {
         'backbone': {deps: ['jquery', 'underscore']},
         'jquery.fileupload': {deps: ['jquery', 'jquery.ui.widget']},
         'jquery.ui.widget': {deps: ['jquery']},
-        'layui': {deps: ['jquery']}
+        'layui': {deps: ['jquery', 'css!requirejs/css/layui.css']}
     }
 };
