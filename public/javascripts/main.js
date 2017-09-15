@@ -1,6 +1,6 @@
 require(['backbone', 'data', 'echarts', 'china'], function (Backbone, mapData, echarts) {
     var _content = this;
-    var mapView = Backbone.View.extend({
+    var MapView = Backbone.View.extend({
         initialize: function () {
             var _this = this;
             _this.chart = echarts.init(_this.el);
@@ -59,7 +59,7 @@ require(['backbone', 'data', 'echarts', 'china'], function (Backbone, mapData, e
         'height': window.innerHeight
     });
 
-    _content.mapView = new mapView({
+    _content.mapView = new MapView({
         el: "#map"
     });
 
