@@ -1,0 +1,18 @@
+<form class="layui-form" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">输入框</label>
+        <div class="layui-input-block">
+            <select id="province" name="province" lay-verify="">
+                <option value="">请选择</option>
+                {{#each province}}
+                    <option value="{{value}}">{{name}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </div>
+</form>
+<div class="layui-upload">
+    <button type="button" class="layui-btn layui-btn-normal" id="selectFile">选择文件</button>
+    <button type="button" class="layui-btn" id="upload">开始上传</button>
+</div>
+<!--<input type="file" id="upload" name="upload" value="上传文档">-->
