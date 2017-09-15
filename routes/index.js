@@ -6,7 +6,14 @@ var multiparty = require('multiparty');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
-    res.render('index', {title: 'Express'});
+    res.redirect("ngwf/main.html");
+    // res.render('error', {
+    //     message: '服务器异常',
+    //     error: {
+    //         status: "404",
+    //         stack: "message"
+    //     }
+    // });
 });
 
 
