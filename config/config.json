@@ -1,0 +1,16 @@
+{
+  "development": {
+    "username": "root",
+    "password": "lanyan324",
+    "database": "ngwf",
+    "host": "47.95.241.170",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "lanyan324",
+    "database": "ngwf",
+    "host": "47.95.241.170",
+    "dialect": "mysql"
+  }
+}

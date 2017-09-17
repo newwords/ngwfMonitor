@@ -1,59 +1,9 @@
-define([], function () {
+define(["jquery"], function ($) {
+
     var data = {
         "total": "25",
         "citys": [
             {
-                "name": "河北",
-                "rate": "20",
-                "state": "进行中",
-                "bgnTime": "2017/08/01",
-                "endTime": "2017-09-31",
-                "duty": "左宗棠",
-                "phases": [
-                    {
-                        "name": "准备阶段",
-                        "process": "30",
-                        "duty": "段誉",
-                        "bgnTime": "2017-08-01",
-                        "endTime": "2017-08-20",
-                        "warn": {
-                            "detail": [{"message": "配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟"}]
-                        },
-                        "problem": {
-                            "detail": [
-                                {
-                                    "person": "赵四",
-                                    "madeTime": "2017-09-01",
-                                    "expectTime": "2017-09-10",
-                                    "solver": "刘能",
-                                    "describe": "缺少接口梳理人员配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "准备阶段",
-                        "process": "30",
-                        "duty": "段誉",
-                        "bgnTime": "2017-08-01",
-                        "endTime": "2017-08-20",
-                        "warn": {
-                            "detail": [{"message": "配合改造工作延迟"}]
-                        },
-                        "problem": {
-                            "detail": [
-                                {
-                                    "person": "赵四",
-                                    "madeTime": "2017-09-01",
-                                    "expectTime": "2017-09-10",
-                                    "solver": "刘能",
-                                    "describe": "缺少接口梳理人员"
-                                }
-                            ]
-                        }
-                    }
-                ]
-            }, {
                 "name": "山西",
                 "rate": "0",
                 "state": "未开始",
@@ -984,6 +934,58 @@ define([], function () {
                         }
                     }
                 ]
+            },
+            {
+                "name": "河北",
+                "rate": "20",
+                "state": "进行中",
+                "bgnTime": "2017/08/01",
+                "endTime": "2017-09-31",
+                "duty": "左宗棠",
+                "phases": [
+                    {
+                        "name": "准备阶段",
+                        "process": "30",
+                        "duty": "段誉",
+                        "bgnTime": "2017-08-01",
+                        "endTime": "2017-08-20",
+                        "warn": {
+                            "detail": [{"message": "配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟"}]
+                        },
+                        "problem": {
+                            "detail": [
+                                {
+                                    "person": "赵四",
+                                    "madeTime": "2017-09-01",
+                                    "expectTime": "2017-09-10",
+                                    "solver": "刘能",
+                                    "describe": "缺少接口梳理人员配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟配合改造工作延迟"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "准备阶段",
+                        "process": "30",
+                        "duty": "段誉",
+                        "bgnTime": "2017-08-01",
+                        "endTime": "2017-08-20",
+                        "warn": {
+                            "detail": [{"message": "配合改造工作延迟"}]
+                        },
+                        "problem": {
+                            "detail": [
+                                {
+                                    "person": "赵四",
+                                    "madeTime": "2017-09-01",
+                                    "expectTime": "2017-09-10",
+                                    "solver": "刘能",
+                                    "describe": "缺少接口梳理人员"
+                                }
+                            ]
+                        }
+                    }
+                ]
             }
         ]
     };
@@ -993,5 +995,23 @@ define([], function () {
         mapData[key].name = data.citys[key].name;
         mapData[key].value = +data.citys[key].rate;
     }
-    return mapData
+    return {
+        getMapData: function (callback) {
+            $.ajax({
+                url: "/ajax",
+                success: function (result) {
+                    if (_.isFunction(callback)) {
+                        callback(result);
+                    }
+
+                },
+                error: function (error) {
+                    if (_.isFunction(callback)) {
+                        callback([]);
+                    }
+                }
+            });
+
+        }
+    }
 });

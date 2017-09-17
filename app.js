@@ -8,34 +8,38 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var users = require('./routes/users');
 
-var orm = require('orm');//MYSQL ORM
-
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
-
-// TODO 添加数据库 orm
-// app.use(orm.express("mysql://username:password@host/database", {
+//
+// // TODO 添加数据库 orm
+// //mysql://root:lanyan324@47.95.241.170:3306/ngwf
+// app.use(orm.express("mysql://root:lanyan324@47.95.241.170:3306/ngwf", {
 //     define: function (db, models, next) {
-//         models.person = db.define("person", {
-//             name: String,
-//             surname: String,
-//             age: Number, // FLOAT
-//             male: Boolean,
-//             continent: ["Europe", "America", "Asia", "Africa", "Australia", "Antarctica"], // ENUM type
-//             photo: Buffer, // BLOB/BINARY
-//             data: Object // JSON encoded
-//         }, {
-//             methods: {
-//                 fullName: function () {
-//                     return this.name + ' ' + this.surname;
-//                 }
-//             },
-//             validations: {
-//                 age: orm.enforce.ranges.number(18, undefined, "under-age")
-//             }
+//         models.Task = db.define("Task", {
+//             taskId: String,
+//             parentTaskId: String,
+//             step: String,
+//             event: String,
+//             progress: String,
+//             states: String,
+//             missionCritical: String,
+//             weight: String,
+//             percent: String,
+//             responsiblePerson: String,
+//             timeLimit: String,
+//             plannedStartTime: String,
+//             plannedEndTime: String,
+//             actualStartTime: String,
+//             actualEndTime: String,
+//             deliverable: String,
+//             problemDetail: String
+//         });
+//         db.sync(function (err) {
+//             if (err) throw err;
+//
 //         });
 //         next();
 //     }
@@ -53,7 +57,7 @@ app.use('/', index);
 app.use('/users', users);
 
 
-app.post('/file-upload', function(req, res, next) {
+app.post('/file-upload', function (req, res, next) {
     console.log(req.body);
     console.log(req.files);
 });
