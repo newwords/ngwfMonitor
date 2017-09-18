@@ -43,7 +43,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
             return "";
         });
         Handlebars.registerHelper('overviewProblemSum', function (val) {
-            if (_.has(val, "problem")) {
+            if (_.has(val, "problem") && val.problem.detail.length > 0) {
                 return '<span class="problem-a"><a>' + val.problem.detail.length + '</a></span>';
             }
             return "";
@@ -66,7 +66,6 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
                 "click span.span_control": "spanControl"
             },
             spanControl: function (e) {
-                debugger;
                 var _this = this;
                 var target = e.target || e.currentTarget;
                 var $el = $(target).closest('.span_control');

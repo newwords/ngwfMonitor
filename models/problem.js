@@ -20,30 +20,25 @@ module.exports = function (sequelize, DataTypes) {
          现场监控责任人
          备注
          */
-
-        index:DataTypes.STRING,
-// groupType:DataTypes.ENUM
-    //组别(项目管理/需求分析设计/版本开发/数据割接/系统集成/系统测试)
-
-        province: DataTypes.STRING,
-        taskId: DataTypes.STRING,
-        parentTaskId: DataTypes.STRING,
-        step: DataTypes.STRING(2048),
-        event: DataTypes.STRING(2048),
-        // progress: DataTypes.ENUM("未开始", "进行中", "完成"),
-        progress: DataTypes.FLOAT,
-        missionCritical: DataTypes.STRING(2048),
-        weight: DataTypes.FLOAT,
-        percent: DataTypes.STRING,
-        responsiblePerson: DataTypes.STRING,
-        // responsiblePerson: DataTypes.ARRAY(DataTypes.STRING),
-        timeLimit: DataTypes.STRING,
-        plannedStartTime: DataTypes.DATE,
-        plannedEndTime: DataTypes.DATE,
-        actualStartTime: DataTypes.DATE,
-        actualEndTime: DataTypes.DATE,
-        deliverable: DataTypes.STRING(2048),
-        problemDetail: DataTypes.STRING(4096)
+        index: DataTypes.STRING,//序号
+        groupType: DataTypes.ENUM('项目管理', '需求分析设计',
+            '版本开发', '数据割接', '系统集成', '系统测试'), //组别(项目管理/需求分析设计/版本开发/数据割接/系统集成/系统测试)
+        province: DataTypes.STRING,//省份编码
+        taskId: DataTypes.STRING,//关联任务编号
+        problemDate: DataTypes.DATE,//产生日期
+        expectedResolutionDate: DataTypes.DATE,//期望解决日期
+        theLatestSettlementDate: DataTypes.DATE,//最晚解决日期
+        innerOuter: DataTypes.ENUM('内部', '外部'),//内部/外部
+        subjectType: DataTypes.ENUM('问题', '风险', '求助'),//类别(问题/风险/求助)
+        priority: DataTypes.ENUM('H', 'M', 'L'),//优先级(H/M/L)
+        describe: DataTypes.STRING(4096), //问题/风险/求助描述
+        solution: DataTypes.STRING(4096),//解决方案
+        progressAndResults: DataTypes.STRING(4096),//进展及结果
+        state: DataTypes.ENUM('close', 'open', 'pending'),
+        questioner: DataTypes.STRING,
+        responsible: DataTypes.STRING,
+        monitor: DataTypes.STRING,
+        remark: DataTypes.STRING(4096)
     });
     return Problem;
 };

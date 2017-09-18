@@ -13,11 +13,15 @@ const duty = require("../model/duty");
 
 const Form = multiparty.Form;
 const TaskModel = Backbone.Model.extend({});
+const ProblemModel = Backbone.Model.extend({});
 
 const TaskCollection = Backbone.Collection.extend({
     model: TaskModel
 });
 
+const ProblemCollection = Backbone.Collection.extend({
+    model: ProblemModel
+});
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -36,20 +40,9 @@ router.get('/', function (req, res, next) {
 router.get('/ajax', function (req, res, next) {
     // models.Task.findAll
     var province = req.query["province"];
-    var StartTime;
-    var EndTime;
-
-    // models.Task.findAll({
-    //     attributes: ["province", 'progress', 'weight', 'taskId', 'parentTaskId']
-    // }).then(function (result) {
-    //
-    //
-    //
-    // });
-
-
     var timeTaskResult;
     var infoTaskResult;
+    var infoProblemResult;
 
     models.Task.findAll({
         attributes: ["province",
@@ -61,13 +54,19 @@ router.get('/ajax', function (req, res, next) {
         timeTaskResult = result;
     }).then(function () {
         return models.Task.findAll({
-
             attributes: ["province", 'progress', 'weight', 'step', 'event', 'taskId', 'parentTaskId',
                 'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson"]
         })
     }).then(function (result) {
         infoTaskResult = result;
+    }).then(function () {
+        return models.Problem.findAll({
+            attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible"]
+        })
+    }).then(function (result) {
+        infoProblemResult = result;
         var taskCollection = new TaskCollection();
+        var problemCollection = new ProblemCollection();
 
         function getWeight(Collection, province, taskId) {
             var result = 0;
@@ -95,6 +94,24 @@ router.get('/ajax', function (req, res, next) {
         //     projectInfo[key].name = data.citys[key].name;
         //     projectInfo[key].value = +data.citys[key].rate;
         // }
+        infoProblemResult.forEach(function (Problem) {
+            var province = Problem.province;
+            var taskId = Problem.taskId;
+            var problemDate = Problem.problemDate;
+            var expectedResolutionDate = Problem.expectedResolutionDate;
+            var describe = Problem.describe;
+            var questioner = Problem.questioner;
+            var responsible = Problem.responsible;
+            problemCollection.push({
+                province: province,
+                taskId: taskId,
+                problemDate: problemDate ? moment(problemDate).format("YYYY-MM-DD") : "",
+                expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") :"",
+                describe: describe,
+                questioner: questioner,
+                responsible: responsible
+            });
+        });
 
         infoTaskResult.forEach(function (Task) {
             var province = Task.province;
@@ -139,6 +156,15 @@ router.get('/ajax', function (req, res, next) {
             _.each(tempPhases, function (taskModel) {
 
                 var json = taskModel.toJSON();
+                var taskId = json["taskId"];
+                var tempProblem = problemCollection.where({province: cityCode, taskId: taskId});
+                json["problem"] = {
+                    "detail": []
+                };
+                _.each(tempProblem, function (Problem) {
+                    json["problem"]["detail"].push(Problem.toJSON());
+                });
+
                 json.progress = json.progress * 100;
                 if (json.progress === 0) {
                     json.name = "准备阶段";
@@ -230,10 +256,21 @@ router.post('/upload', function (req, res, next) {
             return;
         }
         var workbook = xlsx.parse(filepath);
-        models.Task.destroy({'where': {'province': '0030016'}});//将表内userId等于23的元组删除
+        models.Task.destroy({'where': {'province': province}});
+        models.Problem.destroy({'where': {'province': province}});
+
         workbook.forEach(function (sheet, index) {
             var name = sheet.name;
             var rows = sheet.data;
+
+            function handleDate(excelDate) {
+                if (_.isNumber(excelDate)) {
+                    return new Date(1990, 0, excelDate);
+                } else {
+                    return undefined;
+                }
+            }
+
             if (index === 0) {
 
                 //计划日报（主计划每日更新）
@@ -255,13 +292,6 @@ router.post('/upload', function (req, res, next) {
                         var responsiblePerson = row[9];//负责人
                         var timeLimit = row[10];//工期 通过计算得到
 
-                        function handleDate(excelDate) {
-                            if (_.isNumber(excelDate)) {
-                                return new Date(1990, 0, excelDate);
-                            } else {
-                                return undefined;
-                            }
-                        }
 
                         var plannedStartTime = handleDate(row[11]);
                         var plannedEndTime = handleDate(row[12]);
@@ -308,12 +338,49 @@ router.post('/upload', function (req, res, next) {
                 });
             } else if (index === 1) {
                 //问题日报（风险问题每日更新）
+                rows.forEach(function (row, index) {
+                    if (index >= 3) {//从第三行开始
+                        var index = row[0];//序号
+                        var groupType = row[1];//组别(项目管理/需求分析设计/版本开发/数据割接/系统集成/系统测试)
+                        var taskId = row[2];//关联任务编号
+                        var problemDate = handleDate(row[3]);
+                        var expectedResolutionDate = handleDate(row[4]);
+                        var theLatestSettlementDate = handleDate(row[5]);
+                        var innerOuter = row[6];
+                        var subjectType = row[7];
+                        var priority = row[8];
+                        var describe = row[9];
+                        var solution = row[10];
+                        var progressAndResults = row[11];
+                        var state = row[12];
+                        var questioner = row[13];
+                        var responsible = row[14];
+                        var monitor = row[15];
+                        var remark = row[16];
 
-
+                        models.Problem.create({
+                            province: province,
+                            index: index,
+                            groupType: groupType,
+                            taskId: taskId,
+                            problemDate: problemDate,
+                            expectedResolutionDate: expectedResolutionDate,
+                            theLatestSettlementDate: theLatestSettlementDate,
+                            innerOuter: innerOuter,
+                            subjectType: subjectType,
+                            priority: priority,
+                            describe: describe,
+                            solution: solution,
+                            progressAndResults: progressAndResults,
+                            state: state,
+                            questioner: questioner,
+                            responsible: responsible,
+                            monitor: monitor,
+                            remark: remark
+                        });
+                    }
+                });
             }
-            // console.log(index);
-            // console.log(name);
-            // console.log(data)
         });
     });
 });
