@@ -33,7 +33,7 @@
                 <span class="span_detail span_control">详情<i class="iconfont temp-iconmi"></i></span> {{#with
                     phases}}
                 <span class="span_warn span_control">告警
-                        <span class="warn-a"><a href="javascript:void 0">0</a></span>
+                        <span class="warn-a"><a href="javascript:void 0">{{warnSum this}}</a></span>
             <i class="iconfont temp-iconmi"></i>
             </span>
                 <span class="span_problem span_control">问题
@@ -42,7 +42,7 @@
             </span> {{/with}}
             </div>
         </div>
-        <div class="detail">
+        <div class="detail" style="display: none;">
             <h3>实施详情</h3>
             <ul class="title">
                 <li class="phase">实施阶段</li>
@@ -53,8 +53,8 @@
             </ul>
             {{#each phases}}
                 <ul>
-                    <li class="phase"><span class="problem-a"><a href="javascript:void 0">0</a></span><span
-                            class="warn-a"><a href="javascript:void 0">0</a></span>{{name}}</li>
+                    <li class="phase"><span class="problem-a"><a href="javascript:void 0">{{overviewWarnSum this}}</a></span><span
+                            class="warn-a"><a href="javascript:void 0">0</a></span>{{step}}</li>
                     <li class="progress">
                         <progress value="{{progress}}" max="100"></progress> {{progress}}%
                     </li>
@@ -64,21 +64,23 @@
                 </ul>
             {{/each}}
         </div>
-        <!--<div class="warn">-->
-        <!--<ul class="title">-->
-        <!--<li class="phase">实施阶段</li>-->
-        <!--<li class="message">告警信息</li>-->
-        <!--</ul>-->
-            <!--{{#each phases}}-->
-        <!--<ul>-->
-        <!--<li class="phase">{{name}}</li>-->
-            <!--{{#each warn.detail}}-->
-            <!--<li class="message">{{warnText message}}</li>-->
-                <!--{{/each}}-->
-        <!--</ul>-->
-            <!--{{/each}}-->
-        <!--</div>-->
-        <!--<div class="problem">-->
+        <div class="warn" style="display: none;">
+            <ul class="title">
+                <li class="phase">实施阶段</li>
+                <li class="message">告警信息</li>
+            </ul>
+            {{#each phases}}
+                {{#if warn}}
+                    <ul>
+                        <li class="phase">{{step}}</li>
+                        {{#each warn.detail}}
+                            <li class="message">{{warnText message}}</li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+            {{/each}}
+        </div>
+        <!--<div class="problem" style="display: none;">-->
         <!--<ul class="title">-->
         <!--<li class="phase">实施阶段</li>-->
         <!--<li class="person">提出人</li>-->

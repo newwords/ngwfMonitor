@@ -59,7 +59,9 @@ router.get('/ajax', function (req, res, next) {
         timeTaskResult = result;
     }).then(function () {
         return models.Task.findAll({
-            attributes: ["province", 'progress', 'weight', 'taskId', 'parentTaskId', 'plannedStartTime', 'plannedEndTime', "responsiblePerson"]
+
+            attributes: ["province", 'progress', 'weight', 'step', 'event', 'taskId', 'parentTaskId',
+                'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson"]
         })
     }).then(function (result) {
         infoTaskResult = result;
@@ -96,11 +98,18 @@ router.get('/ajax', function (req, res, next) {
             var province = Task.province;
             var progress = Task.progress;
             var weight = Task.weight;
+
             var taskId = Task.taskId;
             var parentTaskId = Task.parentTaskId || "";
             var plannedStartTime = Task.plannedStartTime;
             var plannedEndTime = Task.plannedEndTime;
+
+            var actualStartTime = Task.actualStartTime;
+            var actualEndTime = Task.actualEndTime;
+
             var responsiblePerson = Task.responsiblePerson || "";
+            var step = Task.step || "";
+            var event = Task.event || "";
 
             taskCollection.push({
                 province: province,
@@ -110,7 +119,13 @@ router.get('/ajax', function (req, res, next) {
                 parentTaskId: parentTaskId,
                 plannedStartTime: plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : "",
                 plannedEndTime: plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : "",
+
+                actualStartTime: actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : "",
+                actualEndTime: actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : "",
+
                 responsiblePerson: responsiblePerson,
+                step: step,
+                event: event
             });
         });
 
@@ -130,7 +145,18 @@ router.get('/ajax', function (req, res, next) {
                 } else {
                     json.name = "进行中";
                 }
-
+                if (json.plannedEndTime) {
+                    if (!json.actualEndTime && moment().isBefore(json.plannedEndTime)) {
+                        // "warn": {
+                        //     "detail": [{"message": "配合改造工作延迟"}]
+                        // },
+                        json["warn"] = {
+                            "detail": [
+                                {"message": json["event"] || ""}
+                            ]
+                        }
+                    }
+                }
                 phases.push(json);
             });
 

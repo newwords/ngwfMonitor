@@ -23,15 +23,21 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
             }
             return sum
         });
-        Handlebars.registerHelper('warnSum', function (val) {
+        Handlebars.registerHelper('warnSum', function (items) {
             var sum = 0;
-            for (var key in val) {
-                sum += val[key].warn.detail.length;
+            for (var key in items) {
+                var item = items[key];
+                if (_.has(item, "warn")) {
+                    sum += item.warn.detail.length;
+                }
             }
             return sum
         });
         Handlebars.registerHelper('overviewWarnSum', function (val) {
-            return val.warn.detail.length
+            if (_.has(val, "warn")) {
+                return val.warn.detail.length
+            }
+            return 0;
         });
         Handlebars.registerHelper('overviewProblemSum', function (val) {
             return val.problem.detail.length;
@@ -50,11 +56,34 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
         var MapView = Backbone.View.extend({
             template: Handlebars.compile(mainTpl),
             events: {
-                "click .control span": "control"
+                "click .control span": "control",
+                "click span.span_control": "spanControl"
+            },
+            spanControl: function (e) {
+                debugger;
+                var _this = this;
+                var target = e.target || e.currentTarget;
+                var $el = $(target).closest('.span_control');
+                var city = $el.closest(".city");
+                if ($el.hasClass("span_detail")) {
+                    city.find(".detail").toggle();
+                    city.find(".warn").hide();
+                    city.find(".problem").hide();
+                } else if ($el.hasClass("span_warn")) {
+                    city.find(".warn").toggle();
+                    city.find(".detail").hide();
+                    city.find(".problem").hide();
+                } else if ($el.hasClass("span_problem")) {
+                    city.find(".problem").toggle();
+                    city.find(".warn").hide();
+                    city.find(".detail").hide();
+                }
+                // var $el = $el.closest('span.span_control');
             },
             control: function (e) {
                 var _this = this;
-                var $el = $(e.currentTarget);
+                var target = e.target || e.currentTarget;
+                var $el = $(target);
                 $el.siblings().removeClass('active');
                 $el.addClass('active');
                 if ($el.attr('class') !== 'map active') {
