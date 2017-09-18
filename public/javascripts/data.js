@@ -1012,6 +1012,8 @@ define(["jquery"], function ($) {
                 }
             });
 
+        }, getProblemData: function (province, callback) {
+
         }
     }
 });
