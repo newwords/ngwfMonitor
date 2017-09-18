@@ -144,7 +144,8 @@ progress::-webkit-progress-value {
   height: 80px;
   line-height: 80px;
 }
-.citys{
+
+.citys {
   margin-bottom: 100px;
 }
 
@@ -153,10 +154,6 @@ progress::-webkit-progress-value {
   background: #afcbdf;
   border: 1px solid #bdf;
   box-sizing: border-box;
-}
-
-.delay {
-  background: #e5be92;
 }
 
 .overview {
@@ -173,19 +170,21 @@ progress::-webkit-progress-value {
 .left .describe {
   line-height: 32px;
 }
+
 .left .describe li {
-      padding: 2px 40px 2px 0;
-    background: none;
-}
-.left .describe li:nth-child(1) {
-      font-weight: 700;
-      font-size: 16px;
-      padding: 2px 10px 2px 0;
-}
-.left .describe li:nth-child(2) {
-      color: #fff;
+  padding: 2px 40px 2px 0;
+  background: none;
 }
 
+.left .describe li:nth-child(1) {
+  font-weight: 700;
+  font-size: 16px;
+  padding: 2px 10px 2px 0;
+}
+
+.left .describe li:nth-child(2) {
+  color: #fff;
+}
 
 .detail,
 .warn,
@@ -209,8 +208,8 @@ progress::-webkit-progress-value {
 .detail ul,
 .warn ul,
 .problem ul {
-    background-color: #d2deec;
-    border-bottom: 1px solid #90aec8;
+  background-color: #d2deec;
+  border-bottom: 1px solid #90aec8;
 }
 
 .detail .title,
@@ -258,12 +257,13 @@ progress::-webkit-progress-value {
   color: #fff;
   font-size: 12px;
 }
-.problem-a>a{
+
+.problem-a>a {
   background-color: #ff9700;
 }
+
 .warn-a>a {
   background-color: #ff3601;
-  
 }
 
 .city .detail .phase {
@@ -323,23 +323,23 @@ tbody tr td {
   background: #c1d4e7;
 }
 
-.dui-span{
+.dui-span {
   display: inline-block;
-    width: 16px;
-    height: 16px;
-    background: green;
-    line-height: 16px;
-    text-align: center;
-    border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
 }
-.temp-duigou{
-  font-size: 9px;
-}
-.right {
 
+.icon-duigou {
+  font-size: 12px;
+}
+
+.right {
   line-height: 56px;
-      position: absolute;
-    right: 20px;
+  position: absolute;
+  right: 20px;
 }
 
 .right span {
@@ -349,14 +349,16 @@ tbody tr td {
   cursor: pointer;
   color: #569bd2;
 }
-.temp-iconmi{
+
+.icon-down_arrow {
   color: #000;
   font-weight: 700;
-      margin-left: 5px;
-    position: relative;
-    top: 2px;
-    font-size: 14px
+  margin-left: 5px;
+  position: relative;
+  top: 2px;
+  font-size: 14px
 }
+
 .map-warn {
   float: left;
   /* max-width: 40%; */
@@ -420,7 +422,7 @@ li.progress progress {
   width: 80%;
 }
 
-.temp-duihao {
+.icon-duigou {
   color: #55b54a;
 }
 
@@ -433,7 +435,7 @@ i.nobegin {
 }
 
 .delay {
-  background-color: #e5bd92;
+  color: #e5bd92;
 }
 
 li i.delay {
@@ -449,5 +451,5 @@ li.delay {
 }
 
 .no-begin {
-  background-color: #aaa;
+  color: #aaa;
 }

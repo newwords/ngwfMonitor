@@ -18,8 +18,11 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
          */
         Handlebars.registerHelper('problemSum', function (val) {
             var sum = 0;
-            for (var key in val) {
-                sum += val[key].problem.detail.length;
+            for (var key in items) {
+                var item = items[key]
+                if (_.has(item, 'problem')) {
+                    sum += item.problem.detail.length;
+                }
             }
             return sum
         });
@@ -69,7 +72,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
                 var $el = $(target).closest('.span_control');
                 var city = $el.closest(".city");
                 if ($el.hasClass("span_detail")) {
-                    city.find(".detail").first().toggle();
+                    city.find(".detail").toggle();
                     city.find(".warn").hide();
                     city.find(".problem").hide();
                 } else if ($el.hasClass("span_warn")) {
