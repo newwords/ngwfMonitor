@@ -35,12 +35,15 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
         });
         Handlebars.registerHelper('overviewWarnSum', function (val) {
             if (_.has(val, "warn")) {
-                return val.warn.detail.length
+                return '<span class="warn-a"><a>' + val.warn.detail.length + '</a></span>';
             }
-            return 0;
+            return "";
         });
         Handlebars.registerHelper('overviewProblemSum', function (val) {
-            return val.problem.detail.length;
+            if (_.has(val, "problem")) {
+                return '<span class="problem-a"><a>' + val.problem.detail.length + '</a></span>';
+            }
+            return "";
         });
 
         Handlebars.registerHelper('stateIcon', function (val, option) {
@@ -66,7 +69,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
                 var $el = $(target).closest('.span_control');
                 var city = $el.closest(".city");
                 if ($el.hasClass("span_detail")) {
-                    city.find(".detail").toggle();
+                    city.find(".detail").first().toggle();
                     city.find(".warn").hide();
                     city.find(".problem").hide();
                 } else if ($el.hasClass("span_warn")) {
@@ -116,7 +119,26 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
                         trigger: 'item',
                         formatter: function (val) {
                             if (_.has(val.data, "value")) {
-                                return "项目进度: <br/>" + val.data.name + ": " + val.data.value + "%"
+                                var detailInfo = "";
+                                if (_.has(val.data, "phases")) {
+                                    var problemSum = 0;
+                                    var warnSum = 0;
+                                    _.each(val.data.phases, function (phase) {
+                                        if (_.has(phase, "problem")) {
+                                            problemSum += phase.problem.detail.length;
+                                        }
+                                        if (_.has(phase, "warn")) {
+                                            warnSum += phase.warn.detail.length;
+                                        }
+                                    });
+                                    // for (var key in val.data.phases) {
+                                    //     debugger;
+                                    //     problemSum += val.data.phases[key].problem.detail.length;
+                                    //     warnSum += val.data.phases[key].warn.detail.length;
+                                    // }
+                                    detailInfo = "<br/>告警:" + warnSum + "<br/>问题:" + problemSum;
+                                }
+                                return "项目进度: <br/>" + val.data.name + ": " + val.data.value + "%" + detailInfo;
                             }
                             return "";
                         }

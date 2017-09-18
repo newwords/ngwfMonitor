@@ -9,6 +9,8 @@ var sequelize = require("sequelize");
 var moment = require("moment");
 var Backbone = require("backbone");
 const provinces = require("../model/province");
+const duty = require("../model/duty");
+
 const Form = multiparty.Form;
 const TaskModel = Backbone.Model.extend({});
 
@@ -172,7 +174,10 @@ router.get('/ajax', function (req, res, next) {
                 name: cityName,
                 value: weight,
                 rate: weight,
-                phases: phases
+                duty: duty[cityCode] || "",//写死的后面改成
+                phases: phases,
+                bgnTime: "计划尚未导入",
+                endTime: "计划尚未导入"
             });
             total += weight;
             timeTaskResult.forEach(function (Task) {

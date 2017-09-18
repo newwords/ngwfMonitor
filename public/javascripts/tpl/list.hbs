@@ -9,97 +9,100 @@
 </div>
 <div class="citys">
     {{#each citys}}
-    <div class="city">
-        <div class="overview">
-            <div class="left">
-                <ul class="describe">
-                    <li>{{name}}</li>
-                    <li>
-                        {{#stateIcon rate}}
-                            <span class="dui-span">  <i class="iconfont temp-duigou"></i></span> {{else}}
-                            <span class="dui-span no-begin"> <i
-                                    class="iconfont temp-duigou no-begin"></i></span> {{/stateIcon}}
-                        <span class="state">{{state}}</span>
-                    </li>
-                    <li>计划时间: {{bgnTime}} - {{endTime}}</li>
-                    <li>{{duty}}</li>
-                </ul>
-                <div class="city-progress">
-                    <progress value="{{rate}}" max="100"></progress>
-                    <span>{{rate}}%</span>
+        <div class="city">
+            <div class="overview">
+                <div class="left">
+                    <ul class="describe">
+                        <li>{{name}}</li>
+                        <li>
+                            {{#stateIcon rate}}
+                                <span class="dui-span">  <i class="iconfont temp-duigou"></i></span> {{else}}
+                                <span class="dui-span no-begin"> <i
+                                        class="iconfont temp-duigou no-begin"></i></span> {{/stateIcon}}
+                            <span class="state">{{state}}</span>
+                        </li>
+                        <li>计划时间: {{bgnTime}} - {{endTime}}</li>
+                        <li>{{duty}}</li>
+                    </ul>
+                    <div class="city-progress">
+                        <progress value="{{rate}}" max="100"></progress>
+                        <span>{{rate}}%</span>
+                    </div>
+                </div>
+                <div class="right">
+                    <span class="span_detail span_control">详情<i class="iconfont temp-iconmi"></i></span>
+                    {{#with phases}}
+                        <span class="span_warn span_control">告警
+                        <span class="warn-a"><a href="javascript:void 0">{{warnSum this}}</a></span>
+                        <i class="iconfont temp-iconmi"></i>
+                    </span>
+                        <span class="span_problem span_control">问题
+                        <span class="problem-a"><a href="javascript:void 0">0</a></span>
+                    <i class="iconfont temp-iconmi"></i>
+                    </span>
+                    {{/with}}
                 </div>
             </div>
-            <div class="right">
-                <span class="span_detail span_control">详情<i class="iconfont temp-iconmi"></i></span> {{#with
-                    phases}}
-                <span class="span_warn span_control">告警
-                        <span class="warn-a"><a href="javascript:void 0">{{warnSum this}}</a></span>
-            <i class="iconfont temp-iconmi"></i>
-            </span>
-                <span class="span_problem span_control">问题
-                        <span class="problem-a"><a href="javascript:void 0">0</a></span>
-            <i class="iconfont temp-iconmi"></i>
-            </span> {{/with}}
-            </div>
-        </div>
-        <div class="detail" style="display: none;">
-            <h3>实施详情</h3>
-            <ul class="title">
-                <li class="phase">实施阶段</li>
-                <li class="progress">进度</li>
-                <li class="person">责任人</li>
-                <li class="time">计划开始时间</li>
-                <li class="time">计划结束时间</li>
-            </ul>
-            {{#each phases}}
-                <ul>
-                    <li class="phase"><span class="problem-a"><a href="javascript:void 0">{{overviewWarnSum this}}</a></span><span
-                            class="warn-a"><a href="javascript:void 0">0</a></span>{{step}}</li>
-                    <li class="progress">
-                        <progress value="{{progress}}" max="100"></progress> {{progress}}%
-                    </li>
-                    <li class="person">{{responsiblePerson}}</li>
-                    <li class="time">{{plannedStartTime}}</li>
-                    <li class="time">{{plannedEndTime}}</li>
+            <div class="detail" style="display: none;">
+                <h3>实施详情</h3>
+                <ul class="title">
+                    <li class="phase">实施阶段</li>
+                    <li class="progress">进度</li>
+                    <li class="person">责任人</li>
+                    <li class="time">计划开始时间</li>
+                    <li class="time">计划结束时间</li>
                 </ul>
-            {{/each}}
-        </div>
-        <div class="warn" style="display: none;">
-            <ul class="title">
-                <li class="phase">实施阶段</li>
-                <li class="message">告警信息</li>
-            </ul>
-            {{#each phases}}
-                {{#if warn}}
+                {{#each phases}}
                     <ul>
-                        <li class="phase">{{step}}</li>
-                        {{#each warn.detail}}
-                            <li class="message">{{warnText message}}</li>
-                        {{/each}}
+                        <li class="phase">
+                            {{{overviewWarnSum this}}}
+                            {{{overviewProblemSum this}}}
+                            {{step}}</li>
+                        <li class="progress">
+                            <progress value="{{progress}}" max="100"></progress> {{progress}}%
+                        </li>
+                        <li class="person">{{responsiblePerson}}</li>
+                        <li class="time">{{plannedStartTime}}</li>
+                        <li class="time">{{plannedEndTime}}</li>
                     </ul>
-                {{/if}}
-            {{/each}}
+                {{/each}}
+            </div>
+            <div class="warn" style="display: none;">
+                <ul class="title">
+                    <li class="phase">实施阶段</li>
+                    <li class="message">告警信息</li>
+                </ul>
+                {{#each phases}}
+                    {{#if warn}}
+                        <ul>
+                            <li class="phase">{{step}}</li>
+                            {{#each warn.detail}}
+                                <li class="message">{{warnText message}}</li>
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                {{/each}}
+            </div>
+            <!--<div class="problem" style="display: none;">-->
+            <!--<ul class="title">-->
+            <!--<li class="phase">实施阶段</li>-->
+            <!--<li class="person">提出人</li>-->
+            <!--<li class="time">创建时间</li>-->
+            <!--<li class="time">期望解决时间</li>-->
+            <!--<li class="person">期望解决人</li>-->
+            <!--<li class="describe">问题描述</li>-->
+            <!--</ul>-->
+                <!--{{#each phases}} {{#each problem.detail}}-->
+            <!--<ul>-->
+            <!--<li class="phase">{{../name}}</li>-->
+            <!--<li class="person">{{person}}</li>-->
+            <!--<li class="time">{{madeTime}}</li>-->
+            <!--<li class="time">{{expectTime}}</li>-->
+            <!--<li class="person">{{solver}}</li>-->
+            <!--<li class="describe">{{problemText describe}}</li>-->
+            <!--</ul>-->
+                <!--{{/each}}{{/each}}-->
+            <!--</div>-->
         </div>
-        <!--<div class="problem" style="display: none;">-->
-        <!--<ul class="title">-->
-        <!--<li class="phase">实施阶段</li>-->
-        <!--<li class="person">提出人</li>-->
-        <!--<li class="time">创建时间</li>-->
-        <!--<li class="time">期望解决时间</li>-->
-        <!--<li class="person">期望解决人</li>-->
-        <!--<li class="describe">问题描述</li>-->
-        <!--</ul>-->
-            <!--{{#each phases}} {{#each problem.detail}}-->
-        <!--<ul>-->
-        <!--<li class="phase">{{../name}}</li>-->
-        <!--<li class="person">{{person}}</li>-->
-        <!--<li class="time">{{madeTime}}</li>-->
-        <!--<li class="time">{{expectTime}}</li>-->
-        <!--<li class="person">{{solver}}</li>-->
-        <!--<li class="describe">{{problemText describe}}</li>-->
-        <!--</ul>-->
-            <!--{{/each}}{{/each}}-->
-        <!--</div>-->
-        <!--</div>-->
     {{/each}}
 </div>
