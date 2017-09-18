@@ -16,7 +16,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
         /**
          * 告警和错误的数量
          */
-        Handlebars.registerHelper('problemSum', function (val) {
+        Handlebars.registerHelper('problemSum', function (items) {
             var sum = 0;
             for (var key in items) {
                 var item = items[key]
