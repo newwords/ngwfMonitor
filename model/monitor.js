@@ -1,4 +1,4 @@
-"usestrict";
+"use strict";
 module.exports = {
     '00030001': '督导:姬延方',
     '00030002': '督导:张亚伟',

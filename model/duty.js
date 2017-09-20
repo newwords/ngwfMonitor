@@ -1,4 +1,4 @@
-"usestrict";
+"use strict";
 
 module.exports = {
     '00030001': '分公司负责人:齐睿',
