@@ -406,6 +406,7 @@ span.active {
 .map-warn li,
 .map-problem li {
   padding: 8px 4px;
+  height: 20px;
 }
 
 .map-warn ul,
@@ -423,8 +424,12 @@ li.phase {
   text-align: center;
 }
 
-li.message {
-  min-width: 200px;
+li.message,
+li.describe {
+  width: 200px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 li.person {
@@ -440,10 +445,6 @@ li.time {
 li.solver {
   min-width: 100px;
   text-align: center;
-}
-
-li.describe {
-  min-width: 200px;
 }
 
 li.progress {

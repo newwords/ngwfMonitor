@@ -1,0 +1,38 @@
+<div class="map-warn">
+  <h3>告警信息</h3>
+  <ul class="title">
+    <li class="province">省份</li>
+    <li class="phase">实施阶段</li>
+    <li class="message">告警信息</li>
+  </ul>
+{{#each phases}} {{#each warn.detail}}
+  <ul>
+    <li class="province">{{../../name}}</li>
+    <li class="phase">{{../name}}</li>
+    <li class="message" title="{{message}}">{{message}}</li>
+  </ul>
+  {{/each}}{{/each}}
+</div>
+<div class="map-problem">
+  <h3>问题信息</h3>
+  <ul class="title">
+    <li class="province">省份</li>
+    <li class="phase">实施阶段</li>
+    <li class="person">提出人</li>
+    <li class="time">创建时间</li>
+    <li class="time">期望解决时间</li>
+    <li class="solver">期望解决人</li>
+    <li class="describe">问题描述</li>
+  </ul>
+  {{#each phases}}{{#each problem.detail}}
+  <ul>
+    <li class="province">{{../../name}}</li>
+    <li class="phase">{{../name}}</li>
+    <li class="person">{{person}}</li>
+    <li class="time">{{madeTime}}</li>
+    <li class="time">{{expectTime}}</li>
+    <li class="solver">{{solver}}</li>
+    <li class="describe" title="{{describe}}">{{describe}}</li>
+  </ul>
+  {{/each}}{{/each}}
+</div>

@@ -1,0 +1,23 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  background: #999;
+}
+
+.login {
+  width: 400px;
+  padding: 10px;
+  margin: 12% auto 0 auto;
+  border: 1px solid #aaa;
+  box-shadow: 0 0 10px #eee;
+  background: #eee;
+}
+
+.login .layui-input {
+  width: 240px;
+}
+
+.login h1 {
+  margin: 15px;
+}
