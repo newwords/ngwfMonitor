@@ -1,5 +1,7 @@
 var models = require('../models');
 var express = require('express');
+var session = require('express-session');
+const users = require('../model/users');
 var _ = require("underscore");
 var xlsx = require("node-xlsx");
 var util = require('util');
@@ -8,6 +10,21 @@ var multiparty = require('multiparty');
 var sequelize = require("sequelize");
 var moment = require("moment");
 var Backbone = require("backbone");
+var ccap = require('ccap');//Instantiated ccap class
+const captcha = ccap({
+    width: 90,//set width,default is 256
+    height: 40,//set height,default is 60
+    offset: 21,//set text spacing,default is 40
+    quality: 100,//set pic quality,default is 50
+    fontsize: 36,//set font size,default is 57
+
+    generate: function () {//Custom the function to generate captcha text
+        var rdmString = "";
+        for (; rdmString.length < 4; rdmString += Math.random().toString(24).substr(2)) ;
+        return rdmString.substr(0, 4);
+    }
+});
+
 const provinces = require("../model/province");
 const dutyModel = require("../model/duty");
 const monitorModel = require("../model/monitor");
@@ -37,8 +54,20 @@ router.get('/', function (req, res, next) {
 });
 
 
+router.get("/base64", function (req, res, next) {
+    var captchaData = captcha.get();
+    req.session.base64 = captchaData[0];
+    res.send(captchaData[1].toString("base64"));
+});
+
+
 /* AJAX handle*/
 router.get('/ajax', function (req, res, next) {
+    if (!req.session.user) {                     //到达/home路径首先判断是否已经登录
+        req.session.error = "请先登录";
+        res.redirect("/ngwf/login.html");                //未登录则重定向到 /login 路径
+        return;
+    }
     // models.Task.findAll
     var province = req.query["province"];
     var timeTaskResult;
@@ -107,7 +136,7 @@ router.get('/ajax', function (req, res, next) {
                 province: province,
                 taskId: taskId,
                 problemDate: problemDate ? moment(problemDate).format("YYYY-MM-DD") : "",
-                expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") :"",
+                expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") : "",
                 describe: describe,
                 questioner: questioner,
                 responsible: responsible
@@ -233,6 +262,11 @@ router.get('/ajax', function (req, res, next) {
 
 /* UPLOAD handle*/
 router.post('/upload', function (req, res, next) {
+    if (!req.session.user) {                     //到达/home路径首先判断是否已经登录
+        req.session.error = "请先登录";
+        res.redirect("/login");                //未登录则重定向到 /login 路径
+        return;
+    }
     var multiparty = new Form();
     multiparty.on('field', function (name, value) {
         if (name === 'province') {
@@ -387,5 +421,30 @@ router.post('/upload', function (req, res, next) {
     });
 });
 
+const findUser = function (name, password) {
+    return users.find(function (item) {
+        return item.name === name && item.password === password;
+    });
+};
+
+router.get('/login', function (req, res, next) {
+    var session = req.session;
+    if (req.query.validate !== req.session.base64) {
+        res.json({code: 1, message: '验证码错误'});
+        return;
+    }
+    var user = findUser(req.query.name, req.query.password);
+    if (user) {
+        session.regenerate(function (err) {
+            if (err) {
+                return res.json({code: 2, message: '登录失败'});
+            }
+            req.session.loginUser = user.name;
+            res.json({code: 0, message: '登录成功'});
+        });
+    } else {
+        res.json({code: 1, message: '账号或密码错误'});
+    }
+});
 
 module.exports = router;
