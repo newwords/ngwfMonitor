@@ -9,20 +9,20 @@ var multiparty = require('multiparty');
 var sequelize = require("sequelize");
 var moment = require("moment");
 var Backbone = require("backbone");
-var ccap = require('ccap');//Instantiated ccap class
-const captcha = ccap({
-    width: 90,//set width,default is 256
-    height: 40,//set height,default is 60
-    offset: 21,//set text spacing,default is 40
-    quality: 100,//set pic quality,default is 50
-    fontsize: 36,//set font size,default is 57
-
-    generate: function () {//Custom the function to generate captcha text
-        var rdmString = "";
-        for (; rdmString.length < 4; rdmString += Math.random().toString(24).substr(2)) ;
-        return rdmString.substr(0, 4);
-    }
-});
+// var ccap = require('ccap');//Instantiated ccap class
+// const captcha = ccap({
+//     width: 90,//set width,default is 256
+//     height: 40,//set height,default is 60
+//     offset: 21,//set text spacing,default is 40
+//     quality: 100,//set pic quality,default is 50
+//     fontsize: 36,//set font size,default is 57
+//
+//     generate: function () {//Custom the function to generate captcha text
+//         var rdmString = "";
+//         for (; rdmString.length < 4; rdmString += Math.random().toString(24).substr(2)) ;
+//         return rdmString.substr(0, 4);
+//     }
+// });
 
 const provinces = require("../model/province");
 const dutyModel = require("../model/duty");
@@ -54,9 +54,9 @@ router.get('/', function (req, res, next) {
 
 
 router.get("/base64", function (req, res, next) {
-    var captchaData = captcha.get();
-    req.session.base64 = captchaData[0];
-    res.send(captchaData[1].toString("base64"));
+    // var captchaData = captcha.get();
+    // req.session.base64 = captchaData[0];
+    // res.send(captchaData[1].toString("base64"));
 });
 
 
@@ -428,15 +428,15 @@ const findUser = function (name, password) {
 
 router.post('/login', function (req, res, next) {
     var session = req.session;
-    if (req.session.base64 === undefined) {
-        res.json({code: 3, message: '验证码错误'});
-        return;
-    }
-    if (req.body.validate !== req.session.base64) {
-        req.session.base64 = undefined;
-        res.json({code: 3, message: '验证码错误'});
-        return;
-    }
+    // if (req.session.base64 === undefined) {
+    //     res.json({code: 3, message: '验证码错误'});
+    //     return;
+    // }
+    // if (req.body.validate !== req.session.base64) {
+    //     req.session.base64 = undefined;
+    //     res.json({code: 3, message: '验证码错误'});
+    //     return;
+    // }
     var user = findUser(req.body.username, req.body.password);
     if (user) {
         session.regenerate(function (err) {
