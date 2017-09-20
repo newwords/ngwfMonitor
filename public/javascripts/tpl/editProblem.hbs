@@ -1,0 +1,169 @@
+<div class="layui-container">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>上报问题</legend>
+        <div class="layui-field-box">
+            <form class="form layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">组别</label>
+                        <div class="layui-input-inline">
+                            <select name="groupType">
+                                <option value="">请选择</option>
+                                <option value="项目管理">项目管理</option>
+                                <option value="需求分析设计">需求分析设计</option>
+                                <option value="版本开发">版本开发</option>
+                                <option value="数据割接">数据割接</option>
+                                <option value="系统集成">系统集成</option>
+                                <option value="系统测试">系统测试</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">关联任务编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="taskId" placeholder="请输入关联任务编号"
+                                   autocomplete="off"
+                                   class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><span style="color:red">*</span>产生日期</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="problemDate" name="problemDate" required
+                                   lay-verify="required"
+                                   placeholder="yyyy-MM-dd">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">期望解决日期</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="expectedResolutionDate"
+                                   name="expectedResolutionDate"
+                                   placeholder="yyyy-MM-dd">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">最晚解决日期</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="theLatestSettlementDate"
+                                   name="theLatestSettlementDate"
+                                   placeholder="yyyy-MM-dd">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">内部/外部</label>
+                        <div class="layui-input-inline">
+                            <select name="innerOuter">
+                                <option value="">请选择</option>
+                                <option value="内部">内部</option>
+                                <option value="外部">外部</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">类别</label>
+                        <div class="layui-input-inline">
+                            <select name="subjectType">
+                                <option value="">请选择</option>
+                                <option value="问题">问题</option>
+                                <option value="风险">风险</option>
+                                <option value="求助">求助</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">优先级</label>
+                        <div class="layui-input-inline">
+                            <select name="priority">
+                                <option value="">请选择</option>
+                                <option value="H">H</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color:red">*</span>问题/风险/求助描述</label>
+                    <div class="layui-input-block">
+                        <textarea name="describe" placeholder="请输入内容" required lay-verify="required"
+                                  class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">解决方案</label>
+                    <div class="layui-input-block">
+                        <textarea name="solution" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">进展及结果</label>
+                    <div class="layui-input-block">
+                            <textarea name="progressAndResults" placeholder="请输入内容"
+                                      class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-inline">
+                            <select name="state">
+                                <option value="">请选择</option>
+                                <option value="close">close</option>
+                                <option value="open">open</option>
+                                <option value="pending">pending</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color:red">*</span>问题提出人</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="questioner" placeholder="问题提出人" class="layui-input"/>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+
+                    <label class="layui-form-label">处理责任人</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="responsible" placeholder="处理责任人" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">现场监控责任人</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="monitor" placeholder="现场监控责任人" class="layui-input"/>
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                            <textarea name="remark" placeholder="请输入内容"
+                                      class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-primary" lay-submit>提交</button>
+                        <button type="reset" class="layui-btn layui-btn-normal">取消</button>
+                    </div>
+                </div>
+            </form>
+    </fieldset>
+</div>
+

@@ -84,13 +84,13 @@ router.get('/ajax', function (req, res, next) {
     }).then(function () {
         return models.Task.findAll({
             attributes: ["province", 'progress', 'weight', 'step', 'event', 'taskId', 'parentTaskId',
-                'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson"]
+                'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson", "updatedAt"]
         })
     }).then(function (result) {
         infoTaskResult = result;
     }).then(function () {
         return models.Problem.findAll({
-            attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible"]
+            attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible", "updatedAt"]
         })
     }).then(function (result) {
         infoProblemResult = result;
@@ -131,6 +131,9 @@ router.get('/ajax', function (req, res, next) {
             var describe = Problem.describe;
             var questioner = Problem.questioner;
             var responsible = Problem.responsible;
+            var updatedAt = Problem.updatedAt;
+            var sameDay = moment().format("YYYY-MM-DD") === moment(updatedAt).format("YYYY-MM-DD");
+            console.log(sameDay);
             problemCollection.push({
                 province: province,
                 taskId: taskId,
@@ -138,7 +141,8 @@ router.get('/ajax', function (req, res, next) {
                 expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") : "",
                 describe: describe,
                 questioner: questioner,
-                responsible: responsible
+                responsible: responsible,
+                sameDay: sameDay
             });
         });
 
@@ -191,6 +195,7 @@ router.get('/ajax', function (req, res, next) {
                     "detail": []
                 };
                 _.each(tempProblem, function (Problem) {
+                    Problem.set({step: json.step || ""});
                     json["problem"]["detail"].push(Problem.toJSON());
                 });
 
@@ -224,14 +229,21 @@ router.get('/ajax', function (req, res, next) {
                 weight = getWeight(temp, cityCode, "");
                 weight = weight > 0 ? 100 * weight : 0;
             }
+
+            var problems = [];
+            var provinceProblem = problemCollection.where({province: cityCode});
+            _.each(provinceProblem, function (Problem) {
+                problems.push(Problem.toJSON());
+            });
             projectInfo.push({
                 province: cityCode,
                 name: cityName,
-                value: weight,
-                rate: weight,
+                value: weight.toFixed(1),
+                rate: weight.toFixed(1),
                 duty: dutyModel[cityCode] || "",//写死的后面改成
                 monitor: monitorModel[cityCode] || "",//写死的后面改成
                 phases: phases,
+                problems: problems,
                 bgnTime: "计划尚未导入",
                 endTime: "计划尚未导入"
             });
@@ -287,9 +299,12 @@ router.post('/upload', function (req, res, next) {
             province = fields.province[0];
         }
         if (_.isEmpty(province)) {
-            res.send("OK");
+            res.send({code: 1, message: '省份编码为空'});
             return;
         }
+
+        res.send({code: 0, message: '已经完成导入'});//并不完美
+
         var workbook = xlsx.parse(filepath);
         models.Task.destroy({'where': {'province': province}});
         models.Problem.destroy({'where': {'province': province}});
@@ -311,6 +326,9 @@ router.post('/upload', function (req, res, next) {
                 //计划日报（主计划每日更新）
                 rows.forEach(function (row, index) {
                     if (index >= 2) {//从第二行开始
+                        if (_.isEmpty(row)) {
+                            return;
+                        }
                         var taskId = row[0] + "";//任务编号
                         var parentTaskId = undefined;
                         if (!_.isEmpty(taskId)) {
@@ -375,6 +393,9 @@ router.post('/upload', function (req, res, next) {
                 //问题日报（风险问题每日更新）
                 rows.forEach(function (row, index) {
                     if (index >= 3) {//从第三行开始
+                        if (_.isEmpty(row)) {
+                            return;
+                        }
                         var index = row[0];//序号
                         var groupType = row[1];//组别(项目管理/需求分析设计/版本开发/数据割接/系统集成/系统测试)
                         var taskId = row[2];//关联任务编号
@@ -426,10 +447,242 @@ const findUser = function (name, password) {
     });
 };
 
-router.get('/problemInfo', function (req, res, next) {
-    console.log("problemInfo");
+const findUserProvince = function (name) {
+    return users.find(function (item) {
+        return item.name === name;
+    });
+};
+
+// router.get('/taskInfo', function (req, res, next) {
+//     var session = req.session;
+//     if (_.isString(session.user)) {
+//         var user = findUserProvince(session.user);
+//         if (user) {
+//             var province = user.province;
+//             models.Task.findAll({
+//                 attributes: ["province", 'progress', 'weight', 'step', 'event', 'taskId', 'parentTaskId',
+//                     'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson", "updatedAt"]
+//             }).then(function (result) {
+//                 console.log(result);
+//             });
+//             // console.log(province);
+//         }
+//     }
+// });
+
+router.get('/taskInfo', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var user = findUserProvince(session.user);
+        if (user) {
+            var province = user.province;
+            var infoTaskResult;
+            var taskCollection = new TaskCollection();
+            models.Task.findAll({
+                attributes: [
+                    "id",
+                    "step",
+                    "progress",
+                    "responsiblePerson",
+                    "plannedStartTime",
+                    "plannedEndTime",
+                    "province"
+                ],
+                where: {
+                    province: province
+                }
+            }).then(function (result) {
+                result.forEach(function (Task) {
+                    var id = Task.id;
+                    var step = Task.step;
+                    var progress = Task.progress;
+                    var responsiblePerson = Task.responsiblePerson;
+                    var plannedStartTime = Task.plannedStartTime;
+                    var plannedEndTime = Task.plannedEndTime;
+                    var province = Task.province;
+                    taskCollection.push({
+                        id: id,
+                        step: step,
+                        progress: progress,
+                        progressPercent: (progress * 100 + "%"),
+                        responsiblePerson: responsiblePerson,
+                        plannedStartTime: plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : "",
+                        plannedEndTime: plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : "",
+                        province: province
+                    })
+                });
+                res.send({
+                    code: 0,
+                    msg: "",
+                    count: taskCollection.length,
+                    data: taskCollection.toJSON()
+                });
+            });
+        }
+    }
 });
 
+router.post('/submitTask', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var user = findUserProvince(session.user);
+        if (user) {
+            var province = user.province;
+            var id = req.body.id;
+            var value = req.body.value;
+            var field = req.body.field;
+            var param = {};
+            param[field] = value;
+            models.Task.update(
+                param, {
+                    'where': {'id': id}
+                }
+            );
+        }
+    }
+});
+
+router.get('/problemInfo', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var user = findUserProvince(session.user);
+        if (user) {
+            var province = user.province;
+            var infoProblemResult;
+            var problemCollection = new ProblemCollection();
+            models.Problem.findAll({
+                attributes: [
+                    "id",
+                    "province",
+                    "index",
+                    "groupType",
+                    "taskId",
+                    "problemDate",
+                    "expectedResolutionDate",
+                    "theLatestSettlementDate",
+                    "innerOuter",
+                    "subjectType",
+                    "priority",
+                    "describe",
+                    "solution",
+                    "progressAndResults",
+                    "state",
+                    "questioner",
+                    "responsible",
+                    "monitor",
+                    "remark"],
+                where: {
+                    province: province
+                }
+            }).then(function (result) {
+                infoProblemResult = result;
+                console.log(result);
+                infoProblemResult.forEach(function (Problem) {
+                    var id = Problem.id;
+                    var index = Problem.index;
+                    var groupType = Problem.groupType;
+                    var taskId = Problem.taskId;
+                    var problemDate = Problem.problemDate;
+                    var expectedResolutionDate = Problem.expectedResolutionDate;
+                    var theLatestSettlementDate = Problem.theLatestSettlementDate;
+                    var innerOuter = Problem.innerOuter;
+                    var subjectType = Problem.subjectType;
+                    var priority = Problem.priority;
+                    var describe = Problem.describe;
+                    var solution = Problem.solution;
+                    var progressAndResults = Problem.progressAndResults;
+                    var state = Problem.state;
+                    var questioner = Problem.questioner;
+                    var responsible = Problem.responsible;
+                    var monitor = Problem.monitor;
+                    var remark = Problem.remark;
+                    problemCollection.push({
+                        id: id,
+                        province: province,
+                        index: index,
+                        groupType: groupType,
+                        taskId: taskId,
+                        problemDate: problemDate ? moment(problemDate).format("YYYY-MM-DD") : "",
+                        expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") : "",
+                        theLatestSettlementDate: theLatestSettlementDate ? moment(theLatestSettlementDate).format("YYYY-MM-DD") : "",
+                        innerOuter: innerOuter,
+                        subjectType: subjectType,
+                        priority: priority,
+                        describe: describe,
+                        solution: solution,
+                        progressAndResults: progressAndResults,
+                        state: state,
+                        questioner: questioner,
+                        responsible: responsible,
+                        monitor: monitor,
+                        remark: remark
+                    });
+                });
+
+                res.send({
+                    code: 0,
+                    msg: "",
+                    count: problemCollection.length,
+                    data: problemCollection.toJSON()
+                });
+
+            });
+            // console.log(province);
+        }
+
+    }
+});
+
+
+router.post('/submitProblem', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var user = findUserProvince(session.user);
+        if (user) {
+            var province = user.province;
+            var index = req.body.index;
+            var groupType = req.body.groupType;
+            var taskId = req.body.taskId;
+            var problemDate = req.body.problemDate;
+            var expectedResolutionDate = req.body.expectedResolutionDate;
+            var theLatestSettlementDate = req.body.theLatestSettlementDate;
+            var innerOuter = req.body.innerOuter;
+            var subjectType = req.body.subjectType;
+            var priority = req.body.priority;
+            var describe = req.body.describe;
+            var solution = req.body.solution;
+            var progressAndResults = req.body.progressAndResults;
+            var state = req.body.state;
+            var questioner = req.body.questioner;
+            var responsible = req.body.responsible;
+            var monitor = req.body.monitor;
+            var remark = req.body.remark;
+            models.Problem.create({
+                province: province,
+                index: index,
+                groupType: groupType,
+                taskId: taskId,
+                problemDate: problemDate ? problemDate : "",
+                expectedResolutionDate: expectedResolutionDate ? expectedResolutionDate : "",
+                theLatestSettlementDate: theLatestSettlementDate ? theLatestSettlementDate : "",
+                innerOuter: innerOuter,
+                subjectType: subjectType,
+                priority: priority,
+                describe: describe,
+                solution: solution,
+                progressAndResults: progressAndResults,
+                state: state,
+                questioner: questioner,
+                responsible: responsible,
+                monitor: monitor,
+                remark: remark
+            }).then(function () {
+                res.send({code: 0, message: ''});
+            });
+        }
+    }
+
+});
 router.post('/login', function (req, res, next) {
     var session = req.session;
     // if (req.session.base64 === undefined) {

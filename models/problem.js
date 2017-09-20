@@ -34,11 +34,11 @@ module.exports = function (sequelize, DataTypes) {
         describe: DataTypes.STRING(4096), //问题/风险/求助描述
         solution: DataTypes.STRING(4096),//解决方案
         progressAndResults: DataTypes.STRING(4096),//进展及结果
-        state: DataTypes.ENUM('close', 'open', 'pending'),
-        questioner: DataTypes.STRING,
-        responsible: DataTypes.STRING,
-        monitor: DataTypes.STRING,
-        remark: DataTypes.STRING(4096)
+        state: DataTypes.ENUM('close', 'open', 'pending'),//状态
+        questioner: DataTypes.STRING,//问题提出人
+        responsible: DataTypes.STRING,//处理责任人
+        monitor: DataTypes.STRING,//现场监控责任人
+        remark: DataTypes.STRING(4096)//备注
     });
     return Problem;
 };

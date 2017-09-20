@@ -17,14 +17,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
      * 告警和错误的数量
      */
     Handlebars.registerHelper('problemSum', function (items) {
-      var sum = 0;
-      for (var key in items) {
-        var item = items[key]
-        if (_.has(item, 'problem')) {
-          sum += item.problem.detail.length;
-        }
-      }
-      return sum
+      return items.length||0;
     });
     Handlebars.registerHelper('warnSum', function (items) {
       var sum = 0;
@@ -81,17 +74,17 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
         var city = $el.closest(".city");
         if ($el.hasClass("span_detail")) {
           city.find(".detail").toggle();
-          switchIcon($el)
+          switchIcon($el);
           city.find(".warn").hide();
           city.find(".problem").hide();
         } else if ($el.hasClass("span_warn")) {
           city.find(".warn").toggle();
-          switchIcon($el)
+          switchIcon($el);
           city.find(".detail").hide();
           city.find(".problem").hide();
         } else if ($el.hasClass("span_problem")) {
           city.find(".problem").toggle();
-          switchIcon($el)
+          switchIcon($el);
           city.find(".warn").hide();
           city.find(".detail").hide();
         }
@@ -152,13 +145,14 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
                   var problemSum = 0;
                   var warnSum = 0;
                   _.each(val.data.phases, function (phase) {
-                    if (_.has(phase, "problem")) {
-                      problemSum += phase.problem.detail.length;
-                    }
+                    // if (_.has(phase, "problem")) {
+                    //   problemSum += phase.problem.detail.length;
+                    // }
                     if (_.has(phase, "warn")) {
                       warnSum += phase.warn.detail.length;
                     }
                   });
+                 problemSum=val.data.problems.length;
                   // for (var key in val.data.phases) {
                   //     debugger;
                   //     problemSum += val.data.phases[key].problem.detail.length;

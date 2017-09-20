@@ -37,7 +37,7 @@
             <i class="iconfont icon-down_arrow"></i>
             </span>
                     <span class="span_problem span_control">问题
-                        <span class="problem-a"><a href="javascript:void 0">{{problemSum this.phases}}</a></span>
+                        <span class="problem-a"><a href="javascript:void 0">{{problemSum this.problems}}</a></span>
             <i class="iconfont icon-down_arrow"></i>
             </span>
                 </div>
@@ -64,7 +64,9 @@
                         <li class="person">{{{responsiblePerson}}}</li>
                         <li class="time">{{plannedStartTime}}</li>
                         <li class="time">{{plannedEndTime}}</li>
-                        <li class="isUpdate">{{#update update}} <span class="update active" title="{{updateTime}}"></span> {{else}} <span class="update"></span> {{/update}}</li>
+                        <li class="isUpdate">{{#update update}}
+                            <span class="update active" title="{{updateTime}}"></span> {{else}}
+                            <span class="update"></span> {{/update}}</li>
                     </ul>
                 {{/each}}
             </div>
@@ -93,16 +95,16 @@
                     <li class="person">期望解决人</li>
                     <li class="describe">问题描述</li>
                 </ul>
-                {{#each phases}} {{#each problem.detail}}
+                {{#each problems}}
                     <ul>
-                        <li class="phase">&nbsp;{{../name}}&nbsp;</li>
+                        <li class="phase">&nbsp;{{step}}&nbsp;</li>
                         <li class="person">&nbsp;{{questioner}}&nbsp;</li>
                         <li class="time">&nbsp;{{problemDate}}&nbsp;</li>
                         <li class="time">&nbsp;{{expectedResolutionDate}}&nbsp;</li>
                         <li class="person">&nbsp;{{questioner}}&nbsp;</li>
                         <li class="describe">&nbsp;{{problemText describe}}&nbsp;</li>
                     </ul>
-                {{/each}}{{/each}}
+                {{/each}}
             </div>
         </div>
     {{/each}}
