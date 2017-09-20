@@ -27,9 +27,9 @@
                     </ul>
                     <div class="city-progress">
                         <progress value="{{rate}}" max="100"></progress>
-                        <span>{{rate}}%</span>
                     </div>
                 </div>
+                <p class="medium">{{rate}}%</p>
                 <div class="right">
                     <span class="span_detail span_control">详情<i class="iconfont icon-down_arrow"></i></span>
                     <span class="span_warn span_control">告警
@@ -50,6 +50,7 @@
                     <li class="person">责任人</li>
                     <li class="time">计划开始时间</li>
                     <li class="time">计划结束时间</li>
+                    <li class="isUpdate">当天更新</li>
                 </ul>
                 {{#each phases}}
                     <ul>
@@ -60,9 +61,10 @@
                         <li class="progress">
                             <progress value="{{progress}}" max="100"></progress> {{progress}}%
                         </li>
-                        <li class="person">{{responsiblePerson}}</li>
+                        <li class="person">{{{responsiblePerson}}}</li>
                         <li class="time">{{plannedStartTime}}</li>
                         <li class="time">{{plannedEndTime}}</li>
+                        <li class="isUpdate">{{#update update}} <span class="update active"></span> {{else}} <span class="update"></span> {{/update}}</li>
                     </ul>
                 {{/each}}
             </div>
@@ -74,7 +76,7 @@
                 {{#each phases}}
                     {{#if warn}}
                         <ul>
-                            <li class="phase">{{step}}</li>
+                            <li class="phase" title="{{step}}">{{step}}</li>
                             {{#each warn.detail}}
                                 <li class="message">{{warnText message}}</li>
                             {{/each}}
