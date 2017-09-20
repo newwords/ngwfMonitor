@@ -1,6 +1,5 @@
 var models = require('../models');
 var express = require('express');
-var session = require('express-session');
 const users = require('../model/users');
 var _ = require("underscore");
 var xlsx = require("node-xlsx");
@@ -427,19 +426,24 @@ const findUser = function (name, password) {
     });
 };
 
-router.get('/login', function (req, res, next) {
+router.post('/login', function (req, res, next) {
     var session = req.session;
-    if (req.query.validate !== req.session.base64) {
-        res.json({code: 1, message: '验证码错误'});
+    if (req.session.base64 === undefined) {
+        res.json({code: 3, message: '验证码错误'});
         return;
     }
-    var user = findUser(req.query.name, req.query.password);
+    if (req.body.validate !== req.session.base64) {
+        req.session.base64 = undefined;
+        res.json({code: 3, message: '验证码错误'});
+        return;
+    }
+    var user = findUser(req.body.username, req.body.password);
     if (user) {
         session.regenerate(function (err) {
             if (err) {
                 return res.json({code: 2, message: '登录失败'});
             }
-            req.session.loginUser = user.name;
+            req.session.user = user.name;
             res.json({code: 0, message: '登录成功'});
         });
     } else {

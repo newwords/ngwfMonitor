@@ -58,13 +58,12 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
         });
 
         Handlebars.registerHelper('update', function (val, option) {
-            console.log(val)
             if (val) {
                 return option.fn(this)
             } else {
                 return option.inverse(this)
             }
-        })
+        });
 
         var _content = this;
         var listTemplate = Handlebars.compile(listTpl);

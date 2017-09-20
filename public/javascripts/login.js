@@ -1,9 +1,27 @@
 require(['backbone', 'handlebars', 'text!tpl/login.hbs',
     'layui'], function (Backbone, Handlebars, tpl) {
     var _content = this;
-    var IndexView = Backbone.View.extend({
+    var LoginView = Backbone.View.extend({
         events: {
             "click #image": "clickImage"
+        },
+        login: function () {
+            //     $.ajax({
+            //         url: "/login",
+            //         params:
+            //         success
+            // :
+            //
+            //     function (rep) {
+            //
+            //     }
+            //
+            // ,
+            //     error: function (error) {
+            //         console.log(error);
+            //     }
+            // })
+            //     ;
         },
         clickImage: function () {
             $.ajax({
@@ -23,11 +41,41 @@ require(['backbone', 'handlebars', 'text!tpl/login.hbs',
             this.clickImage();
             layui.use(['form'], function () {
                 var form = layui.form;
+                form.on('submit', function (data) {
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        url: "/login",
+                        data: data.field,
+                        success: function (rep) {
+                            if (rep && rep.code !== undefined) {
+                                if (rep.code === 0) {
+                                    layer.alert("登陆成功!");
+                                    self.location = '/ngwf/index.html';
+                                } else if (rep.code === 3) {
+                                    _content.loginView.clickImage();
+                                    layer.alert(rep.message || "登录失败");
+                                }
+                                else {
+                                    layer.alert(rep.message || "登录失败");
+                                }
+                            } else {
+                                layer.alert("登录失败");
+
+                            }
+                        }
+                        ,
+                        error: function (error) {
+                            layer.alert(error);
+                        }
+                    });
+                    return false;
+                })
+                ;
                 form.render();
 
             });
         }
     });
-    _content.uploadView = new IndexView({el: "#root"});
-    // layui.layer.alert("123");
+    _content.loginView = new LoginView({el: "#root"});
 });

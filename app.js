@@ -12,11 +12,10 @@ var _string = require("underscore.string");
 // app.use(session({secret: 'keyboard cat', cookie: {maxAge: 60000}}))
 
 app.use(session({
-    name: 'ngwf',
+    resave: true, // don't save session if unmodified
     secret: 'zhangxin',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {secure: true, maxAge: 60000}
+    saveUninitialized: false
+    // cookie: {secure: true, maxAge: 60000}
 }));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
