@@ -75,7 +75,7 @@ li {
 }
 
 progress {
-  width: 90%;
+  width: 100%;
   height: 16px;
   background-color: #5e858c;
   border: 1px solid;
@@ -164,7 +164,16 @@ progress::-webkit-progress-value {
 
 .left {
   float: left;
-  width: 75%;
+  width: 66%;
+}
+
+p.medium {
+  float: left;
+  font-size: 20px;
+}
+
+.city-progress {
+  width: 96%;
 }
 
 .left .describe {
@@ -172,7 +181,7 @@ progress::-webkit-progress-value {
 }
 
 .left .describe li {
-  padding: 2px 40px 2px 0;
+  padding: 2px 20px 2px 0;
   background: none;
 }
 
@@ -267,7 +276,7 @@ progress::-webkit-progress-value {
 }
 
 .city .detail .phase {
-  width: 15%;
+  width: 18%;
 }
 
 .city .detail .progress {
@@ -275,19 +284,27 @@ progress::-webkit-progress-value {
 }
 
 .city .detail .person {
-  width: 15%;
+  width: 18%;
 }
 
 .city .detail .time {
-  width: 20%;
+  width: 12%;
+}
+
+.city .detail .isUpdate {
+  width: 10%;
 }
 
 .warn li.phase {
   width: 20%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .warn li.message {
-  width: 80%;
+  width: 76%;
+  padding-left: 4%;
 }
 
 .problem li.phase {
@@ -330,6 +347,22 @@ tbody tr td {
   line-height: 16px;
   text-align: center;
   border-radius: 50%;
+}
+
+.isUpdate {
+  text-align: center;
+}
+
+span.update {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #aaa;
+}
+
+span.active {
+  background: #55b54a;
 }
 
 .icon-duigou {
