@@ -426,6 +426,10 @@ const findUser = function (name, password) {
     });
 };
 
+router.get('/problemInfo', function (req, res, next) {
+    console.log("problemInfo");
+});
+
 router.post('/login', function (req, res, next) {
     var session = req.session;
     // if (req.session.base64 === undefined) {
