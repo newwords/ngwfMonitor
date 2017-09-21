@@ -1,20 +1,21 @@
+<blockquote class="layui-elem-quote">直接编辑文本即可修改问题状态<i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe607;</i></blockquote>
 <table class="layui-table" lay-data="{height:313, url:'/problemInfo'}">
     <thead>
     <tr>
-        <th lay-data="{field:'id', width:80,checkbox: true}">ID</th>
-        <th lay-data="{field:'groupType', width:90}">组别</th>
-        <th lay-data="{field:'taskId', width:120}">关联任务编号</th>
+        <th lay-data="{field:'questioner', width:100}">问题提出人</th>
+        <th lay-data="{field:'describe', width:135}">问题/风险/求助描述</th>
         <th lay-data="{field:'problemDate', width:120}">产生日期</th>
         <th lay-data="{field:'expectedResolutionDate', width:120}">期望解决日期</th>
+        {{!-- <th lay-data="{field:'id', width:80,checkbox: true}">ID</th> --}}
+        <th lay-data="{field:'groupType', width:90}">组别</th>
+        <th lay-data="{field:'taskId', width:80}">关联任务编号</th>
         <th lay-data="{field:'theLatestSettlementDate', width:120}">最晚解决日期</th>
-        <th lay-data="{field:'innerOuter', width:120}">内部/外部</th>
+        <th lay-data="{field:'innerOuter', width:80}">内部/外部</th>
         <th lay-data="{field:'subjectType', width:80}">类别</th>
-        <th lay-data="{field:'priority', width:80}">优先级</th>
-        <th lay-data="{field:'describe', width:135}">问题/风险/求助描述</th>
+        <th lay-data="{field:'priority', width:50}">优先级</th>
         <th lay-data="{field:'solution', width:135}">解决方案</th>
         <th lay-data="{field:'progressAndResults', width:120}">进展及结果</th>
-        <th lay-data="{field:'state', width:80}">状态</th>
-        <th lay-data="{field:'questioner', width:120}">问题提出人</th>
+        <th lay-data="{field:'state', width:80, edit:'text'}">状态</th>
         <th lay-data="{field:'responsible', width:120}">处理责任人</th>
         <th lay-data="{field:'remark', width:135}">备注</th>
     </tr>

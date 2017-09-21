@@ -295,6 +295,10 @@ p.medium {
   width: 10%;
 }
 
+.city li {
+  min-height: 18px;
+}
+
 .warn li.phase {
   width: 20%;
   text-overflow: ellipsis;
@@ -420,8 +424,10 @@ li.province {
 }
 
 li.phase {
-  min-width: 80px;
-  text-align: center;
+  width: 80px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 li.message,

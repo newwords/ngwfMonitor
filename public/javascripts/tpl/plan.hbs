@@ -1,12 +1,12 @@
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-mini" lay-event="detail">进度修改</a>
 </script>
-<blockquote class="layui-elem-quote">直接编辑文本即可修改计划</blockquote>
+<blockquote class="layui-elem-quote">直接编辑文本即可修改计划<i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe607;</i></blockquote>
 
-<table class="layui-table" lay-data="{height:313, url:'/taskInfo'}">
+<table class="layui-table" lay-data="{height:500, url:'/taskInfo'}">
     <thead>
     <tr>
-        <th lay-data="{field:'id', width:80}">ID</th>
+        {{!-- <th lay-data="{field:'id', width:80}">ID</th> --}}
         <th lay-data="{field:'step', width:600}">阶段</th>
         <th lay-data="{field:'progressPercent', width:100,edit:'text'}">进度</th>
         <th lay-data="{field:'responsiblePerson', width:260}">负责人</th>

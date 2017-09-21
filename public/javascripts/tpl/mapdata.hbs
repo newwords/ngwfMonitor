@@ -24,15 +24,15 @@
     <li class="solver">期望解决人</li>
     <li class="describe">问题描述</li>
   </ul>
-  {{#each phases}}{{#each problem.detail}}
+  {{#each problems}}
   <ul>
-    <li class="province">{{../../name}}</li>
-    <li class="phase">{{../name}}</li>
-    <li class="person">{{person}}</li>
-    <li class="time">{{madeTime}}</li>
-    <li class="time">{{expectTime}}</li>
-    <li class="solver">{{solver}}</li>
+    <li class="province">{{provinceTo province}}</li>
+    <li class="phase" title="{{step}}">{{step}}</li>
+    <li class="person">{{questioner}}</li>
+    <li class="time">{{problemDate}}</li>
+    <li class="time">{{expectedResolutionDate}}</li>
+    <li class="solver">{{responsible}}</li>
     <li class="describe" title="{{describe}}">{{describe}}</li>
   </ul>
-  {{/each}}{{/each}}
+  {{/each}}
 </div>

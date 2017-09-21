@@ -17,7 +17,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
      * 告警和错误的数量
      */
     Handlebars.registerHelper('problemSum', function (items) {
-      return items.length||0;
+      return items.length || 0;
     });
     Handlebars.registerHelper('warnSum', function (items) {
       var sum = 0;
@@ -41,6 +41,43 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
       }
       return "";
     });
+
+    Handlebars.registerHelper('provinceTo', function (val) {
+      var provinceList = {
+        '00030001': '北京',
+        '00030002': '天津',
+        '00030003': '内蒙古',
+        '00030004': '河北',
+        '00030005': '黑龙江',
+        '00030006': '辽宁',
+        '00030007': '吉林',
+        '00030008': '山东',
+        '00030009': '河南',
+        '00030010': '山西',
+        '00030011': '陕西',
+        '00030012': '甘肃',
+        '00030013': '宁夏',
+        '00030014': '新疆',
+        '00030015': '西藏',
+        '00030016': '云南',
+        '00030017': '四川',
+        '00030018': '重庆',
+        '00030019': '湖北',
+        '00030020': '湖南',
+        '00030021': '江苏',
+        '00030022': '江西',
+        '00030023': '浙江',
+        '00030024': '福建',
+        '00030025': '广东',
+        '00030026': '广西',
+        '00030027': '贵州',
+        '00030028': '上海',
+        '00030029': '海南',
+        '00030030': '安徽',
+        '00030031': '青海'
+      };
+      return provinceList[val]
+    })
 
     Handlebars.registerHelper('stateIcon', function (val, option) {
       if (val > 0) {
@@ -153,7 +190,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
                       warnSum += phase.warn.detail.length;
                     }
                   });
-                 problemSum=val.data.problems.length;
+                  problemSum = val.data.problems.length;
                   // for (var key in val.data.phases) {
                   //     debugger;
                   //     problemSum += val.data.phases[key].problem.detail.length;
@@ -206,12 +243,14 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
           ]
         });
         _this.chart.on('click', function (para) {
-          var data = _content.data["citys"]
-          var province = para.data.province;
-          for (var key in data) {
-            if (data[key]['province'] === province) {
-              console.log(data[key])
-              _this.$mapInfo.html(mapInfoTemplate(data[key]))
+          if (_content.data && _content.data['citys']) {
+            var data = _content.data["citys"]
+            var province = para.data.province;
+            for (var key in data) {
+              if (data[key]['province'] === province) {
+                console.log(data[key])
+                _this.$mapInfo.html(mapInfoTemplate(data[key]))
+              }
             }
           }
         })
