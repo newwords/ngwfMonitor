@@ -22,7 +22,8 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
             success: function (rep) {
               if (rep && rep.code !== undefined) {
                 if (rep.code === 0) {
-                  layui.layer.closeAll()
+                  var index = parent.layer.getFrameIndex(window.name);
+                  parent.layer.close(index)
                 } else if (rep.code === 3) {
                   layer.alert("修改计划失败!");
 

@@ -228,6 +228,10 @@ p.medium {
   border-bottom: none;
 }
 
+.detail .title li {
+  text-align: center;
+}
+
 .right span.problem-a,
 .right span.warn-a {
   position: relative;
@@ -262,12 +266,29 @@ p.medium {
   display: inline-block;
   width: 14px;
   height: 14px;
-  margin-right: 6px;
+  /* margin-right: 6px; */
 }
 
-.detail .phase span.warn-a {
-  margin-right: 12px;
+.indent-1 {
+  text-indent: 1rem;
 }
+
+.indent-2 {
+  text-indent: 2rem;
+}
+
+.indent-3 {
+  text-indent: 3rem;
+}
+
+.indent-4 {
+  text-indent: 4rem;
+}
+
+
+/* .detail .phase span.warn-a {
+  margin-right: 12px;
+} */
 
 .problem-a>a,
 .warn-a>a {
@@ -307,6 +328,9 @@ p.medium {
 .city .detail .person {
   width: 25%;
   font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .city .detail .time {
@@ -350,10 +374,6 @@ p.medium {
 
 .problem li.time {
   width: 15%;
-}
-
-.problem li.person {
-  width: 10%;
 }
 
 .problem li.describe {
@@ -445,7 +465,6 @@ span.active {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  text-align: center;
 }
 
 .map-warn ul,

@@ -29,18 +29,27 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
       }
       return sum
     });
-    Handlebars.registerHelper('overviewWarnSum', function (val) {
+
+    Handlebars.registerHelper('ident', function (val) {
+      var len = val.taskId.split('.').length - 1;
+      var warn, problem;
+      warn = `<span class="warn-a-none"><a></a></span>`;
+      problem = `<span class="problem-a-none"><a></a></span>`;
       if (_.has(val, "warn")) {
-        return `<span class="warn-a"><a>${val.warn.detail.length}</a></span>`;
+        warn = `<span class="warn-a"><a>${val.warn.detail.length}</a></span>`;
       }
-      return `<span class="warn-a-none"><a></a></span>`;
-    });
-    Handlebars.registerHelper('overviewProblemSum', function (val) {
       if (_.has(val, "problem")) {
-        return `<span class="problem-a"><a>${val.problem.detail.length}</a></span>`;
+        problem = `<span class="problem-a"><a>${val.problem.detail.length}</a></span>`;
       }
-      return `<span class="problem-a-none"><a></a></span>`;
-    });
+      if (!len) {
+        return `<li class="phase" title="${this.step}">
+          ${this.step}
+        </li>`
+      }
+      return `<li class="phase" title="${this.step}">
+          ${warn}${problem}<span style="text-indent: ${len}rem">${this.step}</span>
+        </li>`
+    })
 
     Handlebars.registerHelper('provinceTo', function (val) {
       var provinceList = {

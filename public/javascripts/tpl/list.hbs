@@ -54,17 +54,14 @@
                 </ul>
                 {{#each phases}}
                     <ul>
-                        <li class="phase" title="{{step}}">
-                           {{{overviewWarnSum this}}}
-                            {{{overviewProblemSum this}}}        
-                            {{step}}</li>
+                        {{{ident this}}}
                         <li class="progress">
                             <progress value="{{progress}}" max="100"></progress> {{progress}}%
                         </li>
                         <li class="person">{{{responsiblePerson}}}</li>
                         <li class="time">{{plannedStartTime}}</li>
                         <li class="time">{{plannedEndTime}}</li>
-                        <li class="isUpdate">{{#update update}}
+                        <li class="isUpdate">{{#update sameDay}}
                             <span class="update active" title="{{updateTime}}"></span> {{else}}
                             <span class="update"></span> {{/update}}</li>
                     </ul>

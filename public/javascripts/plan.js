@@ -7,7 +7,8 @@ require(['backbone', 'handlebars', 'text!tpl/plan.hbs',
     events: {
       "click #modify": "modify"
     },
-    modify: function () {
+    modify: function (data) {
+      console.log(data)
       layui.layer.open({
         type: 2,
         itle: '',
@@ -20,6 +21,9 @@ require(['backbone', 'handlebars', 'text!tpl/plan.hbs',
       _this.$el.html(this.template({}));
       layui.use(['table', 'element'], function () {
         var table = layui.table;
+        table.on('modify', function (data) {
+          console.log(data)
+        })
         table.on('edit', function (obj) {
           console.log(obj)
           console.log(obj.value); //得到修改后的值

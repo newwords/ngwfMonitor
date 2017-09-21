@@ -10,10 +10,55 @@
                     </div>
                 </div>
                 <div class="layui-form-item">
-
+                    <label class="layui-form-label">关联任务编号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="taskId" placeholder="请输入关联任务编号" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
                     <label class="layui-form-label">处理责任人</label>
                     <div class="layui-input-block">
                         <input type="text" name="responsible" placeholder="处理责任人" class="layui-input" />
+                    </div>
+                </div>
+               
+                
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">期望解决日期</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="expectedResolutionDate" name="expectedResolutionDate" placeholder="yyyy-MM-dd">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><span style="color:red">*</span>问题提出人</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="questioner" placeholder="问题提出人" class="layui-input" />
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><span style="color:red">*</span>产生日期</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="problemDate" name="problemDate" required
+                                   lay-verify="required"
+                                   placeholder="yyyy-MM-dd">
+                        </div>
+                    </div>      
+                </div>
+                
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><span style="color:red">*</span>状态</label>
+                        <div class="layui-input-inline">
+                            <select name="state" required lay-verify="required">
+                                <option value="open" selected>open</option>
+                                <option value="close" >close</option>
+                                <option value="pending">pending</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
@@ -31,54 +76,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">关联任务编号</label>
-                        <div class="layui-input-inline">
-                            <input type="text" name="taskId" placeholder="请输入关联任务编号"
-                                   autocomplete="off"
-                                   class="layui-input">
-                        </div>
-                    </div>
                 </div>
-                
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label"><span style="color:red">*</span>产生日期</label>
-                        <div class="layui-input-inline">
-                            <input type="text" class="layui-input" id="problemDate" name="problemDate" required
-                                   lay-verify="required"
-                                   placeholder="yyyy-MM-dd">
-                        </div>
-                    </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">期望解决日期</label>
-                        <div class="layui-input-inline">
-                            <input type="text" class="layui-input" id="expectedResolutionDate"
-                                   name="expectedResolutionDate"
-                                   placeholder="yyyy-MM-dd">
-                        </div>
-                    </div>
-
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label"><span style="color:red">*</span>问题提出人</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="questioner" placeholder="问题提出人" class="layui-input" />
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label"><span style="color:red">*</span>状态</label>
-                        <div class="layui-input-inline">
-                            <select name="state" required lay-verify="required">
-                                <option value="open" selected>open</option>
-                                <option value="close" >close</option>
-                                <option value="pending">pending</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">最晚解决日期</label>
