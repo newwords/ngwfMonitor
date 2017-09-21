@@ -529,15 +529,42 @@ router.post('/submitTask', function (req, res, next) {
         if (user) {
             var province = user.province;
             var id = req.body.id;
-            var value = req.body.value;
-            var field = req.body.field;
-            var param = {};
-            param[field] = value;
+            var progress = req.body.progress;
+            // var field = req.body.field;
+            var plannedStartTime = req.body.plannedStartTime;
+            var plannedEndTime = req.body.plannedEndTime;
+            var actualStartTime = req.body.actualStartTime;
+            var actualEndTime = req.body.actualEndTime;
+
+            plannedStartTime = plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : undefined;
+            plannedEndTime = plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : undefined;
+            actualStartTime = actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : undefined;
+            actualEndTime = actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : undefined;
+
+            //
+            // plannedStartTime: DataTypes.DATE,
+            //     plannedEndTime: DataTypes.DATE,
+            //     actualStartTime: DataTypes.DATE,
+            //     actualEndTime: DataTypes.DATE,
+            //
+
+            var param = {
+                progress: progress,
+                plannedStartTime: plannedStartTime,
+                plannedEndTime: plannedEndTime,
+                actualStartTime: actualStartTime,
+                actualEndTime: actualEndTime
+            };
+            // param[field] = value;
             models.Task.update(
                 param, {
                     'where': {'id': id}
                 }
-            );
+            ).then(function () {
+                res.send({
+                    code: 0, message: ""
+                });
+            });
         }
     }
 });
@@ -573,7 +600,10 @@ router.get('/problemInfo', function (req, res, next) {
                     "remark"],
                 where: {
                     province: province
-                }
+                },
+                order: [
+                    ['expectedResolutionDate', 'DESC']
+                ]
             }).then(function (result) {
                 infoProblemResult = result;
                 infoProblemResult.forEach(function (Problem) {
@@ -721,6 +751,48 @@ router.post('/submitProblem', function (req, res, next) {
     }
 
 });
+router.get('/problemAutocomplete', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var user = findUserProvince(session.user);
+        if (user) {
+            var queryStr = req.query.query;
+            var province = user.province;
+            models.Task.findAll({
+                attributes: ["taskId", "step"],
+                where: {
+                    province: province,
+                    $or: [
+                        {
+                            taskId: {
+                                $like: ('%' + queryStr + '%')
+                            }
+                        },
+                        {
+                            step: {
+                                $like: ('%' + queryStr + '%')
+                            }
+                        }
+                    ]
+
+                },
+                limit: 5,
+                offset: 0
+            }).then(function (result) {
+                var DataInfo = [];
+                result.forEach(function (Task) {
+                    var taskId = Task.taskId;
+                    var step = Task.step;
+                    DataInfo.push(Task.step)
+                });
+                res.send(result);
+                // console.log(result);
+            });
+        }
+    }
+});
+
+
 router.post('/login', function (req, res, next) {
     var session = req.session;
     // if (req.session.base64 === undefined) {
