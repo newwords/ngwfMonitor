@@ -6,6 +6,10 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
     el: "#root",
     initialize: function () {
       var _this = this;
+        if (parent) {
+            _this.params = parent.document.params;
+            console.log(_this.params);
+        }
       _this.$el.html(this.template({}));
       layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form;
@@ -26,24 +30,24 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
                 } else if (rep.code === 3) {
                   layer.alert("修改计划失败!");
 
-                }
-              } else {
-                layer.alert("修改计划失败!");
-              }
-            },
-            error: function (error) {
-              layer.alert(error);
-            }
-          });
-          return false;
-        });
-        form.render();
-        laydate.render({ elem: '#startTime' });
-        laydate.render({ elem: '#endTime' });
-      });
-    }
-  });
-  _content.editProblemListView = new modifyPlanListView({
-    el: "#root"
-  });
+                                }
+                            } else {
+                                layer.alert("修改计划失败!");
+                            }
+                        },
+                        error: function (error) {
+                            layer.alert(error);
+                        }
+                    });
+                    return false;
+                });
+                form.render();
+                laydate.render({elem: '#startTime'});
+                laydate.render({elem: '#endTime'});
+            });
+        }
+    });
+    _content.editProblemListView = new modifyPlanListView({
+        el: "#root"
+    });
 });

@@ -1,6 +1,7 @@
-<script type="text/html" id="edit">
-     <a id="modify" class="layui-btn layui-btn-danger layui-btn-mini">修改计划</a>
+<script type="text/html" id="barEdit">
+     <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="edit">修改计划</a>
 </script>
+
 <blockquote class="layui-elem-quote">直接编辑文本即可修改计划</blockquote>
 
 <table class="layui-table" lay-data="{height:800, url:'/taskInfo'}">
@@ -12,7 +13,8 @@
         <th lay-data="{field:'responsiblePerson', width:320}">负责人</th>
         <th lay-data="{field:'plannedStartTime', width:120,edit:'text'}">计划开始时间</th>
         <th lay-data="{field:'plannedEndTime', width:120,edit:'text'}">计划结束时间</th>
-        <th lay-data="{fixed: 'right', width:160, align:'center', templet: '#edit'}">操作</th>
+        <!--<th lay-data="{fixed: 'right', width:160, align:'center', templet: '#edit'}">操作</th>-->
+        <th lay-data="{fixed: 'right', width:160, align:'center', toolbar: '#barEdit'}">操作</th>
     </tr>
     </thead>
 </table>
