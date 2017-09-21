@@ -8,21 +8,20 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
       var _this = this;
       if (parent) {
         var data = parent.document.data;
-        var table = parent.document.table
-        console.log(table)
+        var table = parent.document.table;
       }
       var para = {
         id: data.data.id
-      }
+      };
       _this.$el.html(this.template({}));
       layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form;
         var layedit = layui.layedit;
         var laydate = layui.laydate;
         form.on('submit', function () {
-          var progress = $("#progress").val()
-          var startTime = $("#startTime").val()
-          var endTime = $("#endTime").val()
+          var progress = $("#progress").val();
+          var startTime = $("#startTime").val();
+          var endTime = $("#endTime").val();
           var plannedStartTime = $("#plannedStartTime").val();
           var plannedEndTime = $("#plannedEndTime").val();
           para.progress = progress;
@@ -30,18 +29,18 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
           para.plannedEndTime = plannedEndTime;
           para.actualStartTime = startTime;
           para.actualEndTime = endTime;
-          console.log(para)
           $.ajax({
             type: "POST",
             dataType: 'json',
             url: "/submitTask",
             data: para,
             success: function (rep) {
-              console.log(rep)
+              console.log(rep);
               if (rep && rep.code !== undefined) {
                 if (rep.code === 0) {
-                  var index = parent.layer.getFrameIndex(window.name);
-                  parent.layer.close(index)
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                    parent.location.reload();
                 } else if (rep.code === 3) {
                   layer.alert("修改计划失败!");
                 }

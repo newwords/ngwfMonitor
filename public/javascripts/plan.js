@@ -22,9 +22,9 @@ require(['backbone', 'handlebars', 'text!tpl/plan.hbs',
             area: ['500px', '400px'],
             content: "/ngwf/modifyPlan.html"
           })
-        })
+        });
         table.on('edit', function (obj) {
-          console.log('obj是' + obj)
+          console.log('obj是' + obj);
           console.log(obj.value); //得到修改后的值
           console.log(obj.field); //当前编辑的字段名
           console.log(obj.data); //所在行的所有相关数据

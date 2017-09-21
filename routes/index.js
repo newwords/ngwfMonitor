@@ -486,6 +486,8 @@ router.get('/taskInfo', function (req, res, next) {
                     "responsiblePerson",
                     "plannedStartTime",
                     "plannedEndTime",
+                    "actualStartTime",
+                    "actualEndTime",
                     "province"
                 ],
                 where: {
@@ -499,6 +501,8 @@ router.get('/taskInfo', function (req, res, next) {
                     var responsiblePerson = Task.responsiblePerson;
                     var plannedStartTime = Task.plannedStartTime;
                     var plannedEndTime = Task.plannedEndTime;
+                    var actualStartTime = Task.actualStartTime;
+                    var actualEndTime = Task.actualEndTime;
                     var province = Task.province;
                     taskCollection.push({
                         id: id,
@@ -508,6 +512,8 @@ router.get('/taskInfo', function (req, res, next) {
                         responsiblePerson: responsiblePerson,
                         plannedStartTime: plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : "",
                         plannedEndTime: plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : "",
+                        actualStartTime: actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : "",
+                        actualEndTime: actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : "",
                         province: province
                     })
                 });
@@ -782,10 +788,15 @@ router.get('/problemAutocomplete', function (req, res, next) {
                 var DataInfo = [];
                 result.forEach(function (Task) {
                     var taskId = Task.taskId;
-                    var step = Task.step;
-                    DataInfo.push(Task.step)
+                    var step = Task.taskId + "  " + Task.step;
+                    DataInfo.push({
+                        value: step,
+                        data: taskId
+                    })
                 });
-                res.send(result);
+                res.send({
+                    suggestions: DataInfo
+                });
                 // console.log(result);
             });
         }

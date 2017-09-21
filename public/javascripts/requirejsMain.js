@@ -7,6 +7,7 @@ var requireConfig = require = {
         }
     },
     paths: {
+        'autocomplete': "autocomplete/jquery.autocomplete",
         'require-css': 'requirejs/css.min',
         'text': 'requirejs/text',
         'jquery': 'jquery/jquery-3.2.1.min',
@@ -28,6 +29,7 @@ var requireConfig = require = {
     },
     waitSeconds: 0,
     shim: {
+        'autocomplete': {deps: ['jquery']},
         'china': {deps: ['echarts']},
         'backbone': {deps: ['jquery', 'underscore']},
         'jquery.fileupload': {deps: ['jquery', 'jquery.ui.widget']},

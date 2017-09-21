@@ -9,10 +9,19 @@
                         <textarea name="describe" placeholder="请输入内容" required lay-verify="required" class="layui-textarea"></textarea>
                     </div>
                 </div>
-                <div class="layui-form-item">
+                <!--<div class="layui-form-item">-->
+                    <!--<label class="layui-form-label">关联任务编号</label>-->
+                    <!--<div class="layui-input-inline">-->
+                        <!--<input type="text" name="taskId" placeholder="请输入关联任务编号" autocomplete="off" class="layui-input">-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="layui-inline">
                     <label class="layui-form-label">关联任务编号</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="taskId" placeholder="请输入关联任务编号" autocomplete="off" class="layui-input">
+                        <input type="text" id="taskIdSelect" name="taskIdSelect" placeholder="请输入关联任务编号"
+                               autocomplete="off"
+                               class="layui-input">
+                        <input type="text" id="taskId" name="taskId" style="display: none;">
                     </div>
                 </div>
                 <div class="layui-form-item">

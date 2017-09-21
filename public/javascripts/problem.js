@@ -26,7 +26,12 @@ require(['backbone', 'handlebars', 'text!tpl/problem.hbs',
         initialize: function () {
             var _this = this;
             _this.$el.html(this.template({}));
-            layui.use('table', function () {
+            // layui.use(['form', 'layedit', 'laydate'], function () {
+            //     var form = layui.table;
+            //
+            //     form.render();
+            // });
+            layui.use(['table'], function () {
                 var table = layui.table;
                 table.on('tool', function (obj) {
                     var data = obj.data;
