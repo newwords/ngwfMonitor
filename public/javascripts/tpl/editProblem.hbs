@@ -116,9 +116,9 @@
 
                 <div class="layui-form-item">
                     <div class="layui-inline">
-                        <label class="layui-form-label">状态</label>
+                        <label class="layui-form-label"><span style="color:red">*</span>状态</label>
                         <div class="layui-input-inline">
-                            <select name="state">
+                            <select name="state" required lay-verify="required">
                                 <option value="">请选择</option>
                                 <option value="close">close</option>
                                 <option value="open">open</option>
