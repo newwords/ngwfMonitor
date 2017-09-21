@@ -3,14 +3,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label">用户名</label>
         <div class="layui-input-inline">
-            <input type="text" name="username" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
+            <input id="user" type="text" name="username" lay-verify="required" placeholder="请输入用户名" autocomplete="off"
                    class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">密 码</label>
         <div class="layui-input-inline">
-            <input type="password" name="password" lay-verify="pass" placeholder="请输入密码" autocomplete="off"
+            <input id="pwd" type="password" name="password" lay-verify="pass" placeholder="请输入密码" autocomplete="off"
                    class="layui-input">
         </div>
     </div>
@@ -24,8 +24,9 @@
     </div> --}}
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn layui-btn-normal" lay-submit>提交</button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <button class="layui-btn layui-btn-normal" lay-submit>立即登录</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置密码</button>
+            <input type="checkbox" name="" title="记住我" lay-skin="primary" checked>
         </div>
     </div>
 </form>

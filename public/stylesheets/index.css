@@ -238,6 +238,23 @@ p.medium {
   margin: 0;
 }
 
+.detail .phase span.problem-a-none,
+.detail .phase span.warn-a-none {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 6px;
+  opacity: 1;
+}
+
+.detail .phase {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .detail .phase span.problem-a,
 .detail .phase span.warn-a {
   position: relative;
@@ -275,20 +292,25 @@ p.medium {
   background-color: #ff3601;
 }
 
+.city .detail li {
+  min-height: 20px;
+}
+
 .city .detail .phase {
-  width: 18%;
+  width: 25%;
 }
 
 .city .detail .progress {
-  width: 30%;
+  width: 20%;
 }
 
 .city .detail .person {
-  width: 18%;
+  width: 25%;
+  font-size: 12px;
 }
 
 .city .detail .time {
-  width: 12%;
+  width: 10%;
 }
 
 .city .detail .isUpdate {
@@ -403,7 +425,8 @@ span.active {
   font-size: 14px
 }
 
-.map-warn {
+
+/* .map-warn {
   float: left;
   max-width: 36%;
   margin-right: 4%;
@@ -412,7 +435,7 @@ span.active {
 .map-problem {
   float: left;
   max-width: 60%;
-}
+} */
 
 .map-warn li,
 .map-problem li {
@@ -435,15 +458,51 @@ span.active {
 }
 
 .map-warn li.phase {
+  width: 85%;
+}
+
+
+/* .map-warn li.province {
+  width: 15%;
+}
+
+.map-warn li.phase {
   width: 30%;
 }
 
 .map-warn li.message {
   width: 55%;
   text-align: left;
-}
+} */
 
 .map-problem li.province {
+  width: 5%;
+  min-width: 50px;
+}
+
+.map-problem li.phase {
+  width: 25%;
+}
+
+.map-problem li.person {
+  width: 5%;
+}
+
+.map-problem li.time {
+  width: 10%;
+}
+
+.map-problem li.solver {
+  width: 10%;
+}
+
+.map-problem li.describe {
+  width: 35%;
+  text-align: left;
+}
+
+
+/* .map-problem li.province {
   width: 10%;
 }
 
@@ -466,15 +525,11 @@ span.active {
 .map-problem li.describe {
   width: 25%;
   text-align: left;
-}
-
-li.progress {
-  min-width: 200px;
-  text-align: center;
-}
+} */
 
 li.progress progress {
-  width: 80%;
+  width: 75%;
+  text-align: left;
 }
 
 .icon-duigou {

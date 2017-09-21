@@ -3,13 +3,11 @@
   <ul class="title">
     <li class="province">省份</li>
     <li class="phase">实施阶段</li>
-    <li class="message">告警信息</li>
   </ul>
 {{#each phases}} {{#each warn.detail}}
   <ul>
     <li class="province">{{../../name}}</li>
-    <li class="phase">{{../name}}</li>
-    <li class="message" title="{{message}}">{{message}}</li>
+    <li class="phase">{{../step}} 延迟告警</li>
   </ul>
   {{/each}}{{/each}}
 </div>
@@ -24,15 +22,15 @@
     <li class="solver">期望解决人</li>
     <li class="describe">问题描述</li>
   </ul>
-  {{#each problems}}
-  <ul>
-    <li class="province">{{provinceTo province}}</li>
-    <li class="phase" title="{{step}}">{{step}}</li>
-    <li class="person">{{questioner}}</li>
-    <li class="time">{{problemDate}}</li>
-    <li class="time">{{expectedResolutionDate}}</li>
-    <li class="solver">{{responsible}}</li>
-    <li class="describe" title="{{describe}}">{{describe}}</li>
-  </ul>
+    {{#each problems}}
+    <ul>
+      <li class="province">{{provinceTo province}}</li>
+      <li class="phase" title="{{step}}">{{step}}</li>
+      <li class="person">{{questioner}}</li>
+      <li class="time">{{problemDate}}</li>
+      <li class="time">{{expectedResolutionDate}}</li>
+      <li class="solver">{{responsible}}</li>
+      <li class="describe" title="{{describe}}">{{describe}}</li>
+    </ul>
   {{/each}}
 </div>

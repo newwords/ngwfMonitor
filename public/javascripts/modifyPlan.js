@@ -1,37 +1,34 @@
-require(['backbone', 'handlebars', 'text!tpl/editProblem.hbs',
+require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
   'layui'], function (Backbone, Handlebars, tpl) {
   var _content = this;
-  var EditProblemListView = Backbone.View.extend({
+  var modifyPlanListView = Backbone.View.extend({
     template: Handlebars.compile(tpl),
     el: "#root",
     initialize: function () {
       var _this = this;
       _this.$el.html(this.template({}));
-      layui.use('element', function () {
-        var element = layui.element;
-        console.log(element)
-      })
       layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form;
         var layedit = layui.layedit;
         var laydate = layui.laydate;
         form.on('submit', function (data) {
+          console.log(data)
+
           $.ajax({
             type: "POST",
             dataType: 'json',
-            url: "/submitProblem",
-            data: data.field,
+            url: "/submitTask",
+            data: { field: field, value: value, id: id },
             success: function (rep) {
               if (rep && rep.code !== undefined) {
                 if (rep.code === 0) {
-                  layer.alert("提交成功!");
-                  var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                  parent.layer.close(index); //再执行关闭
+                  layui.layer.closeAll()
                 } else if (rep.code === 3) {
-                  layer.alert(rep.message || "提交失败!");
+                  layer.alert("修改计划失败!");
+
                 }
               } else {
-                layer.alert("提交失败!");
+                layer.alert("修改计划失败!");
               }
             },
             error: function (error) {
@@ -41,14 +38,12 @@ require(['backbone', 'handlebars', 'text!tpl/editProblem.hbs',
           return false;
         });
         form.render();
-        laydate.render({ elem: '#problemDate' });
-        laydate.render({ elem: '#theLatestSettlementDate' });
-        laydate.render({ elem: '#expectedResolutionDate' });
-
+        laydate.render({ elem: '#startTime' });
+        laydate.render({ elem: '#endTime' });
       });
     }
   });
-  _content.editProblemListView = new EditProblemListView({
+  _content.editProblemListView = new modifyPlanListView({
     el: "#root"
   });
 });

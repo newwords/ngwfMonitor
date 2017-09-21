@@ -31,15 +31,15 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
     });
     Handlebars.registerHelper('overviewWarnSum', function (val) {
       if (_.has(val, "warn")) {
-        return '<span class="warn-a"><a>' + val.warn.detail.length + '</a></span>';
+        return `<span class="warn-a"><a>${val.warn.detail.length}</a></span>`;
       }
-      return "";
+      return `<span class="warn-a-none"><a></a></span>`;
     });
     Handlebars.registerHelper('overviewProblemSum', function (val) {
-      if (_.has(val, "problem") && val.problem.detail.length > 0) {
-        return '<span class="problem-a"><a>' + val.problem.detail.length + '</a></span>';
+      if (_.has(val, "problem")) {
+        return `<span class="problem-a"><a>${val.problem.detail.length}</a></span>`;
       }
-      return "";
+      return `<span class="problem-a-none"><a></a></span>`;
     });
 
     Handlebars.registerHelper('provinceTo', function (val) {
@@ -88,6 +88,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
     });
 
     Handlebars.registerHelper('update', function (val, option) {
+      console.log(val)
       if (val) {
         return option.fn(this)
       } else {
@@ -215,7 +216,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
             text: ['高', '低'],
             calculable: true,
             inRange: {
-              color: ['#e0ffff', '#006edd']
+              color: ['#feffc7', '#02cb00']
             }
           },
           series: [
@@ -247,7 +248,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
             var province = para.data.province;
             for (var key in data) {
               if (data[key]['province'] === province) {
-                console.log(data[key])
+                console.log(data)
                 _this.$mapInfo.html(mapInfoTemplate(data[key]))
               }
             }
@@ -262,11 +263,14 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
     _content.data = undefined;
     mapData.getMapData(function (data) {
       _content.data = data;
-      _content.mapView.chart.setOption({
-        series: [{
-          data: data["citys"]
-        }]
-      });
+      console.log(data)
+      if (_content.data && _content.data['citys']) {
+        _content.mapView.chart.setOption({
+          series: [{
+            data: data["citys"]
+          }]
+        });
+      }
 
       _content.mapView.$list.html(listTemplate(data))
     });

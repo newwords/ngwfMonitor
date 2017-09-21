@@ -54,9 +54,9 @@
                 </ul>
                 {{#each phases}}
                     <ul>
-                        <li class="phase">
-                            {{{overviewWarnSum this}}}
-                            {{{overviewProblemSum this}}}
+                        <li class="phase" title="{{step}}">
+                           {{{overviewWarnSum this}}}
+                            {{{overviewProblemSum this}}}        
                             {{step}}</li>
                         <li class="progress">
                             <progress value="{{progress}}" max="100"></progress> {{progress}}%

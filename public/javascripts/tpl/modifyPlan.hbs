@@ -1,0 +1,26 @@
+<div class="layui-container">
+  <form class="layui-form login" action="">
+    <div class="layui-form-item">
+      <label class="layui-form-label">进度</label>
+      <div class="layui-input-inline">
+        <input type="text" name="progress" lay-verify="required" placeholder="请输入修改后的进度" autocomplete="off" class="layui-input">
+      </div>
+    </div><div class="layui-form-item">
+      <label class="layui-form-label">计划开始时间</label>
+      <div class="layui-input-inline">
+        <input id="startTime" type="text" name="startTime" lay-verify="required" placeholder="请输入计划开始时间" autocomplete="off" class="layui-input">
+      </div>
+    </div><div class="layui-form-item">
+      <label class="layui-form-label">计划结束时间</label>
+      <div class="layui-input-inline">
+        <input id="endTime" type="text" name="endTime" lay-verify="required" placeholder="请输入计划结束时间" autocomplete="off" class="layui-input">
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <div class="layui-input-block">
+        <button class="layui-btn layui-btn-primary" lay-submit>提交</button>
+        <button type="reset" class="layui-btn layui-btn-normal">取消</button>
+      </div>
+    </div>
+  </form>
+</div>
