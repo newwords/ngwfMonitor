@@ -312,6 +312,12 @@ p.medium {
   padding-left: 4%;
 }
 
+.problem li {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .problem li.phase {
   width: 10%;
 }
@@ -410,8 +416,13 @@ span.active {
 
 .map-warn li,
 .map-problem li {
-  padding: 8px 4px;
-  height: 20px;
+  box-sizing: border-box;
+  padding: 12px 4px;
+  min-height: 43px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .map-warn ul,
@@ -419,39 +430,42 @@ span.active {
   border: 1px solid #96aec7;
 }
 
-li.province {
-  min-width: 60px;
-  text-align: center;
+.map-warn li.province {
+  width: 15%;
 }
 
-li.phase {
-  width: 80px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+.map-warn li.phase {
+  width: 30%;
 }
 
-li.message,
-li.describe {
-  width: 130px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
+.map-warn li.message {
+  width: 55%;
+  text-align: left;
 }
 
-li.person {
-  min-width: 50px;
-  text-align: center;
+.map-problem li.province {
+  width: 10%;
 }
 
-li.time {
-  min-width: 100px;
-  text-align: center;
+.map-problem li.phase {
+  width: 15%;
 }
 
-li.solver {
-  min-width: 100px;
-  text-align: center;
+.map-problem li.person {
+  width: 10%;
+}
+
+.map-problem li.time {
+  width: 15%;
+}
+
+.map-problem li.solver {
+  width: 10%;
+}
+
+.map-problem li.describe {
+  width: 25%;
+  text-align: left;
 }
 
 li.progress {
