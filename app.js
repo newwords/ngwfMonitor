@@ -64,7 +64,7 @@ app.use('/', index);
 app.use(function (req, res, next) {
     var url = req.originalUrl;
     if (_string.endsWith(url, ".html")) {
-        if (url !== "/ngwf/login.html" && !req.session.user) {
+        if (url !== "/ngwf/login.html" && url !== "/ngwf/main.html" && !req.session.user) {
             return res.redirect("/ngwf/login.html");
         }
     }
