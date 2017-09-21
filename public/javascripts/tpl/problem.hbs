@@ -1,5 +1,11 @@
-<blockquote class="layui-elem-quote">直接编辑文本即可修改问题状态<i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe607;</i></blockquote>
-<table class="layui-table" lay-data="{height:313, url:'/problemInfo'}">
+<script type="text/html" id="barState">
+    <a class="layui-btn layui-btn-primary layui-btn-mini" lay-event="close">关闭</a>
+    <a class="layui-btn layui-btn-mini" lay-event="open">开启</a>
+    <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="pending">追加</a>
+</script>
+<!--<blockquote class="layui-elem-quote">直接编辑文本即可修改问题状态<i class="layui-icon" style="font-size: 30px; color: #1E9FFF;">&#xe607;</i>-->
+<!--</blockquote>-->
+<table class="layui-table" lay-data="{height:313, url:'/problemInfo'}" id="problemTable">
     <thead>
     <tr>
         <th lay-data="{field:'questioner', width:100}">问题提出人</th>
@@ -18,6 +24,7 @@
         <th lay-data="{field:'state', width:80, edit:'text'}">状态</th>
         <th lay-data="{field:'responsible', width:120}">处理责任人</th>
         <th lay-data="{field:'remark', width:135}">备注</th>
+        <th lay-data="{fixed: 'right', width:160, align:'center', toolbar: '#barState'}">操作</th>
     </tr>
     </thead>
 </table>

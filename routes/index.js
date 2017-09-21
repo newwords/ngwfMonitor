@@ -576,7 +576,6 @@ router.get('/problemInfo', function (req, res, next) {
                 }
             }).then(function (result) {
                 infoProblemResult = result;
-                console.log(result);
                 infoProblemResult.forEach(function (Problem) {
                     var id = Problem.id;
                     var index = Problem.index;
@@ -596,15 +595,15 @@ router.get('/problemInfo', function (req, res, next) {
                     var responsible = Problem.responsible;
                     var monitor = Problem.monitor;
                     var remark = Problem.remark;
-                    problemCollection.push({
+                    var json ={
                         id: id,
                         province: province,
                         index: index,
                         groupType: groupType,
                         taskId: taskId,
-                        problemDate: problemDate ? moment(problemDate).format("YYYY-MM-DD") : "",
-                        expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") : "",
-                        theLatestSettlementDate: theLatestSettlementDate ? moment(theLatestSettlementDate).format("YYYY-MM-DD") : "",
+                        // problemDate: problemDate ? moment(problemDate).format("YYYY-MM-DD") : undefined,
+                        // expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") : undefined,
+                        // theLatestSettlementDate: theLatestSettlementDate ? moment(theLatestSettlementDate).format("YYYY-MM-DD") :undefined,
                         innerOuter: innerOuter,
                         subjectType: subjectType,
                         priority: priority,
@@ -616,7 +615,17 @@ router.get('/problemInfo', function (req, res, next) {
                         responsible: responsible,
                         monitor: monitor,
                         remark: remark
-                    });
+                    };
+                    if (problemDate) {
+                        json["problemDate"] = problemDate;
+                    }
+                    if (expectedResolutionDate) {
+                        json["expectedResolutionDate"] = expectedResolutionDate;
+                    }
+                    if (theLatestSettlementDate) {
+                        json["theLatestSettlementDate"] = theLatestSettlementDate;
+                    }
+                    problemCollection.push(json);
                 });
 
                 res.send({
@@ -632,7 +641,27 @@ router.get('/problemInfo', function (req, res, next) {
 
     }
 });
-
+router.post('/updateProblem', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var user = findUserProvince(session.user);
+        if (user) {
+            var province = user.province;
+            var id = req.body.id;
+            var state = req.body.state;
+            var param = {
+                "state": state
+            };
+            models.Problem.update(
+                param, {
+                    'where': {'id': id}
+                }
+            ).then(function () {
+                res.send({code: 0, message: ''});
+            });
+        }
+    }
+});
 
 router.post('/submitProblem', function (req, res, next) {
     var session = req.session;
@@ -657,14 +686,11 @@ router.post('/submitProblem', function (req, res, next) {
             var responsible = req.body.responsible;
             var monitor = req.body.monitor;
             var remark = req.body.remark;
-            models.Problem.create({
+            var json = {
                 province: province,
                 index: index,
                 groupType: groupType,
                 taskId: taskId,
-                problemDate: problemDate ? problemDate : "",
-                expectedResolutionDate: expectedResolutionDate ? expectedResolutionDate : "",
-                theLatestSettlementDate: theLatestSettlementDate ? theLatestSettlementDate : "",
                 innerOuter: innerOuter,
                 subjectType: subjectType,
                 priority: priority,
@@ -676,7 +702,19 @@ router.post('/submitProblem', function (req, res, next) {
                 responsible: responsible,
                 monitor: monitor,
                 remark: remark
-            }).then(function () {
+            };
+
+            if (problemDate) {
+                json["problemDate"] = problemDate;
+            }
+            if (expectedResolutionDate) {
+                json["expectedResolutionDate"] = expectedResolutionDate;
+            }
+            if (theLatestSettlementDate) {
+                json["theLatestSettlementDate"] = theLatestSettlementDate;
+            }
+
+            models.Problem.create(json).then(function () {
                 res.send({code: 0, message: ''});
             });
         }
