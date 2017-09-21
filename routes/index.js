@@ -632,7 +632,27 @@ router.get('/problemInfo', function (req, res, next) {
 
     }
 });
-
+router.post('/updateProblem', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var user = findUserProvince(session.user);
+        if (user) {
+            var province = user.province;
+            var id = req.body.id;
+            var state = req.body.state;
+            var param = {
+                "state": state
+            };
+            models.Problem.update(
+                param, {
+                    'where': {'id': id}
+                }
+            ).then(function () {
+                res.send({code: 0, message: ''});
+            });
+        }
+    }
+});
 
 router.post('/submitProblem', function (req, res, next) {
     var session = req.session;
