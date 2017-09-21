@@ -104,6 +104,7 @@ router.get('/ajax', function (req, res, next) {
             }
             _.each(Collection, function (taskModel) {
                 var weight = taskModel.get("weight") || 0;
+                weight = (1 / weight);
                 var progress = taskModel.get("progress") || 0;
                 var taskId = taskModel.get("taskId");
                 var temp = taskCollection.where({province: province, parentTaskId: taskId});
@@ -321,7 +322,8 @@ router.post('/upload', function (req, res, next) {
                 }
             }
 
-            if (index === 0) {
+            if (name.indexOf("04") === 0) {
+                var taskCollection = new TaskCollection();
 
                 //计划日报（主计划每日更新）
                 rows.forEach(function (row, index) {
@@ -335,24 +337,26 @@ router.post('/upload', function (req, res, next) {
                             var taskIdSplit = taskId.split(".");
                             parentTaskId = _.initial(taskIdSplit).join(".");
                         }
-                        var step = row[1] || row[2]; //关键步骤/子步骤
-                        var event = row[3]; //事件
-                        var progress = row[4]; //进度
-                        //row[5]跳过 状态
-                        var missionCritical = row[6]; //关键任务
-                        var weight = row[7];
-                        var percent = row[8]; //百分比
-                        var responsiblePerson = row[9]; //负责人
-                        var timeLimit = row[10]; //工期 通过计算得到
+                        var step = row[1]; //关键步骤/子步骤
+                        var event = row[2]; //事件
+                        var progress = row[3] || 0; //进度
+                        //row[4 ]跳过 状态
+                        var missionCritical = row[5]; //关键任务
+                        // var weight = row[6];
+                        // var percent = row[7];
+                        var percent = undefined;
+                        var responsiblePerson = row[6]; //负责人
+                        var responsiblePersonPro = row[7]; //厂商责任人
 
+                        var timeLimit = row[8]; //工期 通过计算得到
 
-                        var plannedStartTime = handleDate(row[11]);
-                        var plannedEndTime = handleDate(row[12]);
-                        var actualStartTime = handleDate(row[13]);
-                        var actualEndTime = handleDate(row[14]);
+                        var plannedStartTime = handleDate(row[9]);
+                        var plannedEndTime = handleDate(row[10]);
+                        var actualStartTime = handleDate(row[11]);
+                        var actualEndTime = handleDate(row[12]);
 
-                        var deliverable = row[15];
-                        var problemDetail = row[16];
+                        var deliverable = row[13];
+                        var problemDetail = row[14];
                         // console.log(taskId,
                         //     step,
                         //     event,
@@ -368,7 +372,7 @@ router.post('/upload', function (req, res, next) {
                         //     deliverable,
                         //     problemDetail
                         // );
-                        models.Task.create({
+                        var json = {
                             province: province,
                             taskId: taskId,
                             parentTaskId: parentTaskId,
@@ -377,8 +381,9 @@ router.post('/upload', function (req, res, next) {
                             progress: progress,
                             missionCritical: missionCritical,
                             percent: percent,
-                            weight: weight,
+                            // weight: weight,
                             responsiblePerson: responsiblePerson,
+                            responsiblePersonPro: responsiblePersonPro,
                             timeLimit: timeLimit,
                             plannedStartTime: plannedStartTime,
                             plannedEndTime: plannedEndTime,
@@ -386,10 +391,17 @@ router.post('/upload', function (req, res, next) {
                             actualEndTime: actualEndTime,
                             deliverable: deliverable,
                             problemDetail: problemDetail
-                        })
+                        };
+                        taskCollection.push(json);
                     }
                 });
-            } else if (index === 1) {
+
+                taskCollection.each(function (Model, index, list) {
+                    var weight = taskCollection.where({parentTaskId: Model.get("parentTaskId")}).length
+                    Model.set({weight: weight});
+                    models.Task.create(Model.toJSON())
+                });
+            } else if (name.indexOf("05") === 0) {
                 //问题日报（风险问题每日更新）
                 rows.forEach(function (row, index) {
                     if (index >= 3) { //从第三行开始
