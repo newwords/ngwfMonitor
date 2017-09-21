@@ -10,7 +10,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
       return val.length > 42 ? val.slice(0, 42) + '..' : val
     });
     Handlebars.registerHelper('problemText', function (val) {
-      return val.length > 20 ? val.slice(0, 20) + '..' : val
+      return ''
     });
 
     /**
@@ -97,7 +97,6 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
     });
 
     Handlebars.registerHelper('update', function (val, option) {
-      console.log(val)
       if (val) {
         return option.fn(this)
       } else {
@@ -280,7 +279,9 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
           }]
         });
       }
-
+      data.citys.sort(function (a, b) {
+        return a.rate - b.rate
+      })
       _content.mapView.$list.html(listTemplate(data))
     });
 

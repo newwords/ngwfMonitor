@@ -7,25 +7,24 @@ require(['backbone', 'handlebars', 'text!tpl/plan.hbs',
     events: {
       "click #modify": "modify"
     },
-    modify: function (data) {
-      console.log(data)
-      layui.layer.open({
-        type: 2,
-        itle: '',
-        area: ['720px', '400px'],
-        content: "/ngwf/modifyPlan.html"
-      })
-    },
     initialize: function () {
       var _this = this;
       _this.$el.html(this.template({}));
       layui.use(['table', 'element'], function () {
         var table = layui.table;
-        table.on('modify', function (data) {
-          console.log(data)
+        table.on('tool', function (data) {
+          document.data = data
+          document.table = table
+          layer.open({
+            type: 2,
+            title: '',
+            offset: '100px',
+            area: ['500px', '400px'],
+            content: "/ngwf/modifyPlan.html"
+          })
         })
         table.on('edit', function (obj) {
-          console.log(obj)
+          console.log('obj是' + obj)
           console.log(obj.value); //得到修改后的值
           console.log(obj.field); //当前编辑的字段名
           console.log(obj.data); //所在行的所有相关数据
