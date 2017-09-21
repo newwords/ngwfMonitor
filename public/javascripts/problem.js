@@ -8,7 +8,6 @@ require(['backbone', 'handlebars', 'text!tpl/problem.hbs',
             "click #add": "add",
             "click #delete": "delete",
             "click #edit": "edit"
-
         },
         add: function () {
             layui.layer.open({
@@ -29,8 +28,40 @@ require(['backbone', 'handlebars', 'text!tpl/problem.hbs',
             _this.$el.html(this.template({}));
             layui.use('table', function () {
                 var table = layui.table;
-                table.init();
+                table.on('tool', function (obj) {
+                    var data = obj.data;
+                    if (data.state === obj.event) {
+                        layer.msg('当前状态已经是该状态无需修改!');
+                    }
+                    data = obj.data;
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        url: "/updateProblem",
+                        data: {
+                            state: obj.event,
+                            id: data.id
+                        },
+                        success: function (rep) {
+                            if (rep && rep.code !== undefined) {
+                                if (rep.code === 0) {
+                                    obj.update({
+                                        state: obj.event
+                                    });
+                                } else {
+                                    layer.alert("更新问题状态失败!");
+                                }
+                            } else {
+                                layer.alert("更新问题状态失败!");
+                            }
+                        },
+                        error: function (error) {
+                            layer.alert(error);
+                        }
 
+                    });
+                });
+                table.init();
             });
         }
     });

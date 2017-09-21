@@ -88,7 +88,6 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
     });
 
     Handlebars.registerHelper('update', function (val, option) {
-      console.log(val)
       if (val) {
         return option.fn(this)
       } else {
