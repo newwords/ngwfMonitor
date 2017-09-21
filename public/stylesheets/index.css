@@ -299,15 +299,16 @@ p.medium {
   min-height: 18px;
 }
 
-.warn li.phase {
-  width: 20%;
+.warn li.phase,
+.warn li.message {
+  width: 40%;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
 }
 
 .warn li.message {
-  width: 76%;
+  width: 56%;
   padding-left: 4%;
 }
 
