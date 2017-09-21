@@ -399,13 +399,13 @@ span.active {
 
 .map-warn {
   float: left;
-  /* max-width: 40%; */
-  margin-right: 40px;
+  max-width: 36%;
+  margin-right: 4%;
 }
 
 .map-problem {
   float: left;
-  /* max-width: 60%; */
+  max-width: 60%;
 }
 
 .map-warn li,
@@ -433,7 +433,7 @@ li.phase {
 
 li.message,
 li.describe {
-  width: 200px;
+  width: 130px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
