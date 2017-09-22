@@ -12,6 +12,7 @@ module.exports = function (sequelize, DataTypes) {
         weight: DataTypes.FLOAT,
         percent: DataTypes.STRING,
         responsiblePerson: DataTypes.STRING,
+        responsiblePersonPro:DataTypes.STRING,
         // responsiblePerson: DataTypes.ARRAY(DataTypes.STRING),
         timeLimit: DataTypes.STRING,
         plannedStartTime: DataTypes.DATE,
