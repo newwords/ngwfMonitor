@@ -7,16 +7,12 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
     initialize: function () {
       var _this = this;
       if (parent) {
-        var data = parent.document.data;
+        var data = parent.document.data.data;
         var table = parent.document.table
-        $("#progress").val(data.progressPercent)
-        $("#startTime").val(data.plannedStartTime)
-        $("#endTime").val(data.plannedEndTime)
-        $("#plannedStartTime").val(data.actualStartTime);
-        $("#plannedEndTime").val(data.actualEndTime);
+
       }
       var para = {
-        id: data.data.id
+        id: data.id
       };
       _this.$el.html(this.template({}));
       layui.use(['form', 'layedit', 'laydate'], function () {
@@ -29,7 +25,11 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
           var endTime = $("#endTime").val();
           var plannedStartTime = $("#plannedStartTime").val();
           var plannedEndTime = $("#plannedEndTime").val();
-          if (+progress && +progress < 1) {
+          if (progress.indexOf('%') > -1) {
+            var progress = progress.replace(/%/, '')
+            progress = +progress < 1 ? progress : progress / 100;
+            para.progress = progress;
+          } else if (+progress && +progress < 1) {
             para.progress = progress
           } else {
             para.progress = progress / 100;
@@ -63,8 +63,13 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
           });
           return false;
         });
-        form.render();
+
         table.render();
+        $("#progress").val(data.progressPercent)
+        $("#startTime").val(data.plannedStartTime)
+        $("#endTime").val(data.plannedEndTime)
+        $("#plannedStartTime").val(data.actualStartTime);
+        $("#plannedEndTime").val(data.actualEndTime);
         laydate.render({ elem: '#startTime' });
         laydate.render({ elem: '#endTime' });
         laydate.render({ elem: '#plannedStartTime' });
