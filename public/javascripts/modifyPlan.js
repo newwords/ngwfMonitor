@@ -8,16 +8,12 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
       var _this = this;
       if (parent) {
         var data = parent.document.data;
-<<<<<<< HEAD
         var table = parent.document.table
         $("#progress").val(data.progressPercent)
         $("#startTime").val(data.plannedStartTime)
         $("#endTime").val(data.plannedEndTime)
         $("#plannedStartTime").val(data.actualStartTime);
         $("#plannedEndTime").val(data.actualEndTime);
-=======
-        var table = parent.document.table;
->>>>>>> 731ec927655dc1338b5d8616001c0cf294e9f48e
       }
       var para = {
         id: data.data.id
@@ -33,7 +29,11 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
           var endTime = $("#endTime").val();
           var plannedStartTime = $("#plannedStartTime").val();
           var plannedEndTime = $("#plannedEndTime").val();
-          para.progress = progress;
+          if (+progress && +progress < 1) {
+            para.progress = progress
+          } else {
+            para.progress = progress / 100;
+          }
           para.plannedStartTime = plannedStartTime;
           para.plannedEndTime = plannedEndTime;
           para.actualStartTime = startTime;
@@ -47,9 +47,9 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
               console.log(rep);
               if (rep && rep.code !== undefined) {
                 if (rep.code === 0) {
-                    var index = parent.layer.getFrameIndex(window.name);
-                    parent.layer.close(index);
-                    parent.location.reload();
+                  var index = parent.layer.getFrameIndex(window.name);
+                  parent.layer.close(index);
+                  parent.location.reload();
                 } else if (rep.code === 3) {
                   layer.alert("修改计划失败!");
                 }

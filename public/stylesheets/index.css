@@ -206,6 +206,9 @@ p.medium {
 .warn li,
 .problem li {
   background: none;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .detail ul,
@@ -294,7 +297,7 @@ p.medium {
 .warn-a>a {
   position: absolute;
   display: inline-block;
-  width: 14px;
+  min-width: 14px;
   height: 14px;
   line-height: 14px;
   text-align: center;
@@ -318,7 +321,7 @@ p.medium {
 }
 
 .city .detail .phase {
-  width: 25%;
+  width: 36%;
 }
 
 .city .detail .progress {
@@ -326,15 +329,17 @@ p.medium {
 }
 
 .city .detail .person {
-  width: 25%;
+  width: 10%;
   font-size: 12px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: center;
 }
 
 .city .detail .time {
-  width: 10%;
+  width: 12%;
+  position: relative;
 }
 
 .city .detail .isUpdate {
@@ -581,4 +586,20 @@ li.delay {
 
 .no-begin {
   color: #aaa;
+}
+
+.mark-time {
+  position: absolute;
+  top: 2px;
+  left: 80px;
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: yellow;
+  color: #000;
+  font-weight: 800;
+  line-height: 14px;
+  text-align: center;
+  cursor: pointer;
 }

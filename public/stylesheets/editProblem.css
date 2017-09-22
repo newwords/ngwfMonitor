@@ -1,0 +1,12 @@
+.edit-problem label.layui-form-label {
+  width: 100px;
+}
+
+.edit-problem .layui-input,
+.edit-problem .layui-textarea {
+  width: 90%;
+}
+
+.edit-problem .layui-input-block {
+  margin-left: 130px;
+}

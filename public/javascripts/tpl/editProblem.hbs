@@ -1,10 +1,10 @@
-<div class="layui-container">
+<div class="layui-container edit-problem">
     <fieldset class="layui-elem-field layui-field-title">
         <legend>上报问题</legend>
         <div class="layui-field-box">
             <form class="form layui-form">
                 <div class="layui-form-item">
-                    <label class="layui-form-label"><span style="color:red">*</span>问题/风险/求助描述</label>
+                    <label class="layui-form-label"><span style="color:red">*</span>问题描述</label>
                     <div class="layui-input-block">
                         <textarea name="describe" placeholder="请输入内容" required lay-verify="required" class="layui-textarea"></textarea>
                     </div>
@@ -15,13 +15,15 @@
                         <!--<input type="text" name="taskId" placeholder="请输入关联任务编号" autocomplete="off" class="layui-input">-->
                     <!--</div>-->
                 <!--</div>-->
-                <div class="layui-inline">
-                    <label class="layui-form-label">关联任务编号</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="taskIdSelect" name="taskIdSelect" placeholder="请输入关联任务编号"
-                               autocomplete="off"
-                               class="layui-input">
-                        <input type="text" id="taskId" name="taskId" style="display: none;">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">关联任务编号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="taskIdSelect" name="taskIdSelect" placeholder="请输入关联任务编号"
+                                autocomplete="off"
+                                class="layui-input">
+                            <input type="text" id="taskId" name="taskId" style="display: none;">
+                        </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
