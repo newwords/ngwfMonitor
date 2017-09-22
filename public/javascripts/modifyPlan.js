@@ -9,7 +9,11 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
       if (parent) {
         var data = parent.document.data;
         var table = parent.document.table
-        console.log(table)
+        $("#progress").val(data.progressPercent)
+        $("#startTime").val(data.plannedStartTime)
+        $("#endTime").val(data.plannedEndTime)
+        $("#plannedStartTime").val(data.actualStartTime);
+        $("#plannedEndTime").val(data.actualEndTime);
       }
       var para = {
         id: data.data.id
