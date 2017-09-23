@@ -63,13 +63,13 @@ router.get("/base64", function (req, res, next) {
 
 /* AJAX handle*/
 router.get('/ajax', function (req, res, next) {
-    if (!req.session.user) { //到达/home路径首先判断是否已经登录
-        req.session.error = "请先登录";
-        res.redirect("/ngwf/login.html"); //未登录则重定向到 /login 路径
-        return;
-    }
+    // if (!req.session.user) { //到达/home路径首先判断是否已经登录
+    //     req.session.error = "请先登录";
+    //     res.redirect("/ngwf/login.html"); //未登录则重定向到 /login 路径
+    //     return;
+    // }
     // models.Task.findAll
-    var province = req.query["province"];
+    // var province = req.query["province"];
     var timeTaskResult;
     var infoTaskResult;
     var infoProblemResult;
