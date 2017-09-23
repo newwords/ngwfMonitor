@@ -20,7 +20,8 @@ module.exports = function (sequelize, DataTypes) {
         actualStartTime: DataTypes.DATE,
         actualEndTime: DataTypes.DATE,
         deliverable: DataTypes.STRING(2048),
-        problemDetail: DataTypes.STRING(4096)
+        problemDetail: DataTypes.STRING(4096),
+        index:DataTypes.INTEGER
     });
     return Task;
 };

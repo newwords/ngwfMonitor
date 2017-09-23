@@ -2,6 +2,7 @@ var models = require('../models');
 var express = require('express');
 const users = require('../model/users');
 var _ = require("underscore");
+var _string = require("underscore.string");
 var xlsx = require("node-xlsx");
 var util = require('util');
 var router = express.Router();
@@ -84,7 +85,7 @@ router.get('/ajax', function (req, res, next) {
     }).then(function () {
         return models.Task.findAll({
             attributes: ["province", 'progress', 'weight', 'step', 'event', 'taskId', 'parentTaskId',
-                'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson", "updatedAt"]
+                'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson", "updatedAt", "index"]
         })
     }).then(function (result) {
         infoTaskResult = result;
@@ -134,7 +135,6 @@ router.get('/ajax', function (req, res, next) {
             var responsible = Problem.responsible;
             var updatedAt = Problem.updatedAt;
             var sameDay = moment().format("YYYY-MM-DD") === moment(updatedAt).format("YYYY-MM-DD");
-            console.log(sameDay);
             problemCollection.push({
                 province: province,
                 taskId: taskId,
@@ -153,6 +153,7 @@ router.get('/ajax', function (req, res, next) {
             var weight = Task.weight;
 
             var taskId = Task.taskId;
+
             var parentTaskId = Task.parentTaskId || "";
             var plannedStartTime = Task.plannedStartTime;
             var plannedEndTime = Task.plannedEndTime;
@@ -163,8 +164,10 @@ router.get('/ajax', function (req, res, next) {
             var responsiblePerson = Task.responsiblePerson || "";
             var step = Task.step || "";
             var event = Task.event || "";
+            var index = Task.index;
 
             taskCollection.push({
+                index: index,
                 province: province,
                 progress: progress,
                 weight: weight,
@@ -188,8 +191,8 @@ router.get('/ajax', function (req, res, next) {
             var phases = [];
             var tempPhases = taskCollection.where({province: cityCode});
             _.each(tempPhases, function (taskModel) {
-
                 var json = taskModel.toJSON();
+                var index = json.index;
                 var taskId = json["taskId"];
                 var tempProblem = problemCollection.where({province: cityCode, taskId: taskId});
                 json["problem"] = {
@@ -220,7 +223,7 @@ router.get('/ajax', function (req, res, next) {
                         }
                     }
                 }
-                phases.push(json);
+                phases[index] = json;
             });
 
             if (cityCode === "00030016" || cityCode === "00030026") {
@@ -325,38 +328,64 @@ router.post('/upload', function (req, res, next) {
             if (name.indexOf("04") === 0) {
                 var taskCollection = new TaskCollection();
 
+                var hasCol2 = false;
+                var preStep = undefined;
                 //计划日报（主计划每日更新）
+                var showIndex = 0;
                 rows.forEach(function (row, index) {
+                    if (_.isEmpty(row)) {
+                        return;
+                    } else {
+                        console.log("row:" + row + "|" + index);
+                    }
+                    if (index === 1) {
+                        hasCol2 = (row[2] === undefined);
+                    }
                     if (index >= 2) { //从第二行开始
                         if (_.isEmpty(row)) {
                             return;
                         }
                         var taskId = row[0] + ""; //任务编号
+                        console.log("taskId:" + taskId);
                         var parentTaskId = undefined;
                         if (!_.isEmpty(taskId)) {
                             var taskIdSplit = taskId.split(".");
                             parentTaskId = _.initial(taskIdSplit).join(".");
                         }
-                        var step = row[1]; //关键步骤/子步骤
-                        var event = row[2]; //事件
-                        var progress = row[3] || 0; //进度
-                        //row[4 ]跳过 状态
-                        var missionCritical = row[5]; //关键任务
-                        // var weight = row[6];
-                        // var percent = row[7];
+                        var start = 0;
+                        var step;
+                        if (hasCol2) {
+                            start = 1;
+                            step = (row[start] || "") + (row[start + 1] || ""); //关键步骤/子步骤
+                        } else {
+                            step = (row[start + 1] || ""); //关键步骤/子步骤
+                        }
+                        //绑定
+                        step = _string.trim(step);
+                        if (_string.isBlank(step)) {
+                            step = preStep;
+                        }
+                        preStep = step;
+
+                        var event = row[start + 2]; //事件
+                        var progress = row[start + 3] || 0; //进度
+                        // row[start + 4 ]跳过 状态
+                        var missionCritical = row[start + 5]; //关键任务
+                        // var weight = row[start+6];
+                        // var percent = row[start+7];
                         var percent = undefined;
-                        var responsiblePerson = row[6]; //负责人
-                        var responsiblePersonPro = row[7]; //厂商责任人
+                        var responsiblePerson = row[start + 6]; //负责人
+                        var responsiblePersonPro = row[start + 7]; //厂商责任人
 
-                        var timeLimit = row[8]; //工期 通过计算得到
+                        var timeLimit = row[start + 8]; //工期 通过计算得到
 
-                        var plannedStartTime = handleDate(row[9]);
-                        var plannedEndTime = handleDate(row[10]);
-                        var actualStartTime = handleDate(row[11]);
-                        var actualEndTime = handleDate(row[12]);
+                        var plannedStartTime = handleDate(row[start + 9]);
+                        var plannedEndTime = handleDate(row[start + 10]);
+                        var actualStartTime = handleDate(row[start + 11]);
+                        var actualEndTime = handleDate(row[start + 12]);
 
-                        var deliverable = row[13];
-                        var problemDetail = row[14];
+                        var deliverable = row[start + 13];
+                        var problemDetail = row[start + 14];
                         // console.log(taskId,
                         //     step,
                         //     event,
@@ -390,14 +419,15 @@ router.post('/upload', function (req, res, next) {
                             actualStartTime: actualStartTime,
                             actualEndTime: actualEndTime,
                             deliverable: deliverable,
-                            problemDetail: problemDetail
+                            problemDetail: problemDetail,
+                            index: showIndex
                         };
                         taskCollection.push(json);
+                        showIndex++;
                     }
                 });
-
                 taskCollection.each(function (Model, index, list) {
-                    var weight = taskCollection.where({parentTaskId: Model.get("parentTaskId")}).length
+                    var weight = taskCollection.where({parentTaskId: Model.get("parentTaskId")}).length;
                     Model.set({weight: weight});
                     models.Task.create(Model.toJSON())
                 });
@@ -516,18 +546,31 @@ router.get('/taskInfo', function (req, res, next) {
                     var actualStartTime = Task.actualStartTime;
                     var actualEndTime = Task.actualEndTime;
                     var province = Task.province;
-                    taskCollection.push({
+                    var json = {
                         id: id,
                         step: step,
                         progress: progress,
                         progressPercent: (progress * 100 + "%"),
                         responsiblePerson: responsiblePerson,
-                        plannedStartTime: plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : "",
-                        plannedEndTime: plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : "",
-                        actualStartTime: actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : "",
-                        actualEndTime: actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : "",
+                        // plannedStartTime: plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : "",
+                        // plannedEndTime: plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : "",
+                        // actualStartTime: actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : "",
+                        // actualEndTime: actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : "",
                         province: province
-                    })
+                    };
+                    if (plannedStartTime) {
+                        json["plannedStartTime"] = moment(plannedStartTime).format("YYYY-MM-DD");
+                    }
+                    if (plannedEndTime) {
+                        json["plannedEndTime"] = moment(plannedEndTime).format("YYYY-MM-DD");
+                    }
+                    if (actualStartTime) {
+                        json["actualStartTime"] = moment(actualStartTime).format("YYYY-MM-DD");
+                    }
+                    if (actualEndTime) {
+                        json["actualEndTime"] = moment(actualEndTime).format("YYYY-MM-DD");
+                    }
+                    taskCollection.push(json);
                 });
                 res.send({
                     code: 0,
