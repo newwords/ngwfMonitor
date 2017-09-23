@@ -59,8 +59,8 @@
                             <progress value="{{progress}}" max="100"></progress> {{progress}}%
                         </li>
                         <li class="person">{{{responsiblePerson}}}</li>
-                        <li class="time">{{plannedStartTime}}</li>
-                        <li class="time">{{plannedEndTime}}</li>
+                        <li class="time">{{plannedStartTime}}{{{actualStartTime this}}}</li>
+                        <li class="time">{{plannedEndTime}}{{{actualEndTime this}}}</li>
                         <li class="isUpdate">{{#update this}}
                             <span class="update active" title="{{updateTime}}"></span> {{else}}
                             <span class="update"></span> {{/update}}</li>
@@ -77,7 +77,7 @@
                         <ul>
                             <li class="phase" title="{{step}}">{{step}}</li>
                             {{#each warn.detail}}
-                                <li class="message">{{warnText message}}</li>
+                                <li class="message" title="{{message}}">{{message}}</li>
                             {{/each}}
                         </ul>
                     {{/if}}
@@ -99,7 +99,7 @@
                         <li class="time">&nbsp;{{problemDate}}&nbsp;</li>
                         <li class="time">&nbsp;{{expectedResolutionDate}}&nbsp;</li>
                         <li class="person">&nbsp;{{questioner}}&nbsp;</li>
-                        <li class="describe">&nbsp;{{problemText describe}}&nbsp;</li>
+                        <li class="describe" title="{{describe}}">&nbsp;{{describe}}&nbsp;</li>
                     </ul>
                 {{/each}}
             </div>

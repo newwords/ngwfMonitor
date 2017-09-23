@@ -1,17 +1,5 @@
-require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text!tpl/list.hbs', 'text!tpl/mapdata.hbs', 'china'],
+require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text!tpl/list.hbs', 'text!tpl/mapdata.hbs', 'china', 'layui'],
   function (Backbone, Handlebars, mapData, echarts, mainTpl, listTpl, mapInfo) {
-    /**
-     * 文字截断
-     */
-    Handlebars.registerHelper('mapText', function (val) {
-      return val.length > 11 ? val.slice(0, 11) + '..' : val
-    });
-    Handlebars.registerHelper('warnText', function (val) {
-      return val.length > 42 ? val.slice(0, 42) + '..' : val
-    });
-    Handlebars.registerHelper('problemText', function (val) {
-      return ''
-    });
 
     /**
      * 告警和错误的数量
@@ -49,6 +37,17 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
       return `<li class="phase" title="${this.step}">
           ${warn}${problem}<span style="text-indent: ${len}rem">${this.step}</span>
         </li>`
+    })
+
+    Handlebars.registerHelper('actualStartTime', function (val) {
+      if (val.actualStartTime) {
+        return `<span class="mark-time start-time" title="${val.actualStartTime}">!</span>`
+      }
+    })
+    Handlebars.registerHelper('actualEndTime', function (val) {
+      if (val.actualEndTime) {
+        return `<span class="mark-time end-time" title="${val.actualEndTime}">!</span>`
+      }
     })
 
     Handlebars.registerHelper('provinceTo', function (val) {
@@ -111,7 +110,8 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
       template: Handlebars.compile(mainTpl),
       events: {
         "click .control span": "control",
-        "click span.span_control": "spanControl"
+        "click span.span_control": "spanControl",
+        "mouseover span.mark-time": "showTime"
       },
       spanControl: function (e) {
         var _this = this;
@@ -169,6 +169,21 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
           // $(".map-problem").show();
         }
 
+      },
+      showTime: function (e) {
+        var target = e.target;
+        var title = e.target.title;
+        if ($(target).hasClass('start-time')) {
+          layui.layer.tips(`实际开始时间: ${title}`, target, {
+            tips: 3,
+            time: 3000
+          })
+        } else {
+          layui.layer.tips(`实际结束时间: ${title}`, target, {
+            tips: 3,
+            time: 3000
+          })
+        }
       },
       initialize: function () {
         var _this = this;

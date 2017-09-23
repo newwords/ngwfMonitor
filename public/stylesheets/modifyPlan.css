@@ -1,0 +1,16 @@
+ div.modify-plan {
+   margin-top: 40px;
+ }
+ 
+ .modify-plan label.layui-form-label {
+   width: 100px;
+ }
+ 
+ .modify-plan .layui-input,
+ .modify-plan .layui-textarea {
+   width: 90%;
+ }
+ 
+ .modify-plan .layui-input-block {
+   margin-left: 130px;
+ }
