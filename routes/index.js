@@ -599,13 +599,13 @@ router.get('/taskInfo', function (req, res, next) {
                     taskCollection.push(json);
                 });
                 // res.json()
-                res.json({
+                res.send({
                     code: 0,
                     msg: "",
                     count: taskCollection.length,
                     data: taskCollection.toJSON()
                 });
-                next();
+                // next();
             });
         }
     }
