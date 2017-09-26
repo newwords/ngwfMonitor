@@ -50,7 +50,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
       if(!val){
         return;
       }
-      if (val.actualStartTime) {
+      if (val.actualStartTime && val.plannedStartTime && (val.actualStartTime != val.plannedStartTime)) {
         return `<span class="mark-time start-time" title="${val.actualStartTime}">!</span>`
       }
     })
@@ -58,7 +58,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
       if(!val){
         return;
       }
-      if (val.actualEndTime) {
+      if (val.actualEndTime && val.plannedEndTime && (val.actualEndTime != val.plannedEndTime)) {
         return `<span class="mark-time end-time" title="${val.actualEndTime}">!</span>`
       }
     })
