@@ -62,7 +62,7 @@ router.get("/base64", function (req, res, next) {
 
 
 /* AJAX handle*/
-router.get('/ajax', function (req, res, next) {
+router.post('/ajax', function (req, res, next) {
     // if (!req.session.user) { //到达/home路径首先判断是否已经登录
     //     req.session.error = "请先登录";
     //     res.redirect("/ngwf/login.html"); //未登录则重定向到 /login 路径
@@ -396,6 +396,22 @@ router.post('/upload', function (req, res, next) {
 
                         var deliverable = row[start + 12];
                         var problemDetail = row[start + 13];
+
+
+                        // var responsiblePersonPro = row[start + 7]; //厂商责任人
+                        // var timeLimit = row[start + 8]; //工期 通过计算得到
+                        //
+                        // var plannedStartTime = handleDate(row[start + 9]);
+                        // var plannedEndTime = handleDate(row[start + 10]);
+                        // var actualStartTime = handleDate(row[start + 11]);
+                        // var actualEndTime = handleDate(row[start + 12]);
+                        //
+                        // var deliverable = row[start + 13];
+                        // var problemDetail = row[start + 14];
+
+
+
+
                         // console.log(taskId,
                         //     step,
                         //     event,

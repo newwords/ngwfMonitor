@@ -998,6 +998,8 @@ define(["jquery"], function ($) {
     return {
         getMapData: function (callback) {
             $.ajax({
+                type: "POST",
+                dataType: 'json',
                 url: "/ajax",
                 success: function (result) {
                     if (_.isFunction(callback)) {
