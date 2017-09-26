@@ -598,7 +598,8 @@ router.get('/taskInfo', function (req, res, next) {
                     }
                     taskCollection.push(json);
                 });
-                res.send({
+                // res.json()
+                res.json({
                     code: 0,
                     msg: "",
                     count: taskCollection.length,
