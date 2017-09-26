@@ -205,8 +205,8 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
         _this.$list = _this.$el.find("#list");
         _this.$mapInfo = _this.$el.find('#info')
         _this.$map.css({
-          'width': window.innerWidth,
-          'height': window.innerHeight
+          'width': (window.innerWidth -100),
+          'height': (window.innerHeight-100)
         });
         _this.chart = echarts.init(_this.$map[0]);
         _this.chart.setOption({
