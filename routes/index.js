@@ -211,16 +211,26 @@ router.get('/ajax', function (req, res, next) {
                 } else {
                     json.name = "进行中";
                 }
+                var hasWarn = false;
+                var warmMessage = "";
+                if (json.plannedStartTime) {
+                    if (!json.actualStartTime && !moment().isBefore(json.plannedStartTime) && json.progress !== 100) {
+                        hasWarn = true;
+                        warmMessage += "【到期未开始】";
+                    }
+                }
                 if (json.plannedEndTime) {
-                    if (!json.actualEndTime && !moment().isBefore(json.plannedEndTime)&&json.progress !== 100) {
-                        // "warn": {
-                        //     "detail": [{"message": "配合改造工作延迟"}]
-                        // },
-                        json["warn"] = {
-                            "detail": [
-                                {"message": json["event"] || ""}
-                            ]
-                        }
+                    if (!json.actualEndTime && !moment().isBefore(json.plannedEndTime) && json.progress !== 100) {
+                        hasWarn = true;
+                        warmMessage += "【到期未结束】";
+                    }
+                }
+
+                if (hasWarn) {
+                    json["warn"] = {
+                        "detail": [
+                            {"message": warmMessage || ""}
+                        ]
                     }
                 }
                 phases[index] = json;
@@ -319,7 +329,7 @@ router.post('/upload', function (req, res, next) {
 
             function handleDate(excelDate) {
                 if (_.isNumber(excelDate)) {
-                    return new Date(1900, 0, excelDate-1);
+                    return new Date(1900, 0, excelDate - 1);
                 } else {
                     return undefined;
                 }
@@ -375,13 +385,13 @@ router.post('/upload', function (req, res, next) {
                         // var percent = row[start+7];
                         var percent = undefined;
                         var responsiblePerson = row[start + 6]; //负责人
-                        var responsiblePersonPro ="";// row[start + 7]; //厂商责任人
+                        var responsiblePersonPro = "";// row[start + 7]; //厂商责任人
 
                         var timeLimit = row[start + 7]; //工期 通过计算得到
 
                         var plannedStartTime = handleDate(row[start + 8]);
                         var plannedEndTime = handleDate(row[start + 9]);
-                        var actualStartTime = handleDate(row[start +  10]);
+                        var actualStartTime = handleDate(row[start + 10]);
                         var actualEndTime = handleDate(row[start + 11]);
 
                         var deliverable = row[start + 12];
