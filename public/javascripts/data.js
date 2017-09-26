@@ -998,6 +998,7 @@ define(["jquery"], function ($) {
     return {
         getMapData: function (callback) {
             $.ajax({
+                timeout:600000,
                 type: "POST",
                 dataType: 'json',
                 url: "/ajax",
