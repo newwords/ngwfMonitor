@@ -19,15 +19,22 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
     });
 
     Handlebars.registerHelper('ident', function (val) {
+      if(!val){
+        return "";
+      }
       var len = val.taskId.split('.').length - 1;
       var warn, problem;
       warn = `<span class="warn-a-none"><a></a></span>`;
       problem = `<span class="problem-a-none"><a></a></span>`;
       if (_.has(val, "warn")) {
-        warn = `<span class="warn-a"><a>${val.warn.detail.length}</a></span>`;
+          if(_.has(val.warn,"detail")&&_.isArray(val.warn.detail)&&val.warn.detail.length>0){
+              warn = `<span class="warn-a"><a>${val.warn.detail.length}</a></span>`;
+          }
       }
       if (_.has(val, "problem")) {
-        problem = `<span class="problem-a"><a>${val.problem.detail.length}</a></span>`;
+        if(_.has(val.problem,"detail")&&_.isArray(val.problem.detail)&&val.problem.detail.length>0){
+            problem = `<span class="problem-a"><a>${val.problem.detail.length}</a></span>`;
+        }
       }
       if (!len) {
         return `<li class="phase" title="${this.step}">
@@ -40,11 +47,17 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
     })
 
     Handlebars.registerHelper('actualStartTime', function (val) {
+      if(!val){
+        return;
+      }
       if (val.actualStartTime) {
         return `<span class="mark-time start-time" title="${val.actualStartTime}">!</span>`
       }
     })
     Handlebars.registerHelper('actualEndTime', function (val) {
+      if(!val){
+        return;
+      }
       if (val.actualEndTime) {
         return `<span class="mark-time end-time" title="${val.actualEndTime}">!</span>`
       }
