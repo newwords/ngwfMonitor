@@ -319,7 +319,7 @@ router.post('/upload', function (req, res, next) {
 
             function handleDate(excelDate) {
                 if (_.isNumber(excelDate)) {
-                    return new Date(1990, 0, excelDate);
+                    return new Date(1900, 0, excelDate-1);
                 } else {
                     return undefined;
                 }
