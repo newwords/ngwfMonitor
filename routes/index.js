@@ -212,7 +212,7 @@ router.get('/ajax', function (req, res, next) {
                     json.name = "进行中";
                 }
                 if (json.plannedEndTime) {
-                    if (!json.actualEndTime && moment().isBefore(json.plannedEndTime)) {
+                    if (!json.actualEndTime && !moment().isBefore(json.plannedEndTime)&&json.progress !== 100) {
                         // "warn": {
                         //     "detail": [{"message": "配合改造工作延迟"}]
                         // },
@@ -375,17 +375,17 @@ router.post('/upload', function (req, res, next) {
                         // var percent = row[start+7];
                         var percent = undefined;
                         var responsiblePerson = row[start + 6]; //负责人
-                        var responsiblePersonPro = row[start + 7]; //厂商责任人
+                        var responsiblePersonPro ="";// row[start + 7]; //厂商责任人
 
-                        var timeLimit = row[start + 8]; //工期 通过计算得到
+                        var timeLimit = row[start + 7]; //工期 通过计算得到
 
-                        var plannedStartTime = handleDate(row[start + 9]);
-                        var plannedEndTime = handleDate(row[start + 10]);
-                        var actualStartTime = handleDate(row[start + 11]);
-                        var actualEndTime = handleDate(row[start + 12]);
+                        var plannedStartTime = handleDate(row[start + 8]);
+                        var plannedEndTime = handleDate(row[start + 9]);
+                        var actualStartTime = handleDate(row[start +  10]);
+                        var actualEndTime = handleDate(row[start + 11]);
 
-                        var deliverable = row[start + 13];
-                        var problemDetail = row[start + 14];
+                        var deliverable = row[start + 12];
+                        var problemDetail = row[start + 13];
                         // console.log(taskId,
                         //     step,
                         //     event,
