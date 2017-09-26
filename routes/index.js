@@ -605,6 +605,7 @@ router.get('/taskInfo', function (req, res, next) {
                     count: taskCollection.length,
                     data: taskCollection.toJSON()
                 });
+                next();
             });
         }
     }
