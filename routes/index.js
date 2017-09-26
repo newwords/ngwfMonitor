@@ -216,13 +216,13 @@ router.post('/ajax', function (req, res, next) {
                 if (json.plannedStartTime) {
                     if (!json.actualStartTime && !moment().isBefore(json.plannedStartTime) && json.progress !== 100) {
                         hasWarn = true;
-                        warmMessage += "到期未开始";
+                        warmMessage += "【到期未开始】";
                     }
                 }
                 if (json.plannedEndTime) {
                     if (!json.actualEndTime && !moment().isBefore(json.plannedEndTime) && json.progress !== 100) {
                         hasWarn = true;
-                        warmMessage += "到期未结束";
+                        warmMessage += "【到期未结束】";
                     }
                 }
 
@@ -236,7 +236,7 @@ router.post('/ajax', function (req, res, next) {
                 phases[index] = json;
             });
 
-            if (cityCode === "00030016" || cityCode === "00030026") {
+            if (cityCode === "00030016" || cityCode === "00030026" || cityCode === "00030005" || cityCode === "00030004") {
                 weight = 100;
             } else {
                 var temp = taskCollection.where({province: cityCode, parentTaskId: ""});
@@ -408,8 +408,6 @@ router.post('/upload', function (req, res, next) {
                         //
                         // var deliverable = row[start + 13];
                         // var problemDetail = row[start + 14];
-
-
 
 
                         // console.log(taskId,
