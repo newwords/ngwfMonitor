@@ -23,8 +23,8 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
           var progress = $("#progress").val();
           var startTime = $("#startTime").val();
           var endTime = $("#endTime").val();
-          var plannedStartTime = $("#plannedStartTime").val();
-          var plannedEndTime = $("#plannedEndTime").val();
+          // var plannedStartTime = $("#plannedStartTime").val();
+          // var plannedEndTime = $("#plannedEndTime").val();
           if (progress.indexOf('%') > -1) {
             var progress = progress.replace(/%/, '')
             progress = +progress < 1 ? progress : progress / 100;
@@ -34,8 +34,8 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
           } else {
             para.progress = progress / 100;
           }
-          para.plannedStartTime = plannedStartTime;
-          para.plannedEndTime = plannedEndTime;
+          // para.plannedStartTime = plannedStartTime;
+          // para.plannedEndTime = plannedEndTime;
           para.actualStartTime = startTime;
           para.actualEndTime = endTime;
           $.ajax({

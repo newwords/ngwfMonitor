@@ -621,13 +621,13 @@ router.post('/submitTask', function (req, res, next) {
             var id = req.body.id;
             var progress = req.body.progress;
             // var field = req.body.field;
-            var plannedStartTime = req.body.plannedStartTime;
-            var plannedEndTime = req.body.plannedEndTime;
+            // var plannedStartTime = req.body.plannedStartTime;
+            // var plannedEndTime = req.body.plannedEndTime;
             var actualStartTime = req.body.actualStartTime;
             var actualEndTime = req.body.actualEndTime;
 
-            plannedStartTime = plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : undefined;
-            plannedEndTime = plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : undefined;
+            // plannedStartTime = plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : undefined;
+            // plannedEndTime = plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : undefined;
             actualStartTime = actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : undefined;
             actualEndTime = actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : undefined;
 
@@ -640,8 +640,8 @@ router.post('/submitTask', function (req, res, next) {
 
             var param = {
                 progress: progress,
-                plannedStartTime: plannedStartTime,
-                plannedEndTime: plannedEndTime,
+                // plannedStartTime: plannedStartTime,
+                // plannedEndTime: plannedEndTime,
                 actualStartTime: actualStartTime,
                 actualEndTime: actualEndTime
             };
