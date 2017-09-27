@@ -318,192 +318,195 @@ router.post('/upload', function (req, res, next) {
         }
 
         res.send({code: 0, message: '已经完成导入'}); //并不完美
-
         var workbook = xlsx.parse(filepath);
-        models.Task.destroy({'where': {'province': province}});
-        models.Problem.destroy({'where': {'province': province}});
+        models.Task.destroy({'where': {'province': province}}).then(function () {
+            models.Problem.destroy({'where': {'province': province}}).then(function () {
+                workbook.forEach(function (sheet, index) {
+                    var name = sheet.name;
+                    var rows = sheet.data;
 
-        workbook.forEach(function (sheet, index) {
-            var name = sheet.name;
-            var rows = sheet.data;
-
-            function handleDate(excelDate) {
-                if (_.isNumber(excelDate)) {
-                    return new Date(1900, 0, excelDate - 1);
-                } else {
-                    return undefined;
-                }
-            }
-
-            if (name.indexOf("04") === 0) {
-                var taskCollection = new TaskCollection();
-
-                var hasCol2 = false;
-                var preStep = undefined;
-                //计划日报（主计划每日更新）
-                var showIndex = 0;
-                rows.forEach(function (row, index) {
-                    if (_.isEmpty(row)) {
-                        return;
-                    } else {
-                        console.log("row:" + row + "|" + index);
-                    }
-                    if (index === 1) {
-                        hasCol2 = (row[2] === undefined);
-                    }
-                    if (index >= 2) { //从第二行开始
-                        if (_.isEmpty(row)) {
-                            return;
-                        }
-                        var taskId = row[0] + ""; //任务编号
-                        console.log("taskId:" + taskId);
-                        var parentTaskId = undefined;
-                        if (!_.isEmpty(taskId)) {
-                            var taskIdSplit = taskId.split(".");
-                            parentTaskId = _.initial(taskIdSplit).join(".");
-                        }
-                        var start = 0;
-                        var step;
-                        if (hasCol2) {
-                            start = 1;
-                            step = (row[start] || "") + (row[start + 1] || ""); //关键步骤/子步骤
+                    function handleDate(excelDate) {
+                        if (_.isNumber(excelDate)) {
+                            return new Date(1900, 0, excelDate - 1);
                         } else {
-                            step = (row[start + 1] || ""); //关键步骤/子步骤
+                            return undefined;
                         }
-                        //绑定
-                        step = _string.trim(step);
-                        if (_string.isBlank(step)) {
-                            step = preStep;
-                        }
-                        preStep = step;
-
-                        var event = row[start + 2]; //事件
-                        var progress = row[start + 3] || 0; //进度
-                        // row[start + 4 ]跳过 状态
-                        var missionCritical = row[start + 5]; //关键任务
-                        // var weight = row[start+6];
-                        // var percent = row[start+7];
-                        var percent = undefined;
-                        var responsiblePerson = row[start + 6]; //负责人
-                        var responsiblePersonPro = "";// row[start + 7]; //厂商责任人
-
-                        var timeLimit = row[start + 7]; //工期 通过计算得到
-
-                        var plannedStartTime = handleDate(row[start + 8]);
-                        var plannedEndTime = handleDate(row[start + 9]);
-                        var actualStartTime = handleDate(row[start + 10]);
-                        var actualEndTime = handleDate(row[start + 11]);
-
-                        var deliverable = row[start + 12];
-                        var problemDetail = row[start + 13];
-
-
-                        // var responsiblePersonPro = row[start + 7]; //厂商责任人
-                        // var timeLimit = row[start + 8]; //工期 通过计算得到
-                        //
-                        // var plannedStartTime = handleDate(row[start + 9]);
-                        // var plannedEndTime = handleDate(row[start + 10]);
-                        // var actualStartTime = handleDate(row[start + 11]);
-                        // var actualEndTime = handleDate(row[start + 12]);
-                        //
-                        // var deliverable = row[start + 13];
-                        // var problemDetail = row[start + 14];
-
-
-                        // console.log(taskId,
-                        //     step,
-                        //     event,
-                        //     progress,
-                        //     missionCritical,
-                        //     percent,
-                        //     responsiblePerson,
-                        //     timeLimit,
-                        //     plannedStartTime,
-                        //     plannedEndTime,
-                        //     actualStartTime,
-                        //     actualEndTime,
-                        //     deliverable,
-                        //     problemDetail
-                        // );
-                        var json = {
-                            province: province,
-                            taskId: taskId,
-                            parentTaskId: parentTaskId,
-                            step: step,
-                            event: event,
-                            progress: progress,
-                            missionCritical: missionCritical,
-                            percent: percent,
-                            // weight: weight,
-                            responsiblePerson: responsiblePerson,
-                            responsiblePersonPro: responsiblePersonPro,
-                            timeLimit: timeLimit,
-                            plannedStartTime: plannedStartTime,
-                            plannedEndTime: plannedEndTime,
-                            actualStartTime: actualStartTime,
-                            actualEndTime: actualEndTime,
-                            deliverable: deliverable,
-                            problemDetail: problemDetail,
-                            index: showIndex
-                        };
-                        taskCollection.push(json);
-                        showIndex++;
                     }
-                });
-                taskCollection.each(function (Model, index, list) {
-                    var weight = taskCollection.where({parentTaskId: Model.get("parentTaskId")}).length;
-                    Model.set({weight: weight});
-                    models.Task.create(Model.toJSON())
-                });
-            } else if (name.indexOf("05") === 0) {
-                //问题日报（风险问题每日更新）
-                rows.forEach(function (row, index) {
-                    if (index >= 3) { //从第三行开始
-                        if (_.isEmpty(row)) {
-                            return;
-                        }
-                        var index = row[0]; //序号
-                        var groupType = row[1]; //组别(项目管理/需求分析设计/版本开发/数据割接/系统集成/系统测试)
-                        var taskId = row[2]; //关联任务编号
-                        var problemDate = handleDate(row[3]);
-                        var expectedResolutionDate = handleDate(row[4]);
-                        var theLatestSettlementDate = handleDate(row[5]);
-                        var innerOuter = row[6];
-                        var subjectType = row[7];
-                        var priority = row[8];
-                        var describe = row[9];
-                        var solution = row[10];
-                        var progressAndResults = row[11];
-                        var state = row[12];
-                        var questioner = row[13];
-                        var responsible = row[14];
-                        var monitor = row[15];
-                        var remark = row[16];
 
-                        models.Problem.create({
-                            province: province,
-                            index: index,
-                            groupType: groupType,
-                            taskId: taskId,
-                            problemDate: problemDate,
-                            expectedResolutionDate: expectedResolutionDate,
-                            theLatestSettlementDate: theLatestSettlementDate,
-                            innerOuter: innerOuter,
-                            subjectType: subjectType,
-                            priority: priority,
-                            describe: describe,
-                            solution: solution,
-                            progressAndResults: progressAndResults,
-                            state: state,
-                            questioner: questioner,
-                            responsible: responsible,
-                            monitor: monitor,
-                            remark: remark
+                    if (name.indexOf("04") === 0) {
+                        var taskCollection = new TaskCollection();
+
+                        var hasCol2 = false;
+                        var preStep = undefined;
+                        //计划日报（主计划每日更新）
+                        var showIndex = 0;
+                        rows.forEach(function (row, index) {
+                            if (_.isEmpty(row)) {
+                                return;
+                            } else {
+                                console.log("row:" + row + "|" + index);
+                            }
+                            if (index === 1) {
+                                hasCol2 = (row[2] === undefined);
+                            }
+                            if (index >= 2) { //从第二行开始
+                                if (_.isEmpty(row)) {
+                                    return;
+                                }
+                                var taskId = row[0] + ""; //任务编号
+                                console.log("taskId:" + taskId);
+                                var parentTaskId = undefined;
+                                if (!_.isEmpty(taskId)) {
+                                    var taskIdSplit = taskId.split(".");
+                                    parentTaskId = _.initial(taskIdSplit).join(".");
+                                }
+                                var start = 0;
+                                var step;
+                                if (hasCol2) {
+                                    start = 1;
+                                    step = (row[start] || "") + (row[start + 1] || ""); //关键步骤/子步骤
+                                } else {
+                                    step = (row[start + 1] || ""); //关键步骤/子步骤
+                                }
+                                //绑定
+                                step = _string.trim(step);
+                                if (_string.isBlank(step)) {
+                                    step = preStep;
+                                }
+                                preStep = step;
+
+                                var event = row[start + 2]; //事件
+                                var progress = row[start + 3] || 0; //进度
+                                // row[start + 4 ]跳过 状态
+                                var missionCritical = row[start + 5]; //关键任务
+                                // var weight = row[start+6];
+                                // var percent = row[start+7];
+                                var percent = undefined;
+                                var responsiblePerson = row[start + 6]; //负责人
+                                var responsiblePersonPro = "";// row[start + 7]; //厂商责任人
+
+                                var timeLimit = row[start + 7]; //工期 通过计算得到
+
+                                var plannedStartTime = handleDate(row[start + 8]);
+                                var plannedEndTime = handleDate(row[start + 9]);
+                                var actualStartTime = handleDate(row[start + 10]);
+                                var actualEndTime = handleDate(row[start + 11]);
+
+                                var deliverable = row[start + 12];
+                                var problemDetail = row[start + 13];
+
+
+                                // var responsiblePersonPro = row[start + 7]; //厂商责任人
+                                // var timeLimit = row[start + 8]; //工期 通过计算得到
+                                //
+                                // var plannedStartTime = handleDate(row[start + 9]);
+                                // var plannedEndTime = handleDate(row[start + 10]);
+                                // var actualStartTime = handleDate(row[start + 11]);
+                                // var actualEndTime = handleDate(row[start + 12]);
+                                //
+                                // var deliverable = row[start + 13];
+                                // var problemDetail = row[start + 14];
+
+
+                                // console.log(taskId,
+                                //     step,
+                                //     event,
+                                //     progress,
+                                //     missionCritical,
+                                //     percent,
+                                //     responsiblePerson,
+                                //     timeLimit,
+                                //     plannedStartTime,
+                                //     plannedEndTime,
+                                //     actualStartTime,
+                                //     actualEndTime,
+                                //     deliverable,
+                                //     problemDetail
+                                // );
+                                var json = {
+                                    province: province,
+                                    taskId: taskId,
+                                    parentTaskId: parentTaskId,
+                                    step: step,
+                                    event: event,
+                                    progress: progress,
+                                    missionCritical: missionCritical,
+                                    percent: percent,
+                                    // weight: weight,
+                                    responsiblePerson: responsiblePerson,
+                                    responsiblePersonPro: responsiblePersonPro,
+                                    timeLimit: timeLimit,
+                                    plannedStartTime: plannedStartTime,
+                                    plannedEndTime: plannedEndTime,
+                                    actualStartTime: actualStartTime,
+                                    actualEndTime: actualEndTime,
+                                    deliverable: deliverable,
+                                    problemDetail: problemDetail,
+                                    index: showIndex
+                                };
+                                taskCollection.push(json);
+                                showIndex++;
+                            }
+                        });
+                        taskCollection.each(function (Model, index, list) {
+                            var weight = taskCollection.where({parentTaskId: Model.get("parentTaskId")}).length;
+                            Model.set({weight: weight});
+                            models.Task.create(Model.toJSON())
+                        });
+                    } else if (name.indexOf("05") === 0) {
+                        //问题日报（风险问题每日更新）
+                        rows.forEach(function (row, index) {
+                            if (index >= 3) { //从第三行开始
+                                if (_.isEmpty(row)) {
+                                    return;
+                                }
+                                var index = row[0]; //序号
+                                var groupType = row[1]; //组别(项目管理/需求分析设计/版本开发/数据割接/系统集成/系统测试)
+                                var taskId = row[2]; //关联任务编号
+                                var problemDate = handleDate(row[3]);
+                                var expectedResolutionDate = handleDate(row[4]);
+                                var theLatestSettlementDate = handleDate(row[5]);
+                                var innerOuter = row[6];
+                                var subjectType = row[7];
+                                var priority = row[8];
+                                var describe = row[9];
+                                var solution = row[10];
+                                var progressAndResults = row[11];
+                                var state = row[12];
+                                var questioner = row[13];
+                                var responsible = row[14];
+                                var monitor = row[15];
+                                var remark = row[16];
+
+                                models.Problem.create({
+                                    province: province,
+                                    index: index,
+                                    groupType: groupType,
+                                    taskId: taskId,
+                                    problemDate: problemDate,
+                                    expectedResolutionDate: expectedResolutionDate,
+                                    theLatestSettlementDate: theLatestSettlementDate,
+                                    innerOuter: innerOuter,
+                                    subjectType: subjectType,
+                                    priority: priority,
+                                    describe: describe,
+                                    solution: solution,
+                                    progressAndResults: progressAndResults,
+                                    state: state,
+                                    questioner: questioner,
+                                    responsible: responsible,
+                                    monitor: monitor,
+                                    remark: remark
+                                });
+                            }
                         });
                     }
                 });
-            }
+
+
+            });
         });
+
     });
 });
 
