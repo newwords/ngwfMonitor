@@ -66,14 +66,14 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
 
         table.render();
         $("#progress").val(data.progressPercent)
-        $("#startTime").val(data.plannedStartTime)
-        $("#endTime").val(data.plannedEndTime)
-        $("#plannedStartTime").val(data.actualStartTime);
-        $("#plannedEndTime").val(data.actualEndTime);
+        $("#startTime").val(data.actualStartTime)
+        $("#endTime").val(data.actualEndTime)
+        // $("#plannedStartTime").val(data.actualStartTime);
+        // $("#plannedEndTime").val(data.actualEndTime);
         laydate.render({ elem: '#startTime' });
         laydate.render({ elem: '#endTime' });
-        laydate.render({ elem: '#plannedStartTime' });
-        laydate.render({ elem: '#plannedEndTime' });
+        // laydate.render({ elem: '#plannedStartTime' });
+        // laydate.render({ elem: '#plannedEndTime' });
       });
     }
   });
