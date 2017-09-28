@@ -514,7 +514,30 @@ router.post('/upload', function (req, res, next) {
     });
 });
 
-const findUser = function (name, password) {
+const findUser = function (name, password, callback) {
+    const _callback = _.isFunction(callback) ? callback : _.noop;
+    if (_.isEmpty(name) || _.isEmpty(password)) {
+        _callback(false, "用户名");
+    }
+    models.User.findAll({
+        attributes: ["name", "password"],
+        where: {
+            name: name
+        }
+    }).then(function (users) {
+        if (_.isEmpty(users)) {
+            _callback(false, "您输入的帐号不存在");
+            return;
+        }
+        var user = users[0];
+        var _password = user.password || "123456";
+        if (password === _password) {
+            _callback(true, "");
+        } else {
+            _callback(false, "密码错误");
+        }
+    });
+
     return users.find(function (item) {
         return item.name === name && item.password === password;
     });
@@ -541,6 +564,13 @@ const findUserProvince = function (name) {
 //             // console.log(province);
 //         }
 //     }
+// });
+
+// router.get('/initPassword', function (req, res, next) {
+//     _.each(users, function (user) {
+//         models.User.create(user);
+//     })
+//
 // });
 
 router.get('/taskInfo', function (req, res, next) {
@@ -892,6 +922,47 @@ router.get('/problemAutocomplete', function (req, res, next) {
 });
 
 
+router.get('/whoAmI', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        res.send({code: 0, message: session.user});
+        // res.redirect("/ngwf/login.html"); //未登录则重定向到 /login 路径
+    } else {
+        res.send({code: 1, message: '尚未登录'});
+    }
+});
+
+router.post('/password', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var password = req.body._password;
+        var param = {
+            password: password
+        };
+        models.User.update(
+            param, {
+                'where': {name: session.user}
+            }
+        ).then(function () {
+            res.send({code: 0, message: ''});
+        })
+        // session.user = undefined;
+        // res.send({code: 0, message: ''});
+        // res.redirect("/ngwf/login.html"); //未登录则重定向到 /login 路径
+    } else {
+        res.send({code: 1, message: '尚未登录无法修改密码'});
+    }
+});
+
+router.get('/logoff', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        session.user = undefined;
+        res.send({code: 0, message: ''});
+        // res.redirect("/ngwf/login.html"); //未登录则重定向到 /login 路径
+    }
+});
+
 router.post('/login', function (req, res, next) {
     var session = req.session;
     // if (req.session.base64 === undefined) {
@@ -903,18 +974,21 @@ router.post('/login', function (req, res, next) {
     //     res.json({code: 3, message: '验证码错误'});
     //     return;
     // }
-    var user = findUser(req.body.username, req.body.password);
-    if (user) {
-        session.regenerate(function (err) {
-            if (err) {
-                return res.json({code: 2, message: '登录失败'});
-            }
-            req.session.user = user.name;
-            res.json({code: 0, message: '登录成功'});
-        });
-    } else {
-        res.json({code: 1, message: '账号或密码错误'});
-    }
+    var _userName = req.body.username;
+    findUser(_userName, req.body.password, function (success, message) {
+        if (success) {
+            session.regenerate(function (err) {
+                if (err) {
+                    return res.json({code: 2, message: '登录失败'});
+                }
+                req.session.user = _userName;
+                res.json({code: 0, message: '登录成功'});
+            });
+        } else {
+            res.json({code: 1, message: message});
+        }
+
+    });
 });
 
 module.exports = router;
