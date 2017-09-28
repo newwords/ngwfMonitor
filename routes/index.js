@@ -165,6 +165,8 @@ router.post('/ajax', function (req, res, next) {
             var step = Task.step || "";
             var event = Task.event || "";
             var index = Task.index;
+            var updatedAt = Task.updatedAt;
+            var sameDay = moment().format("YYYY-MM-DD") === moment(updatedAt).format("YYYY-MM-DD");
 
             taskCollection.push({
                 index: index,
@@ -181,7 +183,9 @@ router.post('/ajax', function (req, res, next) {
 
                 responsiblePerson: responsiblePerson,
                 step: step,
-                event: event
+                event: event,
+                updatedAt: updatedAt ? moment(updatedAt).format("YYYY-MM-DD") : "",
+                sameDay: sameDay
             });
         });
 
