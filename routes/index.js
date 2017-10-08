@@ -1,6 +1,7 @@
 var models = require('../models');
 var express = require('express');
 const users = require('../model/users');
+var generatePassword = require("password-generator");
 var _ = require("underscore");
 var _string = require("underscore.string");
 var xlsx = require("node-xlsx");
@@ -568,6 +569,8 @@ const findUserProvince = function (name) {
 
 // router.get('/initPassword', function (req, res, next) {
 //     _.each(users, function (user) {
+//         var password = generatePassword(8, false);
+//         user["password"] = password;
 //         models.User.create(user);
 //     })
 //
@@ -920,7 +923,6 @@ router.get('/problemAutocomplete', function (req, res, next) {
         }
     }
 });
-
 
 router.get('/whoAmI', function (req, res, next) {
     var session = req.session;
