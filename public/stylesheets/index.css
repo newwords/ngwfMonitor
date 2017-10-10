@@ -270,7 +270,7 @@ p.medium {
   display: inline-block;
   width: 14px;
   height: 14px;
-  /* margin-right: 6px; */
+   margin-right: 6px;
 }
 
 .indent-1 {
@@ -384,7 +384,10 @@ p.medium {
 
 .problem li.describe {
   text-align: center;
-  width: 40%;
+  width: 35%;
+}
+.problem li.state {
+  width: 5%;
 }
 
 tr {
@@ -522,10 +525,13 @@ span.active {
 }
 
 .map-problem li.describe {
-  width: 35%;
+  width: 30%;
   text-align: left;
 }
 
+.map-problem li.state {
+  width: 5%;
+}
 
 /* .map-problem li.province {
   width: 10%;

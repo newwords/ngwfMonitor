@@ -67,7 +67,11 @@ app.use(function (req, res, next) {
     var url = req.originalUrl;
     if (_string.endsWith(url, ".html")) {
         if (url !== "/ngwf/login.html" && url !== "/ngwf/noPromise.html" && url !== "/ngwf/main.html" && !req.session.user) {
-            return res.redirect("/ngwf/login.html");
+            if(url !== "/ngwf/login.html"){
+                return res.redirect("/ngwf/login.html#monitor");
+            }else{
+                return res.redirect("/ngwf/login.html");
+            }
         }
 
         if (url === "/ngwf/main.html" && req.session.user !== "zhangxin" && req.session.user !== "admin" && req.session.user !== "anjun") {

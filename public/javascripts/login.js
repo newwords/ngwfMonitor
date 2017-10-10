@@ -67,7 +67,11 @@ require(['backbone', 'handlebars', 'text!tpl/login.hbs',
                     localStorage.removeItem('user')
                     localStorage.removeItem('pwd')
                   }
-                  self.location = '/ngwf/index.html';
+                  if("#monitor"===self.location.hash){
+                      self.location = '/ngwf/ngwfMonitor.html';
+                  }else{
+                      self.location = '/ngwf/index.html';
+                  }
                 } else if (rep.code === 3) {
                   _content.loginView.clickImage();
                   layer.alert(rep.message || "登录失败");

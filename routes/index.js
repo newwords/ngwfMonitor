@@ -1,6 +1,8 @@
 var models = require('../models');
+var fs = require('fs');
 var express = require('express');
 const users = require('../model/users');
+const provinceInfos = require('../model/province');
 var generatePassword = require("password-generator");
 var _ = require("underscore");
 var _string = require("underscore.string");
@@ -92,7 +94,7 @@ router.post('/ajax', function (req, res, next) {
         infoTaskResult = result;
     }).then(function () {
         return models.Problem.findAll({
-            attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible", "updatedAt"]
+            attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible", "state", "updatedAt"]
         })
     }).then(function (result) {
         infoProblemResult = result;
@@ -134,6 +136,7 @@ router.post('/ajax', function (req, res, next) {
             var describe = Problem.describe;
             var questioner = Problem.questioner;
             var responsible = Problem.responsible;
+            var state = Problem.state;
             var updatedAt = Problem.updatedAt;
             var sameDay = moment().format("YYYY-MM-DD") === moment(updatedAt).format("YYYY-MM-DD");
             problemCollection.push({
@@ -143,6 +146,7 @@ router.post('/ajax', function (req, res, next) {
                 expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") : "",
                 describe: describe,
                 questioner: questioner,
+                state: state,
                 responsible: responsible,
                 sameDay: sameDay
             });
@@ -507,11 +511,8 @@ router.post('/upload', function (req, res, next) {
                         });
                     }
                 });
-
-
             });
         });
-
     });
 });
 
@@ -610,6 +611,23 @@ router.get('/taskInfo', function (req, res, next) {
                     var actualStartTime = Task.actualStartTime;
                     var actualEndTime = Task.actualEndTime;
                     var province = Task.province;
+
+                    var hasWarn = false;
+                    var warmMessage = "";
+                    if (plannedStartTime) {
+                        if (!actualStartTime && !moment().isBefore(plannedStartTime) && progress !== 100) {
+                            hasWarn = true;
+                            warmMessage += "【到期未开始】";
+                        }
+                    }
+                    if (plannedEndTime) {
+                        if (!actualEndTime && !moment().isBefore(plannedEndTime) && progress !== 100) {
+                            hasWarn = true;
+                            warmMessage += "【到期未结束】";
+                        }
+                    }
+
+
                     var json = {
                         id: id,
                         step: step,
@@ -620,7 +638,9 @@ router.get('/taskInfo', function (req, res, next) {
                         // plannedEndTime: plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : "",
                         // actualStartTime: actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : "",
                         // actualEndTime: actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : "",
-                        province: province
+                        province: province,
+                        warmMessage: warmMessage,
+                        hasWarn: hasWarn
                     };
                     if (plannedStartTime) {
                         json["plannedStartTime"] = moment(plannedStartTime).format("YYYY-MM-DD");
@@ -648,6 +668,199 @@ router.get('/taskInfo', function (req, res, next) {
         }
     }
 });
+
+
+router.get('/exportProblem', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var problemCollection = new ProblemCollection();
+        var infoProblemResult;
+        models.Problem.findAll({
+            attributes: [
+                "id",
+                "province",
+                "index",
+                "groupType",
+                "taskId",
+                "problemDate",
+                "expectedResolutionDate",
+                "theLatestSettlementDate",
+                "innerOuter",
+                "subjectType",
+                "priority",
+                "describe",
+                "solution",
+                "progressAndResults",
+                "state",
+                "questioner",
+                "responsible",
+                "monitor",
+                "remark"]
+            // order: [
+            //     ['expectedResolutionDate', 'DESC']
+            // ]
+        }).then(function (result) {
+            infoProblemResult = result;
+            infoProblemResult.forEach(function (Problem) {
+                var id = Problem.id;
+                var index = Problem.index;
+                var groupType = Problem.groupType;
+                var taskId = Problem.taskId;
+                var problemDate = Problem.problemDate;
+                var expectedResolutionDate = Problem.expectedResolutionDate;
+                var theLatestSettlementDate = Problem.theLatestSettlementDate;
+                var innerOuter = Problem.innerOuter;
+                var subjectType = Problem.subjectType;
+                var priority = Problem.priority;
+                var describe = Problem.describe;
+                var solution = Problem.solution;
+                var progressAndResults = Problem.progressAndResults;
+                var state = Problem.state;
+                var questioner = Problem.questioner;
+                var responsible = Problem.responsible;
+                var monitor = Problem.monitor;
+                var remark = Problem.remark;
+                var province = Problem.province;
+                var json = {
+                    id: id,
+                    province: province,
+                    index: index,
+                    groupType: groupType,
+                    taskId: taskId,
+                    // problemDate: problemDate ? moment(problemDate).format("YYYY-MM-DD") : undefined,
+                    // expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") : undefined,
+                    // theLatestSettlementDate: theLatestSettlementDate ? moment(theLatestSettlementDate).format("YYYY-MM-DD") :undefined,
+                    innerOuter: innerOuter,
+                    subjectType: subjectType,
+                    priority: priority,
+                    describe: describe,
+                    solution: solution,
+                    progressAndResults: progressAndResults,
+                    state: state,
+                    questioner: questioner,
+                    responsible: responsible,
+                    monitor: monitor,
+                    remark: remark
+                };
+                if (problemDate) {
+                    json["problemDate"] = moment(problemDate).format("YYYY-MM-DD");
+                }
+                if (expectedResolutionDate) {
+                    json["expectedResolutionDate"] = moment(expectedResolutionDate).format("YYYY-MM-DD");
+                }
+                if (theLatestSettlementDate) {
+                    json["theLatestSettlementDate"] = moment(theLatestSettlementDate).format("YYYY-MM-DD");
+                }
+                problemCollection.push(json);
+
+            });
+            var sheets = [];
+            for (var province in provinceInfos) {
+                var provinceName = provinceInfos[province];
+                var tempProblem = problemCollection.where({province: province});
+                var data = [
+                    ["问题提出人",
+                    "问题/风险/求助描述",
+                    "产生日期",
+                    "期望解决日期",
+                    "状态",
+                    "组别",
+                    "关联任务编号",
+                    "最晚解决日期",
+                    "内部/外部",
+                    "类别",
+                    "优先级",
+                    "解决方案",
+                    "进展及结果",
+                    "处理责任人",
+                    "备注"]
+                ];
+                _.each(tempProblem, function (Problem) {
+                    var json = Problem.toJSON();
+                    var info = [];
+                    info.push(json["questioner"] || undefined);
+                    info.push(json["describe"] || undefined);
+                    info.push(json["problemDate"] || undefined);
+                    info.push(json["expectedResolutionDate"] || undefined);
+                    info.push(json["state"] || undefined);
+                    info.push(json["groupType"] || undefined);
+                    info.push(json["taskId"] || undefined);
+                    info.push(json["theLatestSettlementDate"] || undefined);
+                    info.push(json["innerOuter"] || undefined);
+                    info.push(json["subjectType"] || undefined);
+                    info.push(json["priority"] || undefined);
+                    info.push(json["solution"] || undefined);
+                    info.push(json["progressAndResults"] || undefined);
+                    info.push(json["responsible"] || undefined);
+                    info.push(json["remark"] || undefined);
+
+                    // questioner  问题提出人
+                    // describe  问题/风险/求助描述
+                    // problemDate 产生日期
+                    // expectedResolutionDate 期望解决日期
+                    // state  状态
+                    // groupType  组别
+                    // taskId   关联任务编号
+                    // theLatestSettlementDate  最晚解决日期
+                    // innerOuter 内部/外部
+                    // subjectType 类别
+                    // priority 优先级
+                    // solution 解决方案
+                    // progressAndResults 进展及结果
+                    // responsible 处理责任人
+                    // remark 备注
+
+
+                    data.push(info);
+                });
+                sheets.push({
+                    name: provinceName,
+                    data: data
+                });
+                // res.send('export successfully!');
+            }
+            var buffer = xlsx.build(sheets); // Returns a buffer
+            // fs.writeFileSync('问题导出列表.xlsx', buffer, 'binary');
+            res.attachment("问题导出列表.xlsx");
+            res.set("Content-Type", "application/vnd.openxmlformats");
+            res.end(buffer, "binary");
+
+        });
+
+
+    }
+});
+
+router.post('/submitTaskCell', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var user = findUserProvince(session.user);
+        if (user) {
+            var province = user.province;
+            var id = req.body.id;
+            // var progress = req.body.progress;
+            var field = req.body.field;
+            var value = req.body.value;
+
+            if ("actualStartTime" === field || "actualEndTime" === field) {
+                value = value ? moment(value).format("YYYY-MM-DD") : undefined;
+            }
+            var param = {};
+            param[field] = value;
+
+            models.Task.update(
+                param, {
+                    'where': {'id': id}
+                }
+            ).then(function () {
+                res.send({
+                    code: 0, message: ""
+                });
+            });
+        }
+    }
+});
+
 
 router.post('/submitTask', function (req, res, next) {
     var session = req.session;

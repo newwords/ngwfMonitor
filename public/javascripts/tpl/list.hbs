@@ -1,6 +1,7 @@
 <div class="total">
     <div class="progress">
-        <h3>项目实施总体进度</h3>
+        <h3>项目实施总体进度<a id="exportProblem"
+                       style="  cursor: pointer;float: right;margin-right:40px;color:#ff9700">问题导出</a></h3>
         <progress value="{{total}}" max="100"></progress>
     </div>
     <div class="num">
@@ -91,6 +92,7 @@
                     <li class="time">期望解决时间</li>
                     <li class="person">期望解决人</li>
                     <li class="describe">问题描述</li>
+                    <li class="state">状态</li>
                 </ul>
                 {{#each problems}}
                     <ul>
@@ -100,6 +102,7 @@
                         <li class="time">&nbsp;{{expectedResolutionDate}}&nbsp;</li>
                         <li class="person">&nbsp;{{questioner}}&nbsp;</li>
                         <li class="describe" title="{{describe}}">&nbsp;{{describe}}&nbsp;</li>
+                        <li class="state" title="{{state}}">{{state}}</li>
                     </ul>
                 {{/each}}
             </div>

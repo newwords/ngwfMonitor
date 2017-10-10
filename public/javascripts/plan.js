@@ -61,7 +61,7 @@ require(['backbone', 'handlebars', 'text!tpl/plan.hbs',
             }
           });
         });
-        table.init();
+        window.table = table.init();
       });
     }
   });
