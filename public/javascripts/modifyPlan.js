@@ -45,11 +45,14 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
             data: para,
             success: function (rep) {
               console.log(rep);
+              debugger;
               if (rep && rep.code !== undefined) {
                 if (rep.code === 0) {
-                  var index = parent.layer.getFrameIndex(window.name);
-                  parent.layer.close(index);
-                  parent.location.reload();
+                    parent.table.reload("mainPlan");
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                  //todo 不这么刷新
+                  // parent.location.reload();
                 } else if (rep.code === 3) {
                   layer.alert("修改计划失败!");
                 }
