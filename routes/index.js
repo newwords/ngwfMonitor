@@ -276,7 +276,6 @@ router.post('/ajax', function (req, res, next) {
                     if (info.province === Task.province) {
                         info["bgnTime"] = moment(Task.plannedStartTime).format("YYYY-MM-DD");
                         info["endTime"] = moment(Task.plannedEndTime).format("YYYY-MM-DD");
-
                     }
                 });
             });
@@ -639,20 +638,20 @@ router.get('/taskInfo', function (req, res, next) {
                         // actualStartTime: actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : "",
                         // actualEndTime: actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : "",
                         province: province,
-                        warmMessage: hasWarn?warmMessage:"",
+                        warmMessage: hasWarn ? warmMessage : "",
                         hasWarn: hasWarn
                     };
                     if (plannedStartTime) {
                         json["plannedStartTime"] = moment(plannedStartTime).format("YYYY-MM-DD");
                     }
                     if (plannedEndTime) {
-                        json["plannedEndTime"] = moment(plannedEndTime).format("YYYY-MM-DD");
+                        json["plannedEndTime"] = moment(plannedEndTime).format("YYYY-MM-DD") + " 23:59:59";
                     }
                     if (actualStartTime) {
                         json["actualStartTime"] = moment(actualStartTime).format("YYYY-MM-DD");
                     }
                     if (actualEndTime) {
-                        json["actualEndTime"] = moment(actualEndTime).format("YYYY-MM-DD");
+                        json["actualEndTime"] = moment(actualEndTime).format("YYYY-MM-DD") + " 23:59:59";
                     }
                     taskCollection.push(json);
                 });
@@ -760,20 +759,20 @@ router.get('/exportProblem', function (req, res, next) {
                 var tempProblem = problemCollection.where({province: province});
                 var data = [
                     ["问题提出人",
-                    "问题/风险/求助描述",
-                    "产生日期",
-                    "期望解决日期",
-                    "状态",
-                    "组别",
-                    "关联任务编号",
-                    "最晚解决日期",
-                    "内部/外部",
-                    "类别",
-                    "优先级",
-                    "解决方案",
-                    "进展及结果",
-                    "处理责任人",
-                    "备注"]
+                        "问题/风险/求助描述",
+                        "产生日期",
+                        "期望解决日期",
+                        "状态",
+                        "组别",
+                        "关联任务编号",
+                        "最晚解决日期",
+                        "内部/外部",
+                        "类别",
+                        "优先级",
+                        "解决方案",
+                        "进展及结果",
+                        "处理责任人",
+                        "备注"]
                 ];
                 _.each(tempProblem, function (Problem) {
                     var json = Problem.toJSON();
@@ -842,8 +841,12 @@ router.post('/submitTaskCell', function (req, res, next) {
             var field = req.body.field;
             var value = req.body.value;
 
-            if ("actualStartTime" === field || "actualEndTime" === field) {
+            if ("actualStartTime" === field) {
                 value = value ? moment(value).format("YYYY-MM-DD") : undefined;
+            }
+
+            if ("actualEndTime" === field) {
+                value = value ? (moment(value).format("YYYY-MM-DD") + " 23:59:59") : undefined;
             }
             var param = {};
             param[field] = value;
@@ -879,7 +882,7 @@ router.post('/submitTask', function (req, res, next) {
             // plannedStartTime = plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : undefined;
             // plannedEndTime = plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : undefined;
             actualStartTime = actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : undefined;
-            actualEndTime = actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : undefined;
+            actualEndTime = actualEndTime ? (moment(actualEndTime).format("YYYY-MM-DD") + " 23:59:59") : undefined;
 
             //
             // plannedStartTime: DataTypes.DATE,
