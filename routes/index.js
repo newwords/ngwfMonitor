@@ -639,7 +639,7 @@ router.get('/taskInfo', function (req, res, next) {
                         // actualStartTime: actualStartTime ? moment(actualStartTime).format("YYYY-MM-DD") : "",
                         // actualEndTime: actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : "",
                         province: province,
-                        warmMessage: warmMessage,
+                        warmMessage: hasWarn?warmMessage:"",
                         hasWarn: hasWarn
                     };
                     if (plannedStartTime) {
