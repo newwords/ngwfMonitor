@@ -626,6 +626,9 @@ router.get('/taskInfo', function (req, res, next) {
                         }
                     }
 
+                    if (progress >= 100) {
+                        hasWarn = false;
+                    }
 
                     var json = {
                         id: id,
