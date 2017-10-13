@@ -81,8 +81,20 @@ router.post('/ajax', function (req, res, next) {
     var hasProvince = false;
     var _province;
     if (_.has(req.body, "province")) {
-        hasProvince = true;
-        _province = req.body.province;
+        if ("main" === req.body.province) {
+            if (!req.session.user) { //到达/home路径首先判断是否已经登录
+                req.session.error = "请先登录";
+                res.redirect("/ngwf/login.html"); //未登录则重定向到 /login 路径
+                return;
+            }
+            if (_.isString(req.session.user)) {
+                var user = findUserProvince(req.session.user);
+                if (user) {
+                    hasProvince = true;
+                    _province = user.province;
+                }
+            }
+        }
     }
     var taskTimeQueryParam = {
         attributes: ["province",

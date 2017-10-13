@@ -1000,7 +1000,7 @@ define(["jquery"], function ($) {
             $.ajax({
                 cache:false,
                 type: "POST",
-                data:{"province":"00030006"},
+                data:{"province":"main"},
                 dataType: 'json',
                 url: "/ajax",
                 success: function (result) {
