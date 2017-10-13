@@ -33,6 +33,37 @@ require(['backbone', 'handlebars', 'text!tpl/problem.hbs',
             // });
             layui.use(['table'], function () {
                 var table = layui.table;
+                table.on('edit', function (obj) {
+                    var field = obj.field;
+                    var value = obj.value;
+                    var id = obj.data.id;
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        url: "/updateProblemCell",
+                        data: {
+                            field: field,
+                            value: value,
+                            id: id
+                        },
+                        success: function (rep) {
+                            if (rep && rep.code !== undefined) {
+                                if (rep.code === 0) {
+
+                                } else if (rep.code === 3) {
+                                    layer.alert("修改计划失败!");
+
+                                }
+                            } else {
+                                layer.alert("修改计划失败!");
+                            }
+                        },
+                        error: function (error) {
+                            layer.alert(error);
+                        }
+                    });
+                });
+
                 table.on('tool', function (obj) {
                     var data = obj.data;
                     if (data.state === obj.event) {
@@ -66,7 +97,7 @@ require(['backbone', 'handlebars', 'text!tpl/problem.hbs',
 
                     });
                 });
-                table.init();
+                window.table = table.init();
             });
         }
     });

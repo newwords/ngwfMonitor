@@ -13,6 +13,7 @@ var multiparty = require('multiparty');
 var sequelize = require("sequelize");
 var moment = require("moment");
 var Backbone = require("backbone");
+const space = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 // var ccap = require('ccap');//Instantiated ccap class
 // const captcha = ccap({
 //     width: 90,//set width,default is 256
@@ -77,25 +78,45 @@ router.post('/ajax', function (req, res, next) {
     var infoTaskResult;
     var infoProblemResult;
 
-    models.Task.findAll({
+    var hasProvince = false;
+    var _province;
+    if (_.has(req.body, "province")) {
+        hasProvince = true;
+        _province = req.body.province;
+    }
+    var taskTimeQueryParam = {
         attributes: ["province",
             [sequelize.fn('min', sequelize.col('plannedStartTime')), "plannedStartTime"],
             [sequelize.fn('max', sequelize.col('plannedEndTime')), "plannedEndTime"]
         ],
         group: 'province'
-    }).then(function (result) {
+    };
+
+    var taskInfoQueryParam = {
+        attributes: ["province", 'progress', 'weight', 'step', 'event', 'taskId', 'parentTaskId',
+            'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson", "updatedAt", "index"]
+    };
+    var problemInfoQueryParams = {
+        attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible", "state", "updatedAt"]
+    };
+    if (hasProvince) {
+        taskTimeQueryParam["where"] = {'province': _province};
+    }
+
+    models.Task.findAll(taskTimeQueryParam).then(function (result) {
         timeTaskResult = result;
     }).then(function () {
-        return models.Task.findAll({
-            attributes: ["province", 'progress', 'weight', 'step', 'event', 'taskId', 'parentTaskId',
-                'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson", "updatedAt", "index"]
-        })
+        if (hasProvince) {
+            taskInfoQueryParam["where"] = {'province': _province};
+        }
+        return models.Task.findAll(taskInfoQueryParam);
     }).then(function (result) {
         infoTaskResult = result;
     }).then(function () {
-        return models.Problem.findAll({
-            attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible", "state", "updatedAt"]
-        })
+        if (hasProvince) {
+            problemInfoQueryParams["where"] = {'province': _province};
+        }
+        return models.Problem.findAll(problemInfoQueryParams)
     }).then(function (result) {
         infoProblemResult = result;
         var taskCollection = new TaskCollection();
@@ -196,6 +217,9 @@ router.post('/ajax', function (req, res, next) {
 
         var total = 0;
         _.each(provinces, function (cityName, cityCode) {
+            if (hasProvince && cityCode !== _province) {
+                return;
+            }
             var weight = 0;
             var phases = [];
             var tempPhases = taskCollection.where({province: cityCode});
@@ -587,6 +611,7 @@ router.get('/taskInfo', function (req, res, next) {
             models.Task.findAll({
                 attributes: [
                     "id",
+                    "taskId",
                     "step",
                     "progress",
                     "responsiblePerson",
@@ -602,7 +627,9 @@ router.get('/taskInfo', function (req, res, next) {
             }).then(function (result) {
                 result.forEach(function (Task) {
                     var id = Task.id;
-                    var step = Task.step;
+                    var taskId = Task.taskId;
+                    var level = taskId.split(".").length || 0;
+                    var step = space.substr(0, level * 24) + Task.step;
                     var progress = Task.progress;
                     var responsiblePerson = Task.responsiblePerson;
                     var plannedStartTime = Task.plannedStartTime;
@@ -632,6 +659,7 @@ router.get('/taskInfo', function (req, res, next) {
 
                     var json = {
                         id: id,
+                        taskId: taskId,
                         step: step,
                         progress: progress,
                         progressPercent: (progress * 100 + "%"),
@@ -942,8 +970,12 @@ router.get('/problemInfo', function (req, res, next) {
                     "state",
                     "questioner",
                     "responsible",
+                    "proposes",
                     "monitor",
-                    "remark"],
+                    "remark",
+                    "why",
+                    "belong",
+                    "belongPerson"],
                 where: {
                     province: province
                 },
@@ -971,6 +1003,11 @@ router.get('/problemInfo', function (req, res, next) {
                     var responsible = Problem.responsible;
                     var monitor = Problem.monitor;
                     var remark = Problem.remark;
+                    var proposes = Problem.proposes;
+                    var why = Problem.why;
+                    var belong = Problem.belong;
+                    var belongPerson = Problem.belongPerson;
+
                     var json = {
                         id: id,
                         province: province,
@@ -990,7 +1027,11 @@ router.get('/problemInfo', function (req, res, next) {
                         questioner: questioner,
                         responsible: responsible,
                         monitor: monitor,
-                        remark: remark
+                        remark: remark,
+                        proposes: proposes,
+                        why: why,
+                        belong: belong,
+                        belongPerson: belongPerson
                     };
                     if (problemDate) {
                         json["problemDate"] = moment(problemDate).format("YYYY-MM-DD");
@@ -1017,6 +1058,28 @@ router.get('/problemInfo', function (req, res, next) {
 
     }
 });
+router.post('/updateProblemCell', function (req, res, next) {
+    var session = req.session;
+    if (_.isString(session.user)) {
+        var user = findUserProvince(session.user);
+        if (user) {
+            var province = user.province;
+            var id = req.body.id;
+            var field = req.body.field;
+            var value = req.body.value;
+            var param = {};
+            param[field] = value;
+            models.Problem.update(
+                param, {
+                    'where': {'id': id}
+                }
+            ).then(function () {
+                res.send({code: 0, message: ''});
+            });
+        }
+    }
+});
+
 router.post('/updateProblem', function (req, res, next) {
     var session = req.session;
     if (_.isString(session.user)) {
@@ -1062,6 +1125,11 @@ router.post('/submitProblem', function (req, res, next) {
             var responsible = req.body.responsible;
             var monitor = req.body.monitor;
             var remark = req.body.remark;
+            var proposes = req.body.proposes;
+            var why = req.body.why;
+            var belong = req.body.belong;
+            var belongPerson = req.body.belongPerson;
+
             var json = {
                 province: province,
                 index: index,
@@ -1077,7 +1145,12 @@ router.post('/submitProblem', function (req, res, next) {
                 questioner: questioner,
                 responsible: responsible,
                 monitor: monitor,
-                remark: remark
+                remark: remark,
+                proposes: proposes,
+                user: session.user,
+                why: why,
+                belong: belong,
+                belongPerson: belongPerson
             };
 
             if (problemDate) {

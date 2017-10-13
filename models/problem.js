@@ -38,8 +38,13 @@ module.exports = function (sequelize, DataTypes) {
         questioner: DataTypes.STRING,//问题提出人
         responsible: DataTypes.STRING,//处理责任人
         monitor: DataTypes.STRING,//现场监控责任人
-        proposes: DataTypes.ENUM('问题','对分公司要求'),//问题提出方(问题/对分公司要求)
-        remark: DataTypes.STRING(4096)//备注
+        proposes: DataTypes.ENUM('分公司问题', '对分公司要求'),//问题提出方(问题/对分公司要求)
+        remark: DataTypes.STRING(2048),//备注
+        why: DataTypes.STRING(2048),//症结原因
+        belong: DataTypes.STRING,//问题归属
+        belongPerson: DataTypes.STRING,//问题处理人
+        user: DataTypes.STRING//用户
+
     });
     return Problem;
 };

@@ -4,24 +4,36 @@
         <div class="layui-field-box">
             <form class="form layui-form">
                 <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><span style="color:red">*</span>问题类型</label>
+                        <div class="layui-input-inline">
+                            <select name="proposes" required lay-verify="required">
+                                <option value="分公司问题" selected>分公司问题</option>
+                                <option value="对分公司的要求">对分公司的要求</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
                     <label class="layui-form-label"><span style="color:red">*</span>问题描述</label>
                     <div class="layui-input-block">
-                        <textarea name="describe" placeholder="请输入内容" required lay-verify="required" class="layui-textarea"></textarea>
+                        <textarea name="describe" placeholder="请输入内容" required lay-verify="required"
+                                  class="layui-textarea"></textarea>
                     </div>
                 </div>
                 <!--<div class="layui-form-item">-->
-                    <!--<label class="layui-form-label">关联任务编号</label>-->
-                    <!--<div class="layui-input-inline">-->
-                        <!--<input type="text" name="taskId" placeholder="请输入关联任务编号" autocomplete="off" class="layui-input">-->
-                    <!--</div>-->
+                <!--<label class="layui-form-label">关联任务编号</label>-->
+                <!--<div class="layui-input-inline">-->
+                <!--<input type="text" name="taskId" placeholder="请输入关联任务编号" autocomplete="off" class="layui-input">-->
+                <!--</div>-->
                 <!--</div>-->
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">关联任务编号</label>
                         <div class="layui-input-inline">
                             <input type="text" id="taskIdSelect" name="taskIdSelect" placeholder="请输入关联任务编号"
-                                autocomplete="off"
-                                class="layui-input">
+                                   autocomplete="off"
+                                   class="layui-input">
                             <input type="text" id="taskId" name="taskId" style="display: none;">
                         </div>
                     </div>
@@ -29,26 +41,27 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">处理责任人</label>
                     <div class="layui-input-block">
-                        <input type="text" name="responsible" placeholder="处理责任人" class="layui-input" />
+                        <input type="text" name="responsible" placeholder="处理责任人" class="layui-input"/>
                     </div>
                 </div>
-               
-                
+
+
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">期望解决日期</label>
                         <div class="layui-input-inline">
-                            <input type="text" class="layui-input" id="expectedResolutionDate" name="expectedResolutionDate" placeholder="yyyy-MM-dd">
+                            <input type="text" class="layui-input" id="expectedResolutionDate"
+                                   name="expectedResolutionDate" placeholder="yyyy-MM-dd">
                         </div>
                     </div>
                 </div>
                 <div class="layui-form-item">
                     <label class="layui-form-label"><span style="color:red">*</span>问题提出人</label>
                     <div class="layui-input-block">
-                        <input type="text" name="questioner" placeholder="问题提出人" class="layui-input" />
+                        <input type="text" name="questioner" placeholder="问题提出人" class="layui-input"/>
                     </div>
                 </div>
-                
+
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label"><span style="color:red">*</span>产生日期</label>
@@ -57,16 +70,15 @@
                                    lay-verify="required"
                                    placeholder="yyyy-MM-dd">
                         </div>
-                    </div>      
+                    </div>
                 </div>
-                
                 <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label"><span style="color:red">*</span>状态</label>
                         <div class="layui-input-inline">
                             <select name="state" required lay-verify="required">
                                 <option value="open" selected>open</option>
-                                <option value="close" >close</option>
+                                <option value="close">close</option>
                                 <option value="pending">pending</option>
                             </select>
                         </div>
@@ -132,7 +144,14 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">症结原因</label>
+                    <div class="layui-input-block">
+                            <textarea name="why" placeholder="请输入内容"
+                                      class="layui-textarea"></textarea>
+                    </div>
+                </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">解决方案</label>
@@ -148,7 +167,21 @@
                                       class="layui-textarea"></textarea>
                     </div>
                 </div>
-       
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">问题归属</label>
+                    <div class="layui-input-block">
+                        <textarea name="belong" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">问题处理人</label>
+                    <div class="layui-input-block">
+                        <textarea name="belongPerson" placeholder="请输入内容" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">现场监控责任人</label>
@@ -164,6 +197,7 @@
                                       class="layui-textarea"></textarea>
                     </div>
                 </div>
+
 
                 <div class="layui-form-item">
                     <div class="layui-input-block">

@@ -25,6 +25,7 @@ require(['backbone', 'handlebars', 'text!tpl/editProblem.hbs',
                             if (rep && rep.code !== undefined) {
                                 if (rep.code === 0) {
                                     layer.alert("提交成功!");
+                                    parent.table.reload("mainProblem");
                                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                                     parent.layer.close(index); //再执行关闭
                                 } else if (rep.code === 3) {
