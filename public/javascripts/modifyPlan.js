@@ -44,8 +44,6 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
             url: "/submitTask",
             data: para,
             success: function (rep) {
-              console.log(rep);
-              debugger;
               if (rep && rep.code !== undefined) {
                 if (rep.code === 0) {
                     parent.table.reload("mainPlan");

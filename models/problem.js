@@ -38,6 +38,7 @@ module.exports = function (sequelize, DataTypes) {
         questioner: DataTypes.STRING,//问题提出人
         responsible: DataTypes.STRING,//处理责任人
         monitor: DataTypes.STRING,//现场监控责任人
+        proposes: DataTypes.ENUM('问题','对分公司要求'),//问题提出方(问题/对分公司要求)
         remark: DataTypes.STRING(4096)//备注
     });
     return Problem;
