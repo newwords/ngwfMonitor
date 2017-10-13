@@ -374,6 +374,10 @@ p.medium {
   width: 10%;
 }
 
+.problem li.solver{
+  width: 10%;
+}
+
 .problem li.person {
   width: 10%;
 }
