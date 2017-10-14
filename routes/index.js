@@ -109,7 +109,8 @@ router.post('/ajax', function (req, res, next) {
             'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson", "updatedAt", "index"]
     };
     var problemInfoQueryParams = {
-        attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible", "state", "updatedAt", "proposes", "solution", "progressAndResults"]
+        attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible", "state", "updatedAt", "proposes", "solution", "progressAndResults"],
+        where: {'state': ["open", "padding"]}
     };
     if (hasProvince) {
         taskTimeQueryParam["where"] = {'province': _province};
@@ -126,7 +127,7 @@ router.post('/ajax', function (req, res, next) {
         infoTaskResult = result;
     }).then(function () {
         if (hasProvince) {
-            problemInfoQueryParams["where"] = {'province': _province};
+            problemInfoQueryParams["where"] = {'province': _province, 'state': ["open", "padding"]};
         }
         return models.Problem.findAll(problemInfoQueryParams)
     }).then(function (result) {
@@ -172,9 +173,9 @@ router.post('/ajax', function (req, res, next) {
             var state = Problem.state;
             var updatedAt = Problem.updatedAt;
             var sameDay = moment().format("YYYY-MM-DD") === moment(updatedAt).format("YYYY-MM-DD");
-            var proposes=Problem.proposes;
-            var solution=Problem.solution;
-            var progressAndResults=Problem.progressAndResults;
+            var proposes = Problem.proposes;
+            var solution = Problem.solution;
+            var progressAndResults = Problem.progressAndResults;
 
             problemCollection.push({
                 province: province,
@@ -186,9 +187,9 @@ router.post('/ajax', function (req, res, next) {
                 state: state,
                 responsible: responsible,
                 sameDay: sameDay,
-                proposes:proposes,
-                solution:solution,
-                progressAndResults:progressAndResults
+                proposes: proposes,
+                solution: solution,
+                progressAndResults: progressAndResults
             });
         });
 
