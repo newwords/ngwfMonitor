@@ -169,5 +169,160 @@ module.exports = [
         name: 'qinghai',
         password: '123456',
         province: "00030031"
+    },
+    {
+        name: 'adminbeijing',
+        password: '123456',
+        province: "00030001"
+    },
+    {
+        name: 'admintianjin',
+        password: '123456',
+        province: "00030002"
+    },
+    {
+        name: 'adminneimenggu',
+        password: '123456',
+        province: "00030003"
+    },
+    {
+        name: 'adminhebei',
+        password: '123456',
+        province: "00030004"
+    },
+    {
+        name: 'adminheilongjiang',
+        password: '123456',
+        province: "00030005"
+    },
+    {
+        name: 'adminliaoning',
+        password: '123456',
+        province: "00030006"
+    },
+    {
+        name: 'adminjilin',
+        password: '123456',
+        province: "00030007"
+    },
+    {
+        name: 'adminshandong',
+        password: '123456',
+        province: "00030008"
+    },
+    {
+        name: 'adminhenan',
+        password: '123456',
+        province: "00030009"
+    },
+    {
+        name: 'adminshanxi',
+        password: '123456',
+        province: "00030010"
+    },
+    {
+        name: 'adminshanxi3',
+        password: '123456',
+        province: "00030011"
+    },
+    {
+        name: 'admingansu',
+        password: '123456',
+        province: "00030012"
+    },
+    {
+        name: 'adminningxia',
+        password: '123456',
+        province: "00030013"
+    },
+    {
+        name: 'adminxinjiang',
+        password: '123456',
+        province: "00030014"
+    },
+    {
+        name: 'adminxizang',
+        password: '123456',
+        province: "00030015"
+    },
+    {
+        name: 'adminyunnan',
+        password: '123456',
+        province: "00030016"
+    },
+    {
+        name: 'adminsichuan',
+        password: '123456',
+        province: "00030017"
+    },
+    {
+        name: 'adminchongqing',
+        password: '123456',
+        province: "00030018"
+    },
+    {
+        name: 'adminhubei',
+        password: '123456',
+        province: "00030019"
+    },
+    {
+        name: 'adminhunan',
+        password: '123456',
+        province: "00030020"
+    },
+    {
+        name: 'adminjiangsu',
+        password: '123456',
+        province: "00030021"
+    },
+    {
+        name: 'adminjiangxi',
+        password: '123456',
+        province: "00030022"
+    },
+    {
+        name: 'adminzhejiang',
+        password: '123456',
+        province: "00030023"
+    },
+    {
+        name: 'adminfujian',
+        password: '123456',
+        province: "00030024"
+    },
+    {
+        name: 'adminguangdong',
+        password: '123456',
+        province: "00030025"
+    },
+    {
+        name: 'adminguangxi',
+        password: '123456',
+        province: "00030026"
+    },
+    {
+        name: 'adminguizhou',
+        password: '123456',
+        province: "00030027"
+    },
+    {
+        name: 'adminshanghai',
+        password: '123456',
+        province: "00030028"
+    },
+    {
+        name: 'adminhainan',
+        password: '123456',
+        province: "00030029"
+    },
+    {
+        name: 'adminanhui',
+        password: '123456',
+        province: "00030030"
+    },
+    {
+        name: 'adminqinghai',
+        password: '123456',
+        province: "00030031"
     }
 ];

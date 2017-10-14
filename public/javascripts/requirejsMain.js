@@ -22,9 +22,9 @@ var requireConfig = require = {
         'layui': 'requirejs/layui.all'
     },
     urlArgs: function (moduleName, url) {
-        // if (url.match("\.tpl$") || url.match("\.js$") || url.match("\.css$")) {
-        //     return '?v=' + (window.Args ? Args : Math.random());
-        // }
+        if (url.match("\.tpl$") || url.match("\.js$") || url.match("\.css$")) {
+            return '?v=1.0.1';
+        }
         return '';
     },
     waitSeconds: 0,
