@@ -300,7 +300,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
             el: "#root"
         });
         _content.data = undefined;
-        mapData.getMapData(function (data) {
+        mapData.getMapDataMain(function (data) {
             _content.data = data;
             if (_content.data && _content.data['citys']) {
                 _content.mapView.chart.setOption({

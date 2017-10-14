@@ -996,6 +996,26 @@ define(["jquery"], function ($) {
         mapData[key].value = +data.citys[key].rate;
     }
     return {
+        getMapDataMain: function (callback) {
+            $.ajax({
+                cache:false,
+                type: "POST",
+                dataType: 'json',
+                url: "/ajax",
+                success: function (result) {
+                    if (_.isFunction(callback)) {
+                        callback(result);
+                    }
+
+                },
+                error: function (error) {
+                    if (_.isFunction(callback)) {
+                        callback([]);
+                    }
+                }
+            });
+
+        },
         getMapData: function (callback) {
             $.ajax({
                 cache:false,
