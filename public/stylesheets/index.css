@@ -388,7 +388,7 @@ p.medium {
 
 .problem li.describe {
   text-align: center;
-  width: 35%;
+  width: 25%;
 }
 .problem li.state {
   width: 5%;
@@ -513,7 +513,7 @@ span.active {
 }
 
 .map-problem li.phase {
-  width: 25%;
+  width: 10%;
 }
 
 .map-problem li.person {
@@ -521,7 +521,7 @@ span.active {
 }
 
 .map-problem li.time {
-  width: 10%;
+  width: 15%;
 }
 
 .map-problem li.solver {
@@ -529,7 +529,7 @@ span.active {
 }
 
 .map-problem li.describe {
-  width: 30%;
+  width: 25%;
   text-align: left;
 }
 

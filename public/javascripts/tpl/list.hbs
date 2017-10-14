@@ -86,22 +86,31 @@
             </div>
             <div class="problem" style="display: none;">
                 <ul class="title">
-                    <li class="phase">实施阶段</li>
-                    <li class="person">提出人</li>
-                    <li class="time">创建时间</li>
-                    <li class="time">期望解决时间</li>
-                    <li class="solver">期望解决人</li>
+                    <!--<li class="phase">实施阶段</li>-->
+                    <!--<li class="person">提出人</li>-->
+                    <!--<li class="time">创建时间</li>-->
+                    <!--<li class="time">期望解决时间</li>-->
+                    <!--<li class="solver">期望解决人</li>-->
+                    <!--<li class="describe">问题描述</li>-->
+                    <!--<li class="state">状态</li>-->
+
+                    <li class="phase">问题归属</li>
+                    <li class="phase">提出人</li>
+                    <li class="phase">期望解决时间</li>
                     <li class="describe">问题描述</li>
+                    <li class="describe">解决方案</li>
+                    <li class="time">进展</li>
                     <li class="state">状态</li>
                 </ul>
                 {{#each problems}}
                     <ul>
-                        <li class="phase">&nbsp;{{step}}&nbsp;</li>
-                        <li class="person">&nbsp;{{questioner}}&nbsp;</li>
-                        <li class="time">&nbsp;{{problemDate}}&nbsp;</li>
-                        <li class="time">&nbsp;{{expectedResolutionDate}}&nbsp;</li>
-                        <li class="solver">&nbsp;{{responsible}}&nbsp;</li>
-                        <li class="describe" title="{{describe}}">&nbsp;{{describe}}&nbsp;</li>
+                        <li class="phase">&nbsp;{{proposes}}&nbsp;</li>
+                        <li class="phase">&nbsp;{{questioner}}&nbsp;</li>
+                        <li class="phase">&nbsp;{{expectedResolutionDate}}&nbsp;</li>
+                        <li class="describe" title="{{describe}}">{{describe}}&nbsp;
+                        </li>
+                        <li class="describe" title="{{solution}}">&nbsp;{{solution}}&nbsp;</li>
+                        <li class="time" title="{{progressAndResults}}">&nbsp;{{progressAndResults}}&nbsp;</li>
                         <li class="state" title="{{state}}">{{state}}</li>
                     </ul>
                 {{/each}}

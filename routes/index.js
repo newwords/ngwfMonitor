@@ -109,7 +109,7 @@ router.post('/ajax', function (req, res, next) {
             'plannedStartTime', 'plannedEndTime', 'actualStartTime', 'actualEndTime', "responsiblePerson", "updatedAt", "index"]
     };
     var problemInfoQueryParams = {
-        attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible", "state", "updatedAt"]
+        attributes: ["province", "taskId", "problemDate", "expectedResolutionDate", "describe", "questioner", "responsible", "state", "updatedAt", "proposes", "solution", "progressAndResults"]
     };
     if (hasProvince) {
         taskTimeQueryParam["where"] = {'province': _province};
@@ -172,6 +172,10 @@ router.post('/ajax', function (req, res, next) {
             var state = Problem.state;
             var updatedAt = Problem.updatedAt;
             var sameDay = moment().format("YYYY-MM-DD") === moment(updatedAt).format("YYYY-MM-DD");
+            var proposes=Problem.proposes;
+            var solution=Problem.solution;
+            var progressAndResults=Problem.progressAndResults;
+
             problemCollection.push({
                 province: province,
                 taskId: taskId,
@@ -181,7 +185,10 @@ router.post('/ajax', function (req, res, next) {
                 questioner: questioner,
                 state: state,
                 responsible: responsible,
-                sameDay: sameDay
+                sameDay: sameDay,
+                proposes:proposes,
+                solution:solution,
+                progressAndResults:progressAndResults
             });
         });
 
