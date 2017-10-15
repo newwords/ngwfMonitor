@@ -643,7 +643,8 @@ router.get('/taskInfo', function (req, res, next) {
                 ],
                 where: {
                     province: province
-                }
+                },
+                order: ['index']
             }).then(function (result) {
                 result.forEach(function (Task) {
                     var id = Task.id;
