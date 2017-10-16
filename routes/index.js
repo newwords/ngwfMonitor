@@ -67,11 +67,11 @@ router.get("/base64", function (req, res, next) {
 
 /* AJAX handle*/
 router.post('/ajax', function (req, res, next) {
-    // if (!req.session.user) { //到达/home路径首先判断是否已经登录
-    //     req.session.error = "请先登录";
-    //     res.redirect("/ngwf/login.html"); //未登录则重定向到 /login 路径
-    //     return;
-    // }
+    if (!req.session.user) { //到达/home路径首先判断是否已经登录
+        req.session.error = "请先登录";
+        res.redirect("/ngwf/login.html"); //未登录则重定向到 /login 路径
+        return;
+    }
     // models.Task.findAll
     // var province = req.query["province"];
     var timeTaskResult;
@@ -728,10 +728,9 @@ router.get('/exportProblem', function (req, res, next) {
         var infoProblemResult;
         models.Problem.findAll({
             attributes: [
-                "id",
-                "province",
                 "index",
                 "groupType",
+                "province",
                 "taskId",
                 "problemDate",
                 "expectedResolutionDate",
@@ -746,7 +745,13 @@ router.get('/exportProblem', function (req, res, next) {
                 "questioner",
                 "responsible",
                 "monitor",
-                "remark"]
+                "proposes",
+                "remark",
+                "why",
+                "belong",
+                "belongPerson",
+                "user",
+                "updatedAt"]
             // order: [
             //     ['expectedResolutionDate', 'DESC']
             // ]
@@ -770,8 +775,17 @@ router.get('/exportProblem', function (req, res, next) {
                 var questioner = Problem.questioner;
                 var responsible = Problem.responsible;
                 var monitor = Problem.monitor;
+                var proposes = Problem.proposes;
                 var remark = Problem.remark;
                 var province = Problem.province;
+
+                var why = Problem.why;
+                var belong = Problem.belong;
+                var belongPerson = Problem.belongPerson;
+                var user = Problem.user;
+                var updatedAt = Problem.updatedAt;
+
+
                 var json = {
                     id: id,
                     province: province,
@@ -791,7 +805,12 @@ router.get('/exportProblem', function (req, res, next) {
                     questioner: questioner,
                     responsible: responsible,
                     monitor: monitor,
-                    remark: remark
+                    proposes: proposes,
+                    remark: remark,
+                    why: why,
+                    belong: belong,
+                    belongPerson: belongPerson,
+                    user: user
                 };
                 if (problemDate) {
                     json["problemDate"] = moment(problemDate).format("YYYY-MM-DD");
@@ -802,15 +821,24 @@ router.get('/exportProblem', function (req, res, next) {
                 if (theLatestSettlementDate) {
                     json["theLatestSettlementDate"] = moment(theLatestSettlementDate).format("YYYY-MM-DD");
                 }
+
+                if (updatedAt) {
+                    json["updatedAt"] = moment(updatedAt).format("YYYY-MM-DD");
+                }
+
                 problemCollection.push(json);
 
             });
-            var sheets = [];
+            var sheets = [[]];
+            var allExcel = {"name": "汇总"};
+            var allSheetData = [];
             for (var province in provinceInfos) {
                 var provinceName = provinceInfos[province];
                 var tempProblem = problemCollection.where({province: province});
+
                 var data = [
-                    ["问题提出人",
+                    [
+                        "问题提出人",
                         "问题/风险/求助描述",
                         "产生日期",
                         "期望解决日期",
@@ -824,8 +852,15 @@ router.get('/exportProblem', function (req, res, next) {
                         "解决方案",
                         "进展及结果",
                         "处理责任人",
-                        "备注"]
+                        "备注",
+                        "proposes",
+                        "why",
+                        "belong",
+                        "belongPerson",
+                        "user"
+                    ]
                 ];
+
                 _.each(tempProblem, function (Problem) {
                     var json = Problem.toJSON();
                     var info = [];
@@ -844,6 +879,12 @@ router.get('/exportProblem', function (req, res, next) {
                     info.push(json["progressAndResults"] || undefined);
                     info.push(json["responsible"] || undefined);
                     info.push(json["remark"] || undefined);
+
+                    info.push(json["proposes"] || undefined);
+                    info.push(json["why"] || undefined);
+                    info.push(json["belong"] || undefined);
+                    info.push(json["belongPerson"] || undefined);
+                    info.push(json["user"] || undefined);
 
                     // questioner  问题提出人
                     // describe  问题/风险/求助描述
@@ -868,6 +909,8 @@ router.get('/exportProblem', function (req, res, next) {
                     name: provinceName,
                     data: data
                 });
+
+                allSheetData.push({});
                 // res.send('export successfully!');
             }
             var buffer = xlsx.build(sheets); // Returns a buffer
