@@ -13,6 +13,8 @@ var multiparty = require('multiparty');
 var sequelize = require("sequelize");
 var moment = require("moment");
 var Backbone = require("backbone");
+const exportsProivce = require("../model/exportsProivce");
+const exportsMonitor = require("../model/exportsMonitor");
 const space = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 // var ccap = require('ccap');//Instantiated ccap class
 // const captcha = ccap({
@@ -719,7 +721,193 @@ router.get('/taskInfo', function (req, res, next) {
         }
     }
 });
+router.get('/exportProblemAllInOne', function (req, res, next) {
+    var session = req.session;
+    // if (_.isString(session.user)) {
+    var problemCollection = new ProblemCollection();
+    var infoProblemResult;
+    models.Problem.findAll({
+        attributes: [
+            "index",
+            "groupType",
+            "province",
+            "taskId",
+            "problemDate",
+            "expectedResolutionDate",
+            "theLatestSettlementDate",
+            "innerOuter",
+            "subjectType",
+            "priority",
+            "describe",
+            "solution",
+            "progressAndResults",
+            "state",
+            "questioner",
+            "responsible",
+            "monitor",
+            "proposes",
+            "remark",
+            "why",
+            "belong",
+            "belongPerson",
+            "user",
+            "updatedAt"]
+        // order: [
+        //     ['expectedResolutionDate', 'DESC']
+        // ]
+    }).then(function (result) {
+        infoProblemResult = result;
+        infoProblemResult.forEach(function (Problem) {
+            var id = Problem.id;
+            var index = Problem.index;
+            var groupType = Problem.groupType;
+            var taskId = Problem.taskId;
+            var problemDate = Problem.problemDate;
+            var expectedResolutionDate = Problem.expectedResolutionDate;
+            var theLatestSettlementDate = Problem.theLatestSettlementDate;
+            var innerOuter = Problem.innerOuter;
+            var subjectType = Problem.subjectType;
+            var priority = Problem.priority;
+            var describe = Problem.describe;
+            var solution = Problem.solution;
+            var progressAndResults = Problem.progressAndResults;
+            var state = Problem.state;
+            var questioner = Problem.questioner;
+            var responsible = Problem.responsible;
+            var monitor = Problem.monitor;
+            var proposes = Problem.proposes;
+            var remark = Problem.remark;
+            var province = Problem.province;
+            var why = Problem.why;
+            var belong = Problem.belong;
+            var belongPerson = Problem.belongPerson;
+            var user = Problem.user;
+            var updatedAt = Problem.updatedAt;
+            var json = {
+                id: id,
+                province: province,
+                index: index,
+                groupType: groupType,
+                taskId: taskId,
+                // problemDate: problemDate ? moment(problemDate).format("YYYY-MM-DD") : undefined,
+                // expectedResolutionDate: expectedResolutionDate ? moment(expectedResolutionDate).format("YYYY-MM-DD") : undefined,
+                // theLatestSettlementDate: theLatestSettlementDate ? moment(theLatestSettlementDate).format("YYYY-MM-DD") :undefined,
+                innerOuter: innerOuter,
+                subjectType: subjectType,
+                priority: priority,
+                describe: describe,
+                solution: solution,
+                progressAndResults: progressAndResults,
+                state: state,
+                questioner: questioner,
+                responsible: responsible,
+                monitor: monitor,
+                proposes: proposes,
+                remark: remark,
+                why: why,
+                belong: belong,
+                belongPerson: belongPerson,
+                user: user
+            };
+            if (problemDate) {
+                json["problemDate"] = moment(problemDate).format("YYYY-MM-DD");
+            }
+            if (expectedResolutionDate) {
+                json["expectedResolutionDate"] = moment(expectedResolutionDate).format("YYYY-MM-DD");
+            }
+            if (theLatestSettlementDate) {
+                json["theLatestSettlementDate"] = moment(theLatestSettlementDate).format("YYYY-MM-DD");
+            }
 
+            if (updatedAt) {
+                json["updatedAt"] = moment(updatedAt).format("YYYY-MM-DD");
+            }
+            problemCollection.push(json);
+        });
+        var proposesEnums = ['分公司问题', '对分公司的要求'];
+        var sheets = [];
+        var data = [];
+
+        for (var proivce in exportsProivce) {
+            var firstProvince = true;
+            var provinceName = exportsProivce[proivce];
+            for (var index in proposesEnums) {
+                var proposesEnum = proposesEnums[index];
+                var monitor = exportsMonitor[province];
+                var tempProblem = problemCollection.where({province: province, proposes: proposesEnum});
+                data.push(index * 1 === 0 ? [
+                    "分公司",
+                    "问题归属",
+                    "问题提出人",
+                    "问题/风险/求助描述",
+                    "解决方案",
+                    "进展及结果",
+                    // "产生日期",
+                    // "期望解决日期",
+                    "状态"
+                    // "组别",
+                    // "关联任务编号",
+                    // "最晚解决日期",
+                    // "内部/外部",
+                    // "类别",
+                    // "优先级",
+                    // "处理责任人",
+                    // "备注",
+                    // "问题提出方",
+                    // // "症结原因",
+                    // "问题处理人",
+                    // "编辑工号"
+                ] : []);
+                _.each(tempProblem, function (Problem) {
+                    var json = Problem.toJSON();
+                    var info = [];
+                    var cell = "";
+                    if (firstProvince === true) {
+                        cell += provinceName;
+                        cell += "\r\n";
+                        cell += monitor;
+                        firstProvince = false;
+                    }
+                    info.push(cell);
+                    info.push(json["proposes"] || undefined);
+                    info.push(json["questioner"] || undefined);
+                    info.push(json["describe"] || undefined);
+                    info.push(json["progressAndResults"] || undefined);
+                    info.push(json["solution"] || undefined);
+                    // info.push(json["problemDate"] || undefined);
+                    // info.push(json["expectedResolutionDate"] || undefined);
+                    info.push(json["state"] || undefined);
+                    // info.push(json["groupType"] || undefined);
+                    // info.push(json["taskId"] || undefined);
+                    // info.push(json["theLatestSettlementDate"] || undefined);
+                    // info.push(json["innerOuter"] || undefined);
+                    // info.push(json["subjectType"] || undefined);
+                    // info.push(json["priority"] || undefined);
+                    // info.push(json["responsible"] || undefined);
+                    // info.push(json["remark"] || undefined);
+                    // // info.push(json["why"] || undefined);
+                    // info.push(json["belong"] || undefined);
+                    // info.push(json["belongPerson"] || undefined);
+                    // info.push(json["user"] || undefined);
+                    data.push(info);
+                });
+            }
+
+
+            // res.send('export successfully!');
+        }
+        sheets.push({
+            name: "各省份问题",
+            data: data
+        });
+        var buffer = xlsx.build(sheets); // Returns a buffer
+        res.attachment("问题导出列表汇总.xlsx");
+        res.set("Content-Type", "application/vnd.openxmlformats");
+        res.end(buffer, "binary");
+
+    });
+    // }
+});
 
 router.get('/exportProblem', function (req, res, next) {
     var session = req.session;

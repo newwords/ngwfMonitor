@@ -125,9 +125,13 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/mainprovice.hbs'
                 "click .control span": "control",
                 "click span.span_control": "spanControl",
                 "click #exportProblem": "exportProblem",
+                "click #exportProblemAll": "exportProblemAll",
                 "mouseover span.mark-time": "showTime"
             },
-            exportProblem:function (e) {
+            exportProblemAll: function () {
+                window.frames['downloadFrame'].location = "/exportProblemAllInOne";
+            },
+            exportProblem: function (e) {
                 window.frames['downloadFrame'].location = "/exportProblem";
             },
             spanControl: function (e) {
