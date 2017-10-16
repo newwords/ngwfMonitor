@@ -828,7 +828,7 @@ router.get('/exportProblemAllInOne', function (req, res, next) {
         var sheets = [];
         var data = [];
 
-        for (var proivce in exportsProivce) {
+        for (var province in exportsProivce) {
             var firstProvince = true;
             var provinceName = exportsProivce[proivce];
             for (var index in proposesEnums) {
