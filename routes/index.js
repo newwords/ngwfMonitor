@@ -835,7 +835,6 @@ router.get('/exportProblem', function (req, res, next) {
             for (var province in provinceInfos) {
                 var provinceName = provinceInfos[province];
                 var tempProblem = problemCollection.where({province: province});
-
                 var data = [
                     [
                         "问题提出人",
@@ -853,11 +852,11 @@ router.get('/exportProblem', function (req, res, next) {
                         "进展及结果",
                         "处理责任人",
                         "备注",
-                        "proposes",
-                        "why",
-                        "belong",
-                        "belongPerson",
-                        "user"
+                        "问题提出方",
+                        // "症结原因",
+                        "问题归属",
+                        "问题处理人",
+                        "编辑工号"
                     ]
                 ];
 
@@ -881,7 +880,7 @@ router.get('/exportProblem', function (req, res, next) {
                     info.push(json["remark"] || undefined);
 
                     info.push(json["proposes"] || undefined);
-                    info.push(json["why"] || undefined);
+                    // info.push(json["why"] || undefined);
                     info.push(json["belong"] || undefined);
                     info.push(json["belongPerson"] || undefined);
                     info.push(json["user"] || undefined);
