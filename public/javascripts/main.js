@@ -118,7 +118,7 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
 
         var _content = this;
         var listTemplate = Handlebars.compile(listTpl);
-        var mapInfoTemplate = Handlebars.compile(mapInfo)
+        var mapInfoTemplate = Handlebars.compile(mapInfo);
         var MapView = Backbone.View.extend({
             template: Handlebars.compile(mainTpl),
             events: {
