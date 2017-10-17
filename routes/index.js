@@ -872,8 +872,8 @@ router.get('/exportProblemAllInOne', function (req, res, next) {
                         info.push(json["proposes"] || undefined);
                         info.push(json["questioner"] || undefined);
                         info.push(json["describe"] || undefined);
-                        info.push(json["progressAndResults"] || undefined);
                         info.push(json["solution"] || undefined);
+                        info.push(json["progressAndResults"] || undefined);
                         // info.push(json["problemDate"] || undefined);
                         // info.push(json["expectedResolutionDate"] || undefined);
                         info.push(json["state"] || undefined);
