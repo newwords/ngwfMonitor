@@ -268,18 +268,36 @@ router.post('/ajax', function (req, res, next) {
                 }
                 var hasWarn = false;
                 var warmMessage = "";
-                if (json.plannedStartTime) {
-                    if (!json.actualStartTime && !moment().isBefore(json.plannedStartTime) && json.progress !== 100) {
+                if (json.plannedStartTime && json.progress !== 100) {//如果有计划开始时间并且进度非百分百
+                    if ((!json.actualStartTime && moment().isAfter(json.plannedStartTime)) || moment(json.actualStartTime).isAfter(json.plannedStartTime)) {
                         hasWarn = true;
                         warmMessage += "【到期未开始】";
                     }
                 }
-                if (json.plannedEndTime) {
-                    if (!json.actualEndTime && !moment().isBefore(json.plannedEndTime) && json.progress !== 100) {
+                if (json.plannedEndTime && json.progress !== 100) {
+                    if ((!json.actualEndTime && moment().isAfter(json.plannedEndTime)) || moment(json.actualEndTime).isAfter(json.plannedEndTime)) {
                         hasWarn = true;
                         warmMessage += "【到期未结束】";
                     }
                 }
+
+                if (json.progress !== 100 && json.plannedStartTime && json.plannedEndTime && moment().isAfter(json.plannedStartTime)) {
+                    var diff = moment(json.plannedEndTime).diff(moment(json.plannedStartTime));
+                    var pass = moment().diff(moment(json.plannedStartTime));
+                    diff = (diff / (1000 * 60 * 60 * 24));
+                    diff = diff.toFixed(0);
+                    pass = (pass / (1000 * 60 * 60 * 24));
+                    pass = pass.toFixed(0);
+                    if (pass > diff) {
+                        hasWarn = true;
+                        warmMessage += "【延迟风险】【已延期】";
+                    } else if ((pass / diff) > (json.progress / 100)) {
+                        hasWarn = true;
+                        warmMessage += "【延迟风险】";
+                    }
+                    // console.log("diff====" + diff + "pass=====" + pass);
+                }
+
 
                 if (hasWarn) {
                     json["warn"] = {
@@ -663,17 +681,48 @@ router.get('/taskInfo', function (req, res, next) {
 
                     var hasWarn = false;
                     var warmMessage = "";
-                    if (plannedStartTime) {
-                        if (!actualStartTime && !moment().isBefore(plannedStartTime) && progress !== 100) {
+                    // if (plannedStartTime) {
+                    //     if (!actualStartTime && !moment().isBefore(plannedStartTime) && progress !== 1) {
+                    //         hasWarn = true;
+                    //         warmMessage += "【到期未开始】";
+                    //     }
+                    // }
+                    // if (plannedEndTime) {
+                    //     if (!actualEndTime && !moment().isBefore(plannedEndTime) && progress !== 1) {
+                    //         hasWarn = true;
+                    //         warmMessage += "【到期未结束】";
+                    //     }
+                    // }
+
+
+                    if (plannedStartTime && progress !== 1) {//如果有计划开始时间并且进度非百分百
+                        if ((!actualStartTime && moment().isAfter(plannedStartTime)) || moment(actualStartTime).isAfter(plannedStartTime)) {
                             hasWarn = true;
                             warmMessage += "【到期未开始】";
                         }
                     }
-                    if (plannedEndTime) {
-                        if (!actualEndTime && !moment().isBefore(plannedEndTime) && progress !== 100) {
+                    if (plannedEndTime && progress !== 1) {
+                        if ((!actualEndTime && moment().isAfter(plannedEndTime)) || moment(actualEndTime).isAfter(plannedEndTime)) {
                             hasWarn = true;
                             warmMessage += "【到期未结束】";
                         }
+                    }
+
+                    if (progress !== 1 && plannedStartTime && plannedEndTime && moment().isAfter(plannedStartTime)) {
+                        var diff = moment(plannedEndTime).diff(moment(plannedStartTime));
+                        var pass = moment().diff(moment(plannedStartTime));
+                        diff = (diff / (1000 * 60 * 60 * 24));
+                        diff = diff.toFixed(0);
+                        pass = (pass / (1000 * 60 * 60 * 24));
+                        pass = pass.toFixed(0);
+                        if (pass > diff) {
+                            hasWarn = true;
+                            warmMessage += "【延迟风险】";
+                        } else if ((pass / diff) > progress) {
+                            hasWarn = true;
+                            warmMessage += "【延迟风险】";
+                        }
+                        // console.log("diff====" + diff + "pass=====" + pass);
                     }
 
                     if (progress >= 100) {
