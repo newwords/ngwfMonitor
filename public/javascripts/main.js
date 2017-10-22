@@ -51,7 +51,11 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
                 return;
             }
             if (val.actualStartTime && val.plannedStartTime && (val.actualStartTime !== val.plannedStartTime)) {
-                return `<span class="mark-time start-time" title="${val.actualStartTime}">!</span>`
+                var actual = new Date(val.actualStartTime);
+                var planned = new Date(val.plannedStartTime);
+                if (actual > planned) {
+                    return `<span class="mark-time start-time" title="${val.actualStartTime}">!</span>`
+                }
             }
         });
         Handlebars.registerHelper('actualEndTime', function (val) {
@@ -59,7 +63,11 @@ require(['backbone', 'handlebars', 'data', 'echarts', 'text!tpl/main.hbs', 'text
                 return;
             }
             if (val.actualEndTime && val.plannedEndTime && (val.actualEndTime !== val.plannedEndTime)) {
-                return `<span class="mark-time end-time" title="${val.actualEndTime}">!</span>`
+                var actual = new Date(val.actualEndTime);
+                var planned = new Date(val.plannedEndTime);
+                if (actual > planned) {
+                    return `<span class="mark-time end-time" title="${val.actualEndTime}">!</span>`
+                }
             }
         });
 
