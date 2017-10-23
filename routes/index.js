@@ -281,6 +281,13 @@ router.post('/ajax', function (req, res, next) {
                     }
                 }
 
+                if (json.actualEndTime && json.progress !== 100) {
+                    // if ((!actualEndTime && moment().isAfter(plannedEndTime)) || moment(actualEndTime).isAfter(plannedEndTime)) {
+                    hasWarn = true;
+                    warmMessage += "【进度错误】";
+                    // }
+                }
+
                 if (json.progress !== 100 && json.plannedStartTime && json.plannedEndTime && moment().isAfter(json.plannedStartTime)) {
                     var diff = moment(json.plannedEndTime).diff(moment(json.plannedStartTime));
                     var pass = moment().diff(moment(json.plannedStartTime));
@@ -290,7 +297,7 @@ router.post('/ajax', function (req, res, next) {
                     pass = pass.toFixed(0);
                     if (pass > diff) {
                         hasWarn = true;
-                        warmMessage += "【延迟风险】【已延期】";
+                        warmMessage += "【已延期】";
                     } else if ((pass / diff) > (json.progress / 100)) {
                         hasWarn = true;
                         warmMessage += "【延迟风险】";
@@ -707,6 +714,12 @@ router.get('/taskInfo', function (req, res, next) {
                             warmMessage += "【到期未结束】";
                         }
                     }
+                    if (actualEndTime && progress !== 1) {
+                        // if ((!actualEndTime && moment().isAfter(plannedEndTime)) || moment(actualEndTime).isAfter(plannedEndTime)) {
+                            hasWarn = true;
+                            warmMessage += "【进度错误】";
+                        // }
+                    }
 
                     if (progress !== 1 && plannedStartTime && plannedEndTime && moment().isAfter(plannedStartTime)) {
                         var diff = moment(plannedEndTime).diff(moment(plannedStartTime));
@@ -717,7 +730,7 @@ router.get('/taskInfo', function (req, res, next) {
                         pass = pass.toFixed(0);
                         if (pass > diff) {
                             hasWarn = true;
-                            warmMessage += "【延迟风险】";
+                            warmMessage += "【已延期】";
                         } else if ((pass / diff) > progress) {
                             hasWarn = true;
                             warmMessage += "【延迟风险】";
