@@ -275,10 +275,11 @@ router.post('/ajax', function (req, res, next) {
                     }
                 }
                 if (json.plannedEndTime && json.progress !== 100) {
-                    if ((!json.actualEndTime && moment().isAfter(json.plannedEndTime)) || moment(json.actualEndTime).isAfter(json.plannedEndTime)) {
+                    if ((!json.actualEndTime && moment().isAfter(json.plannedEndTime))) {
                         hasWarn = true;
                         warmMessage += "【到期未结束】";
                     }
+                    //|| moment(json.actualEndTime).isAfter(json.plannedEndTime)
                 }
 
                 if (json.actualEndTime && json.progress !== 100) {
@@ -297,7 +298,7 @@ router.post('/ajax', function (req, res, next) {
                     pass = pass.toFixed(0);
                     if (pass > diff) {
                         hasWarn = true;
-                        warmMessage += "【已延期】";
+                        warmMessage += "【延迟风险】";
                     } else if ((pass / diff) > (json.progress / 100)) {
                         hasWarn = true;
                         warmMessage += "【延迟风险】";
@@ -709,15 +710,19 @@ router.get('/taskInfo', function (req, res, next) {
                         }
                     }
                     if (plannedEndTime && progress !== 1) {
-                        if ((!actualEndTime && moment().isAfter(plannedEndTime)) || moment(actualEndTime).isAfter(plannedEndTime)) {
+                        if ((!actualEndTime && moment().isAfter(plannedEndTime))) {
                             hasWarn = true;
                             warmMessage += "【到期未结束】";
                         }
+                        // if (actualEndTime && moment(actualEndTime).isAfter(plannedEndTime)) {
+                        //     hasWarn = true;
+                        //     warmMessage += "【】";
+                        // }
                     }
                     if (actualEndTime && progress !== 1) {
                         // if ((!actualEndTime && moment().isAfter(plannedEndTime)) || moment(actualEndTime).isAfter(plannedEndTime)) {
-                            hasWarn = true;
-                            warmMessage += "【进度错误】";
+                        hasWarn = true;
+                        warmMessage += "【进度错误】";
                         // }
                     }
 
@@ -730,7 +735,7 @@ router.get('/taskInfo', function (req, res, next) {
                         pass = pass.toFixed(0);
                         if (pass > diff) {
                             hasWarn = true;
-                            warmMessage += "【已延期】";
+                            warmMessage += "【延迟风险】";
                         } else if ((pass / diff) > progress) {
                             hasWarn = true;
                             warmMessage += "【延迟风险】";
@@ -1186,11 +1191,11 @@ router.post('/submitTaskCell', function (req, res, next) {
             var value = req.body.value;
 
             if ("actualStartTime" === field) {
-                value = value ? moment(value).format("YYYY-MM-DD") : undefined;
+                value = value ? new Date(moment(value).format("YYYY-MM-DD") + " 00:00:00") : undefined;
             }
 
             if ("actualEndTime" === field) {
-                value = value ? (moment(value).format("YYYY-MM-DD") + " 15:59:59") : undefined;
+                value = value ? new Date(moment(value).format("YYYY-MM-DD") + " 23:59:59") : undefined;
             }
             var param = {};
             param[field] = value;
@@ -1225,8 +1230,8 @@ router.post('/submitTask', function (req, res, next) {
 
             // plannedStartTime = plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : undefined;
             // plannedEndTime = plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : undefined;
-            actualStartTime = actualStartTime ? new Date(moment(actualStartTime).format("YYYY-MM-DD")) : undefined;
-            actualEndTime = actualEndTime ? new Date((moment(actualEndTime).format("YYYY-MM-DD") + " 15:59:59")) : undefined;
+            actualStartTime = actualStartTime ? new Date(moment(actualStartTime).format("YYYY-MM-DD")+" 00:00:00") : undefined;
+            actualEndTime = actualEndTime ? new Date((moment(actualEndTime).format("YYYY-MM-DD") + " 23:59:59")) : undefined;
 
             //
             // plannedStartTime: DataTypes.DATE,
