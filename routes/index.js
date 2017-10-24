@@ -290,11 +290,11 @@ router.post('/ajax', function (req, res, next) {
                 }
 
                 if (json.progress !== 100 && json.plannedStartTime && json.plannedEndTime && moment().isAfter(json.plannedStartTime)) {
-                    var diff = moment(json.plannedEndTime).diff(moment(json.plannedStartTime));
-                    var pass = moment().diff(moment(json.plannedStartTime));
-                    diff = (diff / (1000 * 60 * 60 * 24));
+                    var diff = moment(json.plannedEndTime).diff(moment(json.plannedStartTime),"days");
+                    var pass = moment().diff(moment(json.plannedStartTime),"days");
+                    // diff = (diff / (1000 * 60 * 60 * 24));
                     diff = diff.toFixed(0);
-                    pass = (pass / (1000 * 60 * 60 * 24));
+                    // pass = (pass / (1000 * 60 * 60 * 24));
                     pass = pass.toFixed(0);
                     if (pass > diff) {
                         hasWarn = true;
@@ -727,11 +727,9 @@ router.get('/taskInfo', function (req, res, next) {
                     }
 
                     if (progress !== 1 && plannedStartTime && plannedEndTime && moment().isAfter(plannedStartTime)) {
-                        var diff = moment(plannedEndTime).diff(moment(plannedStartTime));
-                        var pass = moment().diff(moment(plannedStartTime));
-                        diff = (diff / (1000 * 60 * 60 * 24));
+                        var diff = moment(plannedEndTime).diff(moment(plannedStartTime),"days");
+                        var pass = moment().diff(moment(plannedStartTime),"days");
                         diff = diff.toFixed(0);
-                        pass = (pass / (1000 * 60 * 60 * 24));
                         pass = pass.toFixed(0);
                         if (pass > diff) {
                             hasWarn = true;
