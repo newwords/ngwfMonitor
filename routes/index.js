@@ -290,12 +290,12 @@ router.post('/ajax', function (req, res, next) {
                 }
 
                 if (json.progress !== 100 && json.plannedStartTime && json.plannedEndTime && moment().isAfter(json.plannedStartTime)) {
-                    var diff = moment(json.plannedEndTime).diff(moment(json.plannedStartTime),"days");
-                    var pass = moment().diff(moment(json.plannedStartTime),"days");
+                    var diff = moment(json.plannedEndTime).diff(moment(json.plannedStartTime), "days");
+                    var pass = moment().diff(moment(json.plannedStartTime), "days");
                     // diff = (diff / (1000 * 60 * 60 * 24));
-                    diff = diff.toFixed(0);
+                    diff = diff.toFixed(0) * 1;
                     // pass = (pass / (1000 * 60 * 60 * 24));
-                    pass = pass.toFixed(0);
+                    pass = pass.toFixed(0) * 1;
                     if (pass > diff) {
                         hasWarn = true;
                         warmMessage += "【延迟风险】";
@@ -727,10 +727,10 @@ router.get('/taskInfo', function (req, res, next) {
                     }
 
                     if (progress !== 1 && plannedStartTime && plannedEndTime && moment().isAfter(plannedStartTime)) {
-                        var diff = moment(plannedEndTime).diff(moment(plannedStartTime),"days");
-                        var pass = moment().diff(moment(plannedStartTime),"days");
-                        diff = diff.toFixed(0);
-                        pass = pass.toFixed(0);
+                        var diff = moment(plannedEndTime).diff(moment(plannedStartTime), "days");
+                        var pass = moment().diff(moment(plannedStartTime), "days");
+                        diff = diff.toFixed(0) * 1;
+                        pass = pass.toFixed(0) * 1;
                         if (pass > diff) {
                             hasWarn = true;
                             warmMessage += "【延迟风险】";
@@ -1228,7 +1228,7 @@ router.post('/submitTask', function (req, res, next) {
 
             // plannedStartTime = plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : undefined;
             // plannedEndTime = plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : undefined;
-            actualStartTime = actualStartTime ? new Date(moment(actualStartTime).format("YYYY-MM-DD")+" 00:00:00") : undefined;
+            actualStartTime = actualStartTime ? new Date(moment(actualStartTime).format("YYYY-MM-DD") + " 00:00:00") : undefined;
             actualEndTime = actualEndTime ? new Date((moment(actualEndTime).format("YYYY-MM-DD") + " 23:59:59")) : undefined;
 
             //
