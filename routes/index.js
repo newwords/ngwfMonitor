@@ -269,7 +269,7 @@ router.post('/ajax', function (req, res, next) {
                 var hasWarn = false;
                 var warmMessage = "";
                 if (json.plannedStartTime && json.progress !== 100) {//如果有计划开始时间并且进度非百分百
-                    if ((!json.actualStartTime && moment().isAfter(json.plannedStartTime)) || moment(json.actualStartTime).isAfter(json.plannedStartTime)) {
+                    if ((!json.actualStartTime && moment().isAfter(json.plannedStartTime))) {//|| moment(json.actualStartTime).isAfter(json.plannedStartTime)
                         hasWarn = true;
                         warmMessage += "【到期未开始】";
                     }
@@ -704,7 +704,7 @@ router.get('/taskInfo', function (req, res, next) {
 
 
                     if (plannedStartTime && progress !== 1) {//如果有计划开始时间并且进度非百分百
-                        if ((!actualStartTime && moment().isAfter(plannedStartTime)) || moment(actualStartTime).isAfter(plannedStartTime)) {
+                        if ((!actualStartTime && moment().isAfter(plannedStartTime))) {//|| moment(actualStartTime).isAfter(plannedStartTime)
                             hasWarn = true;
                             warmMessage += "【到期未开始】";
                         }
