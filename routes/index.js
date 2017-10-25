@@ -1228,8 +1228,8 @@ router.post('/submitTask', function (req, res, next) {
 
             // plannedStartTime = plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : undefined;
             // plannedEndTime = plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : undefined;
-            actualStartTime = actualStartTime ? new Date(moment(actualStartTime).format("YYYY-MM-DD") + " 00:00:00") : undefined;
-            actualEndTime = actualEndTime ? new Date((moment(actualEndTime).format("YYYY-MM-DD") + " 23:59:59")) : undefined;
+            actualStartTime = actualStartTime ? new Date(moment(actualStartTime).format("YYYY-MM-DD") + " 00:00:00") : null;
+            actualEndTime = actualEndTime ? new Date((moment(actualEndTime).format("YYYY-MM-DD") + " 23:59:59")) : null;
 
             //
             // plannedStartTime: DataTypes.DATE,
