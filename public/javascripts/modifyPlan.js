@@ -23,10 +23,10 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
           var progress = $("#progress").val();
           var startTime = $("#startTime").val();
           var endTime = $("#endTime").val();
-          // var plannedStartTime = $("#plannedStartTime").val();
-          // var plannedEndTime = $("#plannedEndTime").val();
+          var plannedStartTime = $("#plannedStartTime").val();
+          var plannedEndTime = $("#plannedEndTime").val();
           if (progress.indexOf('%') > -1) {
-            var progress = progress.replace(/%/, '')
+            progress = progress.replace(/%/, '')
             progress = +progress < 1 ? progress : progress / 100;
             para.progress = progress;
           } else if (+progress && +progress < 1) {
@@ -34,8 +34,8 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
           } else {
             para.progress = progress / 100;
           }
-          // para.plannedStartTime = plannedStartTime;
-          // para.plannedEndTime = plannedEndTime;
+          para.plannedStartTime = plannedStartTime;
+          para.plannedEndTime = plannedEndTime;
           para.actualStartTime = startTime;
           para.actualEndTime = endTime;
           $.ajax({
@@ -66,13 +66,22 @@ require(['backbone', 'handlebars', 'text!tpl/modifyPlan.hbs',
         });
 
         table.render();
-        $("#progress").val(data.progressPercent)
-        $("#startTime").val(data.actualStartTime)
-        $("#endTime").val(data.actualEndTime)
-        // $("#plannedStartTime").val(data.actualStartTime);
-        // $("#plannedEndTime").val(data.actualEndTime);
+        $("#progress").val(data.progressPercent);
+        $("#startTime").val(data.actualStartTime);
+        $("#endTime").val(data.actualEndTime);
         laydate.render({ elem: '#startTime' });
         laydate.render({ elem: '#endTime' });
+        if(data.isMonitor===true){
+            $("#plannedStartTime").val(data.plannedStartTime);
+            $("#plannedEndTime").val(data.plannedEndTime);
+            laydate.render({ elem: '#plannedStartTime' });
+            laydate.render({ elem: '#plannedEndTime' });
+        }else{
+            $("#plannedStartTimeLayer").hide();
+            $("#plannedEndTimeLayer").hide();
+        }
+
+
         // laydate.render({ elem: '#plannedStartTime' });
         // laydate.render({ elem: '#plannedEndTime' });
       });

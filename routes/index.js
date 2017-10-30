@@ -2,6 +2,7 @@ var models = require('../models');
 var fs = require('fs');
 var express = require('express');
 const users = require('../model/users');
+const permission = require('../model/permission');
 const provinceInfos = require('../model/province');
 var generatePassword = require("password-generator");
 var _ = require("underscore");
@@ -651,6 +652,7 @@ const findUserProvince = function (name) {
 router.get('/taskInfo', function (req, res, next) {
     var session = req.session;
     if (_.isString(session.user)) {
+        const isMonitor = permission.isMonitor(session.user);
         var user = findUserProvince(session.user);
         if (user) {
             var province = user.province;
@@ -758,7 +760,8 @@ router.get('/taskInfo', function (req, res, next) {
                         // actualEndTime: actualEndTime ? moment(actualEndTime).format("YYYY-MM-DD") : "",
                         province: province,
                         warmMessage: hasWarn ? warmMessage : "",
-                        hasWarn: hasWarn
+                        hasWarn: hasWarn,
+                        isMonitor: isMonitor
                     };
                     if (plannedStartTime) {
                         json["plannedStartTime"] = moment(plannedStartTime).format("YYYY-MM-DD");
@@ -1215,19 +1218,21 @@ router.post('/submitTaskCell', function (req, res, next) {
 router.post('/submitTask', function (req, res, next) {
     var session = req.session;
     if (_.isString(session.user)) {
+        const isMonitor = permission.isMonitor(session.user);
         var user = findUserProvince(session.user);
         if (user) {
             var province = user.province;
             var id = req.body.id;
             var progress = req.body.progress;
             // var field = req.body.field;
-            // var plannedStartTime = req.body.plannedStartTime;
-            // var plannedEndTime = req.body.plannedEndTime;
+
+            var plannedStartTime = isMonitor ? req.body.plannedStartTime : undefined;
+            var plannedEndTime = isMonitor ? req.body.plannedEndTime : undefined;
             var actualStartTime = req.body.actualStartTime;
             var actualEndTime = req.body.actualEndTime;
 
-            // plannedStartTime = plannedStartTime ? moment(plannedStartTime).format("YYYY-MM-DD") : undefined;
-            // plannedEndTime = plannedEndTime ? moment(plannedEndTime).format("YYYY-MM-DD") : undefined;
+            plannedStartTime = plannedStartTime ? new Date(moment(plannedStartTime).format("YYYY-MM-DD") + " 00:00:00") : null;
+            plannedEndTime = plannedEndTime ? new Date((moment(plannedEndTime).format("YYYY-MM-DD") + " 23:59:59")) : null;
             actualStartTime = actualStartTime ? new Date(moment(actualStartTime).format("YYYY-MM-DD") + " 00:00:00") : null;
             actualEndTime = actualEndTime ? new Date((moment(actualEndTime).format("YYYY-MM-DD") + " 23:59:59")) : null;
 
@@ -1240,8 +1245,8 @@ router.post('/submitTask', function (req, res, next) {
 
             var param = {
                 progress: progress,
-                // plannedStartTime: plannedStartTime,
-                // plannedEndTime: plannedEndTime,
+                plannedStartTime: plannedStartTime,
+                plannedEndTime: plannedEndTime,
                 actualStartTime: actualStartTime,
                 actualEndTime: actualEndTime
             };

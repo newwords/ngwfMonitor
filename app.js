@@ -7,6 +7,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var index = require('./routes/index');
+var permission = require('./model/permission');
+
 var app = express();
 var _ = require("underscore");
 var _string = require("underscore.string");
@@ -73,7 +75,7 @@ app.use(function (req, res, next) {
                 return res.redirect("/ngwf/login.html");
             }
         }
-        if (url === "/ngwf/ngwfMonitor.html" && req.session.user !== "zhangxin" && req.session.user !== "admin" && req.session.user !== "anjun") {
+        if (url === "/ngwf/ngwfMonitor.html" && !permission.isAdmin(req.session.user)) {
             return res.redirect("/ngwf/noPromise.html");
         }
 
