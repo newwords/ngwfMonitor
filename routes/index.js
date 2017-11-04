@@ -1245,11 +1245,15 @@ router.post('/submitTask', function (req, res, next) {
 
             var param = {
                 progress: progress,
-                plannedStartTime: plannedStartTime,
-                plannedEndTime: plannedEndTime,
+                // plannedStartTime: plannedStartTime,
+                // plannedEndTime: plannedEndTime,
                 actualStartTime: actualStartTime,
                 actualEndTime: actualEndTime
             };
+            if(isMonitor){
+                param["plannedStartTime"] = plannedStartTime;
+                param["plannedEndTime"] = plannedEndTime;
+            }
             // param[field] = value;
             models.Task.update(
                 param, {
